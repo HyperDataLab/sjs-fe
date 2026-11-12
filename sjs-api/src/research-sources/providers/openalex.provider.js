@@ -16,7 +16,7 @@ function configurationError() {
 function worksUrl(baseUrl) {
   try {
     const url = new URL(baseUrl);
-    if (!['https:', 'http:'].includes(url.protocol)) throw configurationError();
+    if (url.protocol !== 'https:') throw configurationError();
     url.pathname = `${url.pathname.replace(/\/+$/, '')}/works`;
     url.search = '';
     url.hash = '';
