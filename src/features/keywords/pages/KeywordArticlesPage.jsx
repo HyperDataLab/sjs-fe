@@ -49,12 +49,12 @@ export default function KeywordArticlesPage() {
       <Container sx={{ paddingBottom: "3rem", flexGrow: 1 }} >
         <MuiBox component="nav" sx={{ marginBottom: "1.5rem" }} aria-label="breadcrumb" className="keyword-articles-breadcrumb">
           <MuiBox component="ol" sx={{ display: "flex", flexWrap: "wrap", padding: 0, marginBottom: "1rem", listStyle: "none" }} >
-            <MuiBox component="li" sx={{ display: "flex", alignItems: "center", "&:not(:last-child)::after": { content: "\"/\"", px: "0.5rem", color: "text.secondary" } }} >
+            <MuiBox component="li" sx={{ display: "flex", alignItems: "center", "&:not(:last-of-type)::after": { content: "\"/\"", px: "0.5rem", color: "text.secondary" } }} >
               <span role="button" tabIndex={0} onClick={() => navigate('/keywords')} onKeyDown={e => e.key === 'Enter' && navigate('/keywords')} className="keyword-articles-back-link">
                 Keywords
               </span>
             </MuiBox>
-            <MuiBox component="li" sx={{ display: "flex", alignItems: "center", "&:not(:last-child)::after": { content: "\"/\"", px: "0.5rem", color: "text.secondary" }, fontWeight: 600 }} className="active text-main" aria-current="page">{t("keywords.baiBaoTheoKeyword")}</MuiBox>
+            <MuiBox component="li" sx={{ display: "flex", alignItems: "center", "&:not(:last-of-type)::after": { content: "\"/\"", px: "0.5rem", color: "text.secondary" }, fontWeight: 600 }} className="active text-main" aria-current="page">{t("keywords.baiBaoTheoKeyword")}</MuiBox>
           </MuiBox>
         </MuiBox>
 

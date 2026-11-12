@@ -162,8 +162,8 @@ export default function SubmitArticlePage() {
       {/* Page Breadcrumbs */}
       <MuiBox component="nav" sx={{ marginBottom: "1rem" }} aria-label="breadcrumb" >
         <MuiBox component="ol" sx={{ display: "flex", flexWrap: "wrap", padding: 0, marginBottom: "0", listStyle: "none", fontSize: "0.875em" }} className="text-muted-custom">
-          <MuiBox component="li" sx={{ display: "flex", alignItems: "center", "&:not(:last-child)::after": { content: "\"/\"", px: "0.5rem", color: "text.secondary" } }} ><MuiBox component={Link} sx={{ textDecoration: "none" }} to="/dashboard" className="text-muted-custom hover-primary">Articles</MuiBox></MuiBox>
-          <MuiBox component="li" sx={{ display: "flex", alignItems: "center", "&:not(:last-child)::after": { content: "\"/\"", px: "0.5rem", color: "text.secondary" } }} className="active" aria-current="page">New Submission</MuiBox>
+          <MuiBox component="li" sx={{ display: "flex", alignItems: "center", "&:not(:last-of-type)::after": { content: "\"/\"", px: "0.5rem", color: "text.secondary" } }} ><MuiBox component={Link} sx={{ textDecoration: "none" }} to="/dashboard" className="text-muted-custom hover-primary">Articles</MuiBox></MuiBox>
+          <MuiBox component="li" sx={{ display: "flex", alignItems: "center", "&:not(:last-of-type)::after": { content: "\"/\"", px: "0.5rem", color: "text.secondary" } }} className="active" aria-current="page">New Submission</MuiBox>
         </MuiBox>
       </MuiBox>
 

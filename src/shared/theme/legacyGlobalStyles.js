@@ -1,5 +1,36 @@
 // Generated from feature style sheets and emitted through MUI GlobalStyles.
-export default [
+// Emotion requires JavaScript-style property names in object-based styles.
+const normalizeStyleKey = (key) => {
+  const isSelector =
+    key.startsWith('--') ||
+    key.includes('&') ||
+    key.includes(':') ||
+    key.includes('.') ||
+    key.includes('#') ||
+    key.includes('@') ||
+    key.includes('[') ||
+    /\s|[>+~,]/.test(key);
+
+  if (isSelector || !key.includes('-')) return key;
+
+  return key
+    .replace(/-([a-z])/g, (_match, letter) => letter.toUpperCase())
+    .replace(/^Ms(?=[A-Z])/, 'ms');
+};
+
+const normalizeStyleObject = (value) => {
+  if (Array.isArray(value)) return value.map(normalizeStyleObject);
+  if (!value || typeof value !== 'object') return value;
+
+  return Object.fromEntries(
+    Object.entries(value).map(([key, child]) => [
+      normalizeStyleKey(key),
+      normalizeStyleObject(child),
+    ]),
+  );
+};
+
+const legacyGlobalStyles = [
 {
   ".admin-layout": {
     "--admin-card-radius": "1rem",
@@ -715,7 +746,7 @@ export default [
   }
 },
 {
-  ".admin-table tbody tr:last-child td": {
+  ".admin-table tbody tr:last-of-type td": {
     "border-bottom": "none"
   }
 },
@@ -811,7 +842,7 @@ export default [
   }
 },
 {
-  ".admin-form-group:last-child": {
+  ".admin-form-group:last-of-type": {
     "margin-bottom": "0"
   }
 },
@@ -4927,7 +4958,7 @@ export default [
   }
 },
 {
-  ".ap-metric-tile:last-child": {
+  ".ap-metric-tile:last-of-type": {
     "border-right": "none"
   }
 },
@@ -6214,7 +6245,7 @@ export default [
   }
 },
 {
-  ".ap-award-item:last-child": {
+  ".ap-award-item:last-of-type": {
     "padding-bottom": "0"
   }
 },
@@ -6259,7 +6290,7 @@ export default [
   }
 },
 {
-  ".ap-award-item:last-child .ap-award-timeline-line": {
+  ".ap-award-item:last-of-type .ap-award-timeline-line": {
     "display": "none"
   }
 },
@@ -6386,7 +6417,7 @@ export default [
   }
 },
 {
-  ".ap-edu-row:last-child .ap-edu-line": {
+  ".ap-edu-row:last-of-type .ap-edu-line": {
     "display": "none"
   }
 },
@@ -6533,12 +6564,12 @@ export default [
       }
     },
     {
-      ".ap-metric-tile:nth-child(3)": {
+      ".ap-metric-tile:nth-of-type(3)": {
         "border-right": "none"
       }
     },
     {
-      ".ap-metric-tile:nth-child(1),\r\n  .ap-metric-tile:nth-child(2),\r\n  .ap-metric-tile:nth-child(3)": {
+      ".ap-metric-tile:nth-of-type(1),\r\n  .ap-metric-tile:nth-of-type(2),\r\n  .ap-metric-tile:nth-of-type(3)": {
         "border-bottom": "1px solid var(--border, #e6e6e6)"
       }
     },
@@ -6624,12 +6655,12 @@ export default [
       }
     },
     {
-      ".ap-metric-tile:nth-child(even)": {
+      ".ap-metric-tile:nth-of-type(even)": {
         "border-right": "none"
       }
     },
     {
-      ".ap-metric-tile:nth-child(1),\r\n  .ap-metric-tile:nth-child(2),\r\n  .ap-metric-tile:nth-child(3),\r\n  .ap-metric-tile:nth-child(4)": {
+      ".ap-metric-tile:nth-of-type(1),\r\n  .ap-metric-tile:nth-of-type(2),\r\n  .ap-metric-tile:nth-of-type(3),\r\n  .ap-metric-tile:nth-of-type(4)": {
         "border-bottom": "1px solid var(--border, #e6e6e6)"
       }
     },
@@ -8289,7 +8320,7 @@ export default [
   }
 },
 {
-  ".dashboard-author-row:last-child": {
+  ".dashboard-author-row:last-of-type": {
     "border-bottom": "0"
   }
 },
@@ -8673,7 +8704,7 @@ export default [
   }
 },
 {
-  ".journal-meta-line span:not(:last-child)::after": {
+  ".journal-meta-line span:not(:last-of-type)::after": {
     "content": "\"•\"",
     "margin-left": "0.8rem",
     "color": "var(--border)"
@@ -10912,7 +10943,7 @@ export default [
   }
 },
 {
-  ".landing-rank-row:last-child": {
+  ".landing-rank-row:last-of-type": {
     "border-bottom": "0"
   }
 },
@@ -11085,7 +11116,7 @@ export default [
   }
 },
 {
-  ".landing-feature-card:nth-child(1),\r\n.landing-feature-card:nth-child(4)": {
+  ".landing-feature-card:nth-of-type(1),\r\n.landing-feature-card:nth-of-type(4)": {
     "grid-column": "span 3"
   }
 },
@@ -11287,7 +11318,7 @@ export default [
       }
     },
     {
-      ".landing-feature-card,\r\n  .landing-feature-card:nth-child(1),\r\n  .landing-feature-card:nth-child(4)": {
+      ".landing-feature-card,\r\n  .landing-feature-card:nth-of-type(1),\r\n  .landing-feature-card:nth-of-type(4)": {
         "grid-column": "span 3"
       }
     },
@@ -11344,7 +11375,7 @@ export default [
       }
     },
     {
-      ".landing-feature-card,\r\n  .landing-feature-card:nth-child(1),\r\n  .landing-feature-card:nth-child(4)": {
+      ".landing-feature-card,\r\n  .landing-feature-card:nth-of-type(1),\r\n  .landing-feature-card:nth-of-type(4)": {
         "grid-column": "span 1"
       }
     }
@@ -13438,7 +13469,7 @@ export default [
   }
 },
 {
-  ".my-wallet-table tr:last-child td": {
+  ".my-wallet-table tr:last-of-type td": {
     "border-bottom": "0"
   }
 },
@@ -15807,7 +15838,7 @@ export default [
   }
 },
 {
-  ".po-metric:first-child": {
+  ".po-metric:first-of-type": {
     "border-left": "0",
     "padding-left": "0"
   }
@@ -15822,17 +15853,17 @@ export default [
       }
     },
     {
-      ".po-metric:nth-child(-n+2)": {
+      ".po-metric:nth-of-type(-n+2)": {
         "border-top": "0"
       }
     },
     {
-      ".po-metric:nth-child(odd)": {
+      ".po-metric:nth-of-type(odd)": {
         "padding-left": "0"
       }
     },
     {
-      ".po-metric:nth-child(even)": {
+      ".po-metric:nth-of-type(even)": {
         "border-left": "1px solid var(--divider)"
       }
     }
@@ -16471,7 +16502,7 @@ export default [
   ]
 },
 {
-  ".rp-chatbot__table-wrap tr:last-child td": {
+  ".rp-chatbot__table-wrap tr:last-of-type td": {
     "border-bottom": "none"
   }
 },
@@ -16559,12 +16590,12 @@ export default [
   }
 },
 {
-  ".rp-chatbot__typing span:nth-child(1)": {
+  ".rp-chatbot__typing span:nth-of-type(1)": {
     "animation-delay": "-0.32s"
   }
 },
 {
-  ".rp-chatbot__typing span:nth-child(2)": {
+  ".rp-chatbot__typing span:nth-of-type(2)": {
     "animation-delay": "-0.16s"
   }
 },
@@ -16748,3 +16779,5 @@ export default [
   }
 }
 ];
+
+export default legacyGlobalStyles.map(normalizeStyleObject);

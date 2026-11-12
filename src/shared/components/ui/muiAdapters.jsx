@@ -209,6 +209,8 @@ const FormControlInput = forwardRef(function FormControlInput(
     isInvalid,
     isValid,
     max,
+    inputProps: inputPropsProp,
+    slotProps: slotPropsProp,
     className,
     id,
     rows,
@@ -220,6 +222,20 @@ const FormControlInput = forwardRef(function FormControlInput(
 ) {
   const { controlId } = useContext(FormContext);
   const multiline = as === 'textarea';
+  const textFieldSlotProps = { ...slotPropsProp };
+  if (inputPropsProp || max !== undefined) {
+    const existingHtmlInputProps =
+      slotPropsProp?.htmlInput && typeof slotPropsProp.htmlInput === 'object'
+        ? slotPropsProp.htmlInput
+        : {};
+
+    textFieldSlotProps.htmlInput = {
+      ...existingHtmlInputProps,
+      ...inputPropsProp,
+      ...(max === undefined ? {} : { max }),
+    };
+  }
+
   return (
     <TextField
       ref={ref}
@@ -232,7 +248,7 @@ const FormControlInput = forwardRef(function FormControlInput(
       className={stripMappedClassNames(joinClasses(className, isValid && 'is-valid', isInvalid && 'is-invalid'))}
       variant={plaintext ? 'standard' : 'outlined'}
       fullWidth
-      inputProps={max === undefined ? undefined : { max }}
+      slotProps={textFieldSlotProps}
       {...props}
       sx={combineSx(
         getClassNameSx(joinClasses(className, isValid && 'is-valid', isInvalid && 'is-invalid')),
@@ -510,7 +526,7 @@ export const ListGroup = Object.assign(
   }),
   {
     Item: forwardRef(function ListGroupItem({ action, active, className, sx, ...props }, ref) {
-      return <Box ref={ref} component={action ? 'button' : 'li'} className={className} sx={[{ display: 'block', width: '100%', p: 1.5, borderBottom: '1px solid', borderColor: 'divider', textAlign: 'left', bgcolor: active ? 'action.selected' : 'background.paper', color: 'text.primary', '&:last-child': { borderBottom: 0 } }, sx]} {...props} />;
+      return <Box ref={ref} component={action ? 'button' : 'li'} className={className} sx={[{ display: 'block', width: '100%', p: 1.5, borderBottom: '1px solid', borderColor: 'divider', textAlign: 'left', bgcolor: active ? 'action.selected' : 'background.paper', color: 'text.primary', '&:last-of-type': { borderBottom: 0 } }, sx]} {...props} />;
     }),
   },
 );

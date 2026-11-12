@@ -524,7 +524,7 @@ const simpleUtilities = {
   'alert-success': { bgcolor: '#d1e7dd', borderColor: '#badbcc', color: '#0f5132' },
   badge: { display: 'inline-block', px: '0.65em', py: '0.35em', fontSize: '0.75em', fontWeight: 700, lineHeight: 1, color: '#fff', textAlign: 'center', whiteSpace: 'nowrap', verticalAlign: 'baseline', borderRadius: '0.375rem' },
   breadcrumb: { display: 'flex', flexWrap: 'wrap', padding: 0, marginBottom: '1rem', listStyle: 'none' },
-  'breadcrumb-item': { display: 'flex', alignItems: 'center', '&:not(:last-child)::after': { content: '"/"', px: '0.5rem', color: 'text.secondary' } },
+  'breadcrumb-item': { display: 'flex', alignItems: 'center', '&:not(:last-of-type)::after': { content: '"/"', px: '0.5rem', color: 'text.secondary' } },
   nav: { display: 'flex', flexWrap: 'wrap', paddingLeft: 0, marginBottom: 0, listStyle: 'none' },
   'nav-tabs': { borderBottom: '1px solid #dee2e6', '& .MuiLink-root': { marginBottom: '-1px', borderRadius: '0.375rem 0.375rem 0 0' } },
   'nav-link': { display: 'block', px: '1rem', py: '0.5rem', color: 'primary.main', textDecoration: 'none', '&:hover': { color: 'primary.dark' } },

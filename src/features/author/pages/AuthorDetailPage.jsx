@@ -1,4 +1,4 @@
-﻿import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import Header from "../../landing/components/Header";
 import Icon from "../../../shared/components/Icon";
 
@@ -75,17 +75,17 @@ export default function AuthorDetailPage() {
         {/* 1. BREADCRUMB */}
         <nav className="ap-breadcrumb" aria-label="breadcrumb">
           <MuiBox component="ol" sx={{ display: "flex", flexWrap: "wrap", padding: 0, marginBottom: "1rem", listStyle: "none" }} >
-            <MuiBox component="li" sx={{ display: "flex", alignItems: "center", "&:not(:last-child)::after": { content: "\"/\"", px: "0.5rem", color: "text.secondary" } }} >
+            <MuiBox component="li" sx={{ display: "flex", alignItems: "center", "&:not(:last-of-type)::after": { content: "\"/\"", px: "0.5rem", color: "text.secondary" } }} >
               <span className="ap-breadcrumb__link" onClick={() => navigate("/")}>
                 ResearchPulse
               </span>
             </MuiBox>
-            <MuiBox component="li" sx={{ display: "flex", alignItems: "center", "&:not(:last-child)::after": { content: "\"/\"", px: "0.5rem", color: "text.secondary" } }} >
+            <MuiBox component="li" sx={{ display: "flex", alignItems: "center", "&:not(:last-of-type)::after": { content: "\"/\"", px: "0.5rem", color: "text.secondary" } }} >
               <span className="ap-breadcrumb__link" onClick={() => navigate("/authors")}>
                 Tác giả
               </span>
             </MuiBox>
-            <MuiBox component="li" sx={{ display: "flex", alignItems: "center", "&:not(:last-child)::after": { content: "\"/\"", px: "0.5rem", color: "text.secondary" } }} className="active" aria-current="page">
+            <MuiBox component="li" sx={{ display: "flex", alignItems: "center", "&:not(:last-of-type)::after": { content: "\"/\"", px: "0.5rem", color: "text.secondary" } }} className="active" aria-current="page">
               <span className="ap-breadcrumb__current">{author.full_name}</span>
             </MuiBox>
           </MuiBox>
