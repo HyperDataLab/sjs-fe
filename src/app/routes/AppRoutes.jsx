@@ -29,8 +29,8 @@ import LanguageRedirect from './LanguageRedirect';
 
 import ProjectListPage from '../../features/project/pages/ProjectListPage';
 import CreateProjectPage from '../../features/project/pages/CreateProjectPage';
-import EditProjectPage from '../../features/project/pages/EditProjectPage';
-import ProjectDetailPage from '../../features/project/pages/ProjectDetailPage';
+import ProjectEditPage from '../../features/project/pages/ProjectEditPage';
+import ProjectDetailPage from '../../features/project/pages/ProjectSummaryPage';
 import AcceptInvitePage from '../../features/project/pages/AcceptInvitePage';
 
 import AdminLayout from '../layouts/AdminLayout';
@@ -97,7 +97,7 @@ export default function AppRoutes() {
             
             <Route path="projects" element={<ProjectListPage />} />
             <Route path="projects/create" element={<CreateProjectPage />} />
-            <Route path="projects/:id/edit" element={<EditProjectPage />} />
+            <Route path="projects/:id/edit" element={<ProjectEditPage />} />
             <Route path="projects/:id" element={<ProjectDetailPage />} />
             <Route path="project-invite/accept" element={<AcceptInvitePage />} />
 

@@ -1,207 +1,129 @@
-/**
- * File source thuộc hệ thống FE ResearchPulse.
- *
- * File: features\project\api\project.api.js
- */
-import api from '../../../shared/services/api';
+import {
+  collection,
+  deleteDoc,
+  doc,
+  getDoc,
+  getDocs,
+  orderBy,
+  query,
+  serverTimestamp,
+  setDoc,
+  updateDoc,
+} from 'firebase/firestore';
+import { auth, db } from '../../../shared/services/firebase';
 
-/**
- * Get user projects list
- * @returns {Promise} Axios promise
- */
-export const getProjectsApi = () => {
-  return api.get('/projects');
-};
+function currentUserId() {
+  const uid = auth.currentUser?.uid;
+  if (!uid) throw new Error('Sign in to access your projects.');
+  return uid;
+}
 
-/**
- * Create a new project
- * @param {Object} data - { title, subject_area, subject_category_ids, journal_ids }
- * @returns {Promise} Axios promise
- */
-export const createProjectApi = (data) => {
-  return api.post('/projects', data);
-};
+function projectCollection(uid = currentUserId()) {
+  return collection(db, 'users', uid, 'projects');
+}
 
-/**
- * Get project details by ID
- * @param {number|string} id - Project ID
- * @returns {Promise} Axios promise
- */
-export const getProjectByIdApi = (id) => {
-  return api.get(`/projects/${id}`);
-};
+function toProject(snapshot, uid = currentUserId()) {
+  const data = snapshot.data();
+  const subjectArea = data.subjectArea ?? data.subjectAreaId ?? '';
+  const keywords = Array.isArray(data.keywords) ? data.keywords : [];
+  const createdAt = data.createdAt?.toDate?.()?.toISOString() || data.createdAt || null;
+  const updatedAt = data.updatedAt?.toDate?.()?.toISOString() || data.updatedAt || null;
+  return {
+    id: snapshot.id,
+    project_id: snapshot.id,
+    owner_id: uid,
+    title: data.title,
+    subjectArea,
+    subject_area: { name: subjectArea },
+    keywords,
+    watch_keywords: keywords.map((keyword) => ({ keyword })),
+    status: String(data.status || 'draft').toUpperCase(),
+    analysisStatus: data.analysisStatus || 'not_started',
+    analysisSummary: data.analysisSummary || null,
+    createdAt,
+    created_at: createdAt,
+    updatedAt,
+    updated_at: updatedAt,
+  };
+}
 
-/**
- * Get project overview statistics and charts
- * @param {number|string} id - Project ID
- * @returns {Promise} Axios promise
- */
-export const getProjectOverviewApi = (id) => {
-  return api.get(`/projects/${id}/overview`);
-};
+export async function getProjectsApi() {
+  const uid = currentUserId();
+  const projectsQuery = query(projectCollection(uid), orderBy('createdAt', 'desc'));
+  const result = await getDocs(projectsQuery);
+  return result.docs.map((snapshot) => toProject(snapshot, uid));
+}
 
-/**
- * Update project details by ID
- * @param {number|string} id - Project ID
- * @param {Object} data - { title, subject_area, subject_category_ids, journal_ids }
- * @returns {Promise} Axios promise
- */
-export const updateProjectApi = (id, data) => {
-  return api.put(`/projects/${id}`, data);
-};
+export async function createProjectApi(data) {
+  const uid = currentUserId();
+  const reference = doc(projectCollection(uid));
+  const now = serverTimestamp();
+  const project = {
+    title: data.title.trim(),
+    subjectArea: data.subjectArea.trim(),
+    keywords: Array.isArray(data.keywords) ? data.keywords : [],
+    status: 'active',
+    analysisStatus: 'not_started',
+    createdAt: now,
+    updatedAt: now,
+  };
 
-/**
- * Delete a project by ID
- * @param {number|string} id - Project ID
- * @returns {Promise} Axios promise
- */
-export const deleteProjectApi = (id) => {
-  return api.delete(`/projects/${id}`);
-};
+  await setDoc(reference, project);
+  const created = await getDoc(reference);
+  return toProject(created, uid);
+}
 
-/**
- * Restore a deleted project by ID
- * @param {number|string} id - Project ID
- * @returns {Promise} Axios promise
- */
-export const restoreProjectApi = (id) => {
-  return api.put(`/projects/${id}/restore`);
-};
+export async function getProjectByIdApi(id) {
+  const uid = currentUserId();
+  const snapshot = await getDoc(doc(db, 'users', uid, 'projects', String(id)));
+  if (!snapshot.exists()) throw new Error('Project not found.');
+  return toProject(snapshot, uid);
+}
 
-/**
- * Get project-related articles stream
- * @param {number|string} id - Project ID
- * @param {number} limit - Maximum articles count
- * @returns {Promise} Axios promise
- */
-export const getRelatedArticlesApi = (id, limit = 5) => {
-  return api.get(`/projects/${id}/related-articles`, {
-    params: { limit },
+export async function updateProjectApi(id, data) {
+  const uid = currentUserId();
+  const reference = doc(db, 'users', uid, 'projects', String(id));
+  const updates = {
+    updatedAt: serverTimestamp(),
+  };
+  if (typeof data.title === 'string') updates.title = data.title.trim();
+  if (typeof data.subjectArea === 'string') updates.subjectArea = data.subjectArea.trim();
+  if (Array.isArray(data.keywords)) updates.keywords = data.keywords;
+
+  await updateDoc(reference, updates);
+  return getProjectByIdApi(id);
+}
+
+export async function saveProjectAnalysisApi(id, analysisSummary) {
+  const uid = currentUserId();
+  const reference = doc(db, 'users', uid, 'projects', String(id));
+  await updateDoc(reference, {
+    analysisStatus: analysisSummary.status || 'complete',
+    analysisSummary,
+    updatedAt: serverTimestamp(),
   });
-};
+  return getProjectByIdApi(id);
+}
 
-/**
- * Get project statistics for charts
- * @param {number|string} id - Project ID
- * @returns {Promise} Axios promise
- */
-export const getProjectAnalyticsApi = (id) => {
-  return api.get(`/projects/${id}/analytics`);
-};
+export async function deleteProjectApi(id) {
+  const uid = currentUserId();
+  await deleteDoc(doc(db, 'users', uid, 'projects', String(id)));
+  return { id: String(id) };
+}
 
-/**
- * Get project top trending keywords
- * @param {number|string} id - Project ID
- * @param {number} limit - Keywords count limit
- * @param {string} sortBy - sort criterion: 'count' or 'score'
- * @returns {Promise} Axios promise
- */
-export const getTrendingKeywordsApi = (id, limit = 20, sortBy = 'count') => {
-  return api.get(`/projects/${id}/keywords/trending`, {
-    params: { limit, sort_by: sortBy },
-  });
-};
-
-/**
- * Get latest articles from watched keywords
- * @param {number|string} id - Project ID
- * @returns {Promise} Axios promise
- */
-export const getWatchedKeywordArticlesApi = (id, page = 1, limit = 10, filter = 'all') => {
-  return api.get(`/projects/${id}/keywords/watch/articles`, {
-    params: { page, limit, filter }
-  });
-};
-
-/**
- * Watch new keyword list for a project
- * @param {number|string} id - Project ID
- * @param {Array<string>} keywords - Keywords array
- * @returns {Promise} Axios promise
- */
-export const watchKeywordsApi = (id, keywords) => {
-  return api.post(`/projects/${id}/keywords/watch`, { keyword_ids: keywords });
-};
-
-/**
- * Override/Update keywords watch-list for a project
- * @param {number|string} id - Project ID
- * @param {Array<string>} keywords - Keywords array
- * @returns {Promise} Axios promise
- */
-export const updateWatchedKeywordsApi = (id, keywords) => {
-  return api.put(`/projects/${id}/keywords/watch`, { keyword_ids: keywords });
-};
-
-/**
- * Unwatch/Remove a keyword from project watch-list
- * @param {number|string} id - Project ID
- * @param {number|string} keywordId - Keyword entry ID
- * @returns {Promise} Axios promise
- */
-export const unwatchKeywordApi = (id, keywordId) => {
-  return api.delete(`/projects/${id}/keywords/${keywordId}`);
-};
-
-/**
- * Activate a project to VIP
- * @param {number|string} id - Project ID
- * @param {number} coinAmount - Amount of coins to deduct
- * @returns {Promise} Axios promise
- */
-export const activateProjectApi = (id, coinAmount) => {
-  return api.put(`/projects/${id}/activate`, { coinAmount });
-};
-
-/**
- * Get project members list
- * @param {number|string} id - Project ID
- * @returns {Promise} Axios promise
- */
-export const getProjectMembersApi = (id) => {
-  return api.get(`/projects/${id}/members`);
-};
-
-/**
- * Invite a member to the project
- * @param {number|string} id - Project ID
- * @param {string} email - User email
- * @param {string} role - Role (OWNER, ADMIN, MEMBER, VIEWER)
- * @returns {Promise} Axios promise
- */
-export const inviteProjectMemberApi = (id, email, role) => {
-  return api.post(`/projects/${id}/members/invite`, { email, role });
-};
-
-/**
- * Update project member role
- * @param {number|string} id - Project ID
- * @param {string} userId - User ID
- * @param {string} role - New role
- * @returns {Promise} Axios promise
- */
-export const updateProjectMemberRoleApi = (id, userId, role) => {
-  return api.put(`/projects/${id}/members/${userId}/role`, { role });
-};
-
-/**
- * Remove a member or cancel invitation
- * @param {number|string} id - Project ID
- * @param {string} userId - User ID
- * @returns {Promise} Axios promise
- */
-export const removeProjectMemberApi = (id, userId) => {
-  return api.delete(`/projects/${id}/members/${userId}`);
-};
-
-/**
- * Accept project invitation via email token
- * @param {string} token - JWT Token
- * @returns {Promise} Axios promise
- */
-export const acceptProjectInviteApi = (token) => {
-  return api.get(`/projects/project-invite/accept`, {
-    params: { token }
-  });
-};
-
+// Legacy screens still import these names; their old-only features are not migrated yet.
+export const getProjectOverviewApi = () => Promise.reject(new Error('Project overview is not migrated yet.'));
+export const getRelatedArticlesApi = () => Promise.reject(new Error('Related articles are not migrated yet.'));
+export const getProjectAnalyticsApi = () => Promise.reject(new Error('Project analytics is not migrated yet.'));
+export const getTrendingKeywordsApi = () => Promise.reject(new Error('Trending keywords are not migrated yet.'));
+export const getWatchedKeywordArticlesApi = () => Promise.reject(new Error('Watched keyword articles are not migrated yet.'));
+export const watchKeywordsApi = () => Promise.reject(new Error('Keyword tracking is not migrated yet.'));
+export const updateWatchedKeywordsApi = () => Promise.reject(new Error('Keyword tracking is not migrated yet.'));
+export const unwatchKeywordApi = () => Promise.reject(new Error('Keyword tracking is not migrated yet.'));
+export const restoreProjectApi = () => Promise.reject(new Error('Project restore is not supported.'));
+export const activateProjectApi = () => Promise.reject(new Error('Project activation is not migrated yet.'));
+export const getProjectMembersApi = () => Promise.reject(new Error('Project members are not migrated yet.'));
+export const inviteProjectMemberApi = () => Promise.reject(new Error('Project invitations are not migrated yet.'));
+export const updateProjectMemberRoleApi = () => Promise.reject(new Error('Project members are not migrated yet.'));
+export const removeProjectMemberApi = () => Promise.reject(new Error('Project members are not migrated yet.'));
+export const acceptProjectInviteApi = () => Promise.reject(new Error('Project invitations are not migrated yet.'));

@@ -1,11 +1,12 @@
 import { useTranslation } from "react-i18next";
 import { t } from "i18next";
 import { useState } from 'react';
+import { sendPasswordResetEmail } from 'firebase/auth';
+import { auth } from '../../../shared/services/firebase';
 import AuthLayout from '../../../app/layouts/AuthLayout';
 import AuthBanner from '../components/AuthBanner';
 import ForgotPasswordForm from '../components/ForgotPasswordForm';
 import ForgotPasswordSuccess from '../components/ForgotPasswordSuccess';
-import { forgotPasswordApi } from '../api/auth.api';
 import Icon from '../../../shared/components/Icon';
 export default function ForgotPasswordPage() {
   const { t: _t } = useTranslation();
@@ -18,11 +19,11 @@ export default function ForgotPasswordPage() {
     setError(null);
     try {
       setSubmittedEmail(email);
-      await forgotPasswordApi(email);
+      await sendPasswordResetEmail(auth, email, { url: `${window.location.origin}/login` });
       setIsSubmitted(true);
     } catch (err) {
-      console.error('Forgot password API failed:', err.response?.data?.message || err.message);
-      setError(err.response?.data?.message || err.message || t("auth.guiYeuCauKhoiPhucMatKhauThatBa"));
+      console.error('Password reset request failed:', err.message);
+      setError(err.message || t("auth.guiYeuCauKhoiPhucMatKhauThatBa"));
     } finally {
       setIsLoading(false);
     }
@@ -32,10 +33,10 @@ export default function ForgotPasswordPage() {
     setIsLoading(true);
     setError(null);
     try {
-      await forgotPasswordApi(submittedEmail);
+      await sendPasswordResetEmail(auth, submittedEmail, { url: `${window.location.origin}/login` });
     } catch (err) {
-      console.error('Resending forgot password failed:', err.response?.data?.message || err.message);
-      setError(err.response?.data?.message || t("auth.guiLaiYeuCauKhoiPhucThatBai"));
+      console.error('Resending password reset failed:', err.message);
+      setError(err.message || t("auth.guiLaiYeuCauKhoiPhucThatBai"));
     } finally {
       setIsLoading(false);
     }

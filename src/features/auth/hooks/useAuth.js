@@ -1,229 +1,169 @@
-/**
- * Hook auth dùng chung cho các màn hình đăng nhập, đăng ký và profile.
- *
- * File: features/auth/hooks/useAuth.js
- */
-import { useCallback, useState } from 'react';
+import { useCallback } from 'react';
+import {
+  createUserWithEmailAndPassword,
+  deleteUser,
+  GoogleAuthProvider,
+  sendEmailVerification,
+  signInWithEmailAndPassword,
+  signInWithPopup,
+  signOut,
+  updateProfile as updateFirebaseProfile,
+} from 'firebase/auth';
 import { useNavigate } from 'react-router-dom';
-import { useGoogleLogin } from '@react-oauth/google';
-import { toast } from '../../../shared/utils/toast';
+import { auth, firebaseEmulatorsEnabled } from '../../../shared/services/firebase';
 import { useAuthStore } from '../../../app/store/authStore';
 import { useUserStore } from '../../../app/store/userStore';
 import { useWalletStore } from '../../../app/store/walletStore';
-import {
-  deleteCurrentAccount,
-  fetchCurrentProfile,
-  loginWithGoogleCode,
-  loginWithPassword,
-  logoutSession,
-  registerUser,
-  updateCurrentProfile,
-} from '../services/authService';
 
-/**
- * Gom toàn bộ thao tác auth vào một hook duy nhất.
- *
- * Hook này đọc/ghi state qua Zustand, còn việc gọi API được tách sang
- * `authService` để component page không phải biết chi tiết endpoint.
- */
+function displayNameFrom(data = {}) {
+  return data.displayName || [data.first_name, data.last_name].filter(Boolean).join(' ').trim() || undefined;
+}
+
 export default function useAuth() {
   const navigate = useNavigate();
-  const [googleRedirect, setGoogleRedirect] = useState('/');
-
-  // State auth chính lấy từ Zustand store.
   const user = useAuthStore((state) => state.user);
-  const token = useAuthStore((state) => state.token);
+  const token = null;
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
   const isLoading = useAuthStore((state) => state.isLoading);
   const error = useAuthStore((state) => state.error);
-  const loginSuccess = useAuthStore((state) => state.loginSuccess);
-  const setUser = useAuthStore((state) => state.setUser);
+  const setAuthUser = useAuthStore((state) => state.setAuthUser);
   const setLoading = useAuthStore((state) => state.setLoading);
   const setError = useAuthStore((state) => state.setError);
   const clearAuthState = useAuthStore((state) => state.logout);
-
-  // Store phụ dùng để hiển thị email trên header/landing.
   const setEmail = useUserStore((state) => state.setEmail);
   const clearEmail = useUserStore((state) => state.clearEmail);
   const clearWallet = useWalletStore((state) => state.clearWallet);
 
-  /**
-   * Lấy profile người dùng hiện tại từ backend.
-   * Dùng sau login hoặc khi cần đồng bộ lại thông tin cá nhân.
-   */
-  const fetchProfile = useCallback(async () => {
+  const login = useCallback(async (email, password) => {
     setLoading(true);
     setError(null);
-
     try {
-      const userData = await fetchCurrentProfile();
-      setUser(userData);
-      setEmail(userData.email);
-      return userData;
-    } catch (err) {
-      const message = err.response?.data?.message || err.message || 'Không thể tải hồ sơ người dùng';
-      setError(message);
-      throw err;
+      const credential = await signInWithEmailAndPassword(auth, email, password);
+      setAuthUser(credential.user);
+      setEmail(credential.user.email);
+      return credential.user;
+    } catch (authError) {
+      setError(authError.message);
+      throw authError;
     } finally {
       setLoading(false);
     }
-  }, [setEmail, setError, setLoading, setUser]);
+  }, [setAuthUser, setEmail, setError, setLoading]);
 
-  /**
-   * Cấu hình Google OAuth dạng auth-code.
-   * Sau khi Google trả code, FE gửi code đó về BE để BE xác thực và trả token/user.
-   */
-  const googleLogin = useGoogleLogin({
-    flow: 'auth-code',
-    onSuccess: async (codeResponse) => {
-      setLoading(true);
-      setError(null);
+  const loginWithGoogle = useCallback(async (redirectTo = '/') => {
+    setLoading(true);
+    setError(null);
+    try {
+      const credential = await signInWithPopup(auth, new GoogleAuthProvider());
+      setAuthUser(credential.user);
+      setEmail(credential.user.email);
+      navigate(redirectTo, { replace: true });
+      return credential.user;
+    } catch (authError) {
+      setError(authError.message);
+      throw authError;
+    } finally {
+      setLoading(false);
+    }
+  }, [navigate, setAuthUser, setEmail, setError, setLoading]);
 
+  const loginAsDevUser = useCallback(async () => {
+    if (!import.meta.env.DEV || !firebaseEmulatorsEnabled) {
+      throw new Error('Development mock login is available only with the Firebase Auth Emulator.');
+    }
+
+    const email = import.meta.env.VITE_DEV_AUTH_EMAIL || 'dev@example.test';
+    const password = import.meta.env.VITE_DEV_AUTH_PASSWORD || 'dev-password';
+    setLoading(true);
+    setError(null);
+    try {
+      let credential;
       try {
-        const { response, token: googleToken, refreshToken: googleRefreshToken, user: googleUser, email } = await loginWithGoogleCode(codeResponse.code);
-
-        if (response?.success && googleToken) {
-          loginSuccess(googleToken, googleUser, true, googleRefreshToken);
-          setEmail(email);
-          toast.success('Đăng nhập thành công');
-          navigate(googleRedirect, { replace: true });
-        } else {
-          toast.error('Đăng nhập thất bại');
-        }
-      } catch (err) {
-        const message = err.response?.data?.message || err.message || 'Đăng nhập thất bại';
-        setError(message);
-        toast.error('Đăng nhập thất bại');
-      } finally {
-        setLoading(false);
+        credential = await signInWithEmailAndPassword(auth, email, password);
+      } catch (authError) {
+        if (authError.code !== 'auth/user-not-found') throw authError;
+        credential = await createUserWithEmailAndPassword(auth, email, password);
       }
-    },
-    onError: () => {
-      toast.error('Đăng nhập Google thất bại');
-    },
-  });
-
-  /**
-   * Đăng nhập bằng email/password.
-   * `remember` quyết định BE có set refresh-token cookie dài hạn hay không.
-   */
-  const login = useCallback(async (email, password, remember = true, onSuccess) => {
-    setLoading(true);
-    setError(null);
-
-    try {
-      const result = await loginWithPassword(email, password, remember);
-
-      if (result.token) {
-        loginSuccess(result.token, result.user, result.remember, result.refreshToken);
-        onSuccess?.(result.token);
-        setEmail(result.email);
-      }
-
-      return result.response;
-    } catch (err) {
-      const message = err.response?.data?.message || err.message || 'Đăng nhập thất bại';
-      setError(message);
-      throw err;
+      setAuthUser(credential.user);
+      setEmail(credential.user.email);
+      return credential.user;
+    } catch (authError) {
+      setError(authError.message);
+      throw authError;
     } finally {
       setLoading(false);
     }
-  }, [loginSuccess, setEmail, setError, setLoading]);
+  }, [setAuthUser, setEmail, setError, setLoading]);
 
-  /**
-   * Mở popup/redirect Google OAuth và ghi nhớ trang cần quay lại sau login.
-   */
-  const loginWithGoogle = useCallback((redirectTo = '/') => {
-    setGoogleRedirect(redirectTo);
-    googleLogin();
-  }, [googleLogin]);
-
-  /**
-   * Đăng ký tài khoản mới.
-   * BE sẽ gửi email xác thực nếu tạo tài khoản thành công.
-   */
   const register = useCallback(async (data) => {
     setLoading(true);
     setError(null);
-
     try {
-      return await registerUser(data);
-    } catch (err) {
-      const message = err.response?.data?.message || err.message || 'Đăng ký thất bại';
-      setError(message);
-      throw err;
+      const credential = await createUserWithEmailAndPassword(auth, data.email, data.password);
+      const displayName = displayNameFrom(data);
+      if (displayName) await updateFirebaseProfile(credential.user, { displayName });
+      try {
+        await sendEmailVerification(credential.user, { url: window.location.origin + '/login' });
+      } finally {
+        await signOut(auth);
+        setAuthUser(null);
+      }
+      return credential.user;
+    } catch (authError) {
+      setError(authError.message);
+      throw authError;
     } finally {
       setLoading(false);
     }
-  }, [setError, setLoading]);
+  }, [setAuthUser, setError, setLoading]);
 
-  /**
-   * Đăng xuất: gọi BE clear session/cookie, sau đó xóa state FE.
-   */
   const logout = useCallback(async () => {
-    await logoutSession();
+    await signOut(auth);
     clearAuthState();
     clearEmail();
     clearWallet();
     navigate('/login', { replace: true });
   }, [clearAuthState, clearEmail, clearWallet, navigate]);
 
-  /**
-   * Cập nhật profile user và đồng bộ lại store sau khi API thành công.
-   */
+  const fetchProfile = useCallback(async () => {
+    const currentUser = auth.currentUser;
+    if (!currentUser) throw new Error('No authenticated Firebase user.');
+    setAuthUser(currentUser);
+    setEmail(currentUser.email);
+    return currentUser;
+  }, [setAuthUser, setEmail]);
+
   const updateProfile = useCallback(async (profileData) => {
-    setLoading(true);
-    setError(null);
+    const currentUser = auth.currentUser;
+    if (!currentUser) throw new Error('No authenticated Firebase user.');
+    const displayName = displayNameFrom(profileData);
+    await updateFirebaseProfile(currentUser, {
+      ...(displayName ? { displayName } : {}),
+      ...(profileData.photoURL ? { photoURL: profileData.photoURL } : {}),
+    });
+    setAuthUser(currentUser);
+    return currentUser;
+  }, [setAuthUser]);
 
-    try {
-      const updatedUser = await updateCurrentProfile(profileData);
-      setUser(updatedUser);
-
-      if (updatedUser.email) {
-        setEmail(updatedUser.email);
-      }
-
-      return updatedUser;
-    } catch (err) {
-      const message = err.response?.data?.message || err.message || 'Cập nhật hồ sơ thất bại';
-      setError(message);
-      throw err;
-    } finally {
-      setLoading(false);
-    }
-  }, [setEmail, setError, setLoading, setUser]);
-
-  /**
-   * Xóa tài khoản hiện tại rồi đưa người dùng về trang đăng ký.
-   */
   const deleteAccount = useCallback(async () => {
-    setLoading(true);
-    setError(null);
-
-    try {
-      await deleteCurrentAccount();
-      clearAuthState();
-      clearEmail();
-      clearWallet();
-      navigate('/register', { replace: true });
-    } catch (err) {
-      const message = err.response?.data?.message || err.message || 'Xóa tài khoản thất bại';
-      setError(message);
-      throw err;
-    } finally {
-      setLoading(false);
-    }
-  }, [clearAuthState, clearEmail, clearWallet, navigate, setError, setLoading]);
+    const currentUser = auth.currentUser;
+    if (!currentUser) throw new Error('No authenticated Firebase user.');
+    await deleteUser(currentUser);
+    clearAuthState();
+    clearEmail();
+    clearWallet();
+    navigate('/register', { replace: true });
+  }, [clearAuthState, clearEmail, clearWallet, navigate]);
 
   return {
     user,
-    setUser,
     token,
     isAuthenticated,
     isLoading,
     error,
     login,
     loginWithGoogle,
+    loginAsDevUser,
     register,
     logout,
     fetchProfile,

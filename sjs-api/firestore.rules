@@ -1,0 +1,83 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function signedInAs(userId) {
+      return request.auth != null && request.auth.uid == userId;
+    }
+
+    function validAnalysisSummary(summary) {
+      return summary is map
+        && summary.keys().hasAll(['status', 'parameters', 'analyzedAt'])
+        && summary.keys().hasOnly(['status', 'parameters', 'result', 'error', 'analyzedAt'])
+        && summary.status in ['complete', 'failed']
+        && ((summary.status == 'complete' && 'result' in summary)
+          || (summary.status == 'failed' && 'error' in summary))
+        && summary.parameters is map
+        && summary.parameters.keys().hasAll(['query', 'sources', 'limit'])
+        && summary.parameters.keys().hasOnly(['query', 'sources', 'limit'])
+        && summary.parameters.query is string
+        && summary.parameters.query.size() > 0
+        && summary.parameters.query.size() <= 500
+        && summary.parameters.sources is list
+        && summary.parameters.sources.size() > 0
+        && summary.parameters.sources.size() <= 5
+        && summary.parameters.limit is int
+        && summary.parameters.limit > 0
+        && summary.parameters.limit <= 100
+        && summary.analyzedAt is string
+        && summary.analyzedAt.size() <= 40
+        && (!('error' in summary) || (summary.error is string && summary.error.size() <= 300))
+        && (!('result' in summary) || (
+          summary.result is map
+          && summary.result.keys().hasAll(['query', 'totalWorks', 'sources', 'analyzedAt'])
+          && summary.result.keys().hasOnly(['query', 'totalWorks', 'sources', 'analyzedAt'])
+          && summary.result.query is string
+          && summary.result.totalWorks is int
+          && summary.result.totalWorks >= 0
+          && summary.result.sources is map
+          && summary.result.sources.keys().size() <= 5
+          && summary.result.analyzedAt is string
+        ));
+    }
+
+    function validProject(data) {
+      return data.keys().hasAll([
+          'title', 'subjectArea', 'keywords', 'status', 'analysisStatus', 'createdAt', 'updatedAt'
+        ])
+        && data.keys().hasOnly([
+          'title', 'subjectArea', 'keywords', 'status', 'analysisStatus',
+          'analysisSummary', 'createdAt', 'updatedAt'
+        ])
+        && data.title is string
+        && data.title.size() > 0
+        && data.title.size() <= 200
+        && data.subjectArea is string
+        && data.subjectArea.size() > 0
+        && data.subjectArea.size() <= 120
+        && data.keywords is list
+        && data.keywords.size() <= 20
+        && data.status in ['draft', 'active']
+        && data.analysisStatus in ['not_started', 'complete', 'failed']
+        && data.createdAt is timestamp
+        && data.updatedAt is timestamp
+        && (!('analysisSummary' in data)
+          || (validAnalysisSummary(data.analysisSummary)
+            && data.analysisSummary.status == data.analysisStatus));
+    }
+
+    match /users/{userId}/projects/{projectId} {
+      allow get, list: if signedInAs(userId);
+      allow create: if signedInAs(userId)
+        && validProject(request.resource.data)
+        && request.resource.data.analysisStatus == 'not_started'
+        && request.resource.data.createdAt == request.time
+        && request.resource.data.updatedAt == request.time;
+      allow update: if signedInAs(userId)
+        && validProject(request.resource.data)
+        && request.resource.data.createdAt == resource.data.createdAt
+        && request.resource.data.updatedAt == request.time;
+      allow delete: if signedInAs(userId);
+    }
+  }
+}

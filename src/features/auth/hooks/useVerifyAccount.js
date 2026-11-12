@@ -4,8 +4,9 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
+import { applyActionCode } from 'firebase/auth';
+import { auth } from '../../../shared/services/firebase';
 import ROUTES from '../../../app/routes/routePaths';
-import { verifyEmailApi } from '../api/auth.api';
 
 // Số giây đếm ngược trước khi tự redirect
 const COUNTDOWN_SECONDS = 5;
@@ -30,15 +31,16 @@ const useVerifyAccount = () => {
 
     
 
-    const token = searchParams.get('token');
+    const token = searchParams.get('oobCode') || searchParams.get('token');
+    const mode = searchParams.get('mode');
 
-    if (!token) {
+    if (!token || (mode && mode !== 'verifyEmail')) {
       setStatus('error');
       setErrorMessage('Liên kết kích hoạt không hợp lệ hoặc đã hết hạn.');
       return;
     }
 
-    verifyEmailApi(token)
+    applyActionCode(auth, token)
       .then(() => {
         setStatus('success');
       })

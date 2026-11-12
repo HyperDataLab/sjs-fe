@@ -1,18 +1,19 @@
 import { useTranslation } from "react-i18next";
 import { t } from "i18next";
 import { useState } from 'react';
+import { confirmPasswordReset } from 'firebase/auth';
+import { auth } from '../../../shared/services/firebase';
 import { useSearchParams, Link } from 'react-router-dom';
 import AuthLayout from '../../../app/layouts/AuthLayout';
 import AuthBanner from '../components/AuthBanner';
 import ResetPasswordForm from '../components/ResetPasswordForm';
 import ResetPasswordSuccess from '../components/ResetPasswordSuccess';
-import { resetPasswordApi } from '../api/auth.api';
 import Icon from '../../../shared/components/Icon';
 import ROUTES from '../../../app/routes/routePaths';
 export default function ResetPasswordPage() {
   const { t: _t } = useTranslation();
   const [searchParams] = useSearchParams();
-  const token = searchParams.get('token');
+  const token = searchParams.get('oobCode') || searchParams.get('token');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
   const [isSubmitted, setIsSubmitted] = useState(false);
@@ -24,15 +25,11 @@ export default function ResetPasswordPage() {
     setIsLoading(true);
     setError(null);
     try {
-      // API call with token and new_password (backend format is new_password)
-      await resetPasswordApi({
-        token: token,
-        new_password: password
-      });
+      await confirmPasswordReset(auth, token, password);
       setIsSubmitted(true);
     } catch (err) {
-      console.error('Reset password API failed:', err.response?.data?.message || err.message);
-      setError(err.response?.data?.message || err.message || t("auth.thayDoiMatKhauThatBaiVuiLongTh"));
+      console.error('Password reset failed:', err.message);
+      setError(err.message || t("auth.thayDoiMatKhauThatBaiVuiLongTh"));
     } finally {
       setIsLoading(false);
     }

@@ -16,7 +16,8 @@ export default function LoginPage() {
   const location = useLocation();
   const {
     login,
-    loginWithGoogle
+    loginWithGoogle,
+    loginAsDevUser,
   } = useAuth();
 
   // State riêng của màn hình login để điều khiển loading và lỗi form.
@@ -52,13 +53,26 @@ export default function LoginPage() {
    * Khởi chạy luồng đăng nhập Google OAuth.
    * Sau khi thành công, hook `useAuth` sẽ tự điều hướng về dashboard.
    */
-  const handleLoginWithGoogle = () => {
+  const handleLoginWithGoogle = async () => {
     setIsLoading(true);
     setError(null);
     try {
-      loginWithGoogle(from);
-    } catch {
+      await loginWithGoogle(from);
+    } catch (authError) {
+      setError(authError.message || t("auth.dangNhapThatBai"));
       toast.error(t("auth.dangNhapThatBai"));
+    } finally {
+      setIsLoading(false);
+    }
+  };
+  const handleDevLogin = async () => {
+    setIsLoading(true);
+    setError(null);
+    try {
+      await loginAsDevUser();
+      navigate(from, { replace: true });
+    } catch (authError) {
+      setError(authError.message || t("auth.dangNhapThatBai"));
     } finally {
       setIsLoading(false);
     }
@@ -78,6 +92,12 @@ export default function LoginPage() {
       <div className="mb-4">
         <SocialAuthButton onClick={handleLoginWithGoogle} disabled={isLoading} />
       </div>
+
+      {import.meta.env.DEV && import.meta.env.VITE_USE_FIREBASE_EMULATOR !== 'false' && (
+        <button type="button" className="btn btn-outline-secondary w-100 mb-4" onClick={handleDevLogin} disabled={isLoading}>
+          Dev login (Firebase Auth Emulator)
+        </button>
+      )}
 
       {/* Đường phân cách giữa Google OAuth và form email/password. */}
       <div className="d-flex align-items-center justify-content-center mb-4 text-xs font-semibold select-none text-muted-custom" style={{
