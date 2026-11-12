@@ -1,4 +1,5 @@
 import { FirebaseCertificateError, verifyFirebaseIdToken } from './firebase-auth.js';
+import { createFirebaseCustomTokenForSso } from './sso-auth.js';
 import { ScholarlySourceError } from './research-sources/scholarly-source.errors.js';
 import { createResearchSourceService } from './research-sources/research-sources.service.js';
 
@@ -116,6 +117,31 @@ async function handleRequest(request, env) {
     });
   }
   if (url.pathname === '/health' && request.method === 'GET') return jsonResponse(request, env, { status: 'ok' });
+
+  if (url.pathname === '/api/v1/auth/sso/custom-token' && request.method === 'POST') {
+    let requestBody;
+    try {
+      requestBody = await request.text();
+    } catch {
+      return jsonResponse(request, env, { error: 'invalid_json' }, 400);
+    }
+    if (requestBody.length > 16_384) return jsonResponse(request, env, { error: 'request_too_large' }, 413);
+
+    let body;
+    try {
+      body = JSON.parse(requestBody);
+    } catch {
+      return jsonResponse(request, env, { error: 'invalid_json' }, 400);
+    }
+    try {
+      const customToken = await createFirebaseCustomTokenForSso(body?.accessToken, env);
+      return jsonResponse(request, env, { customToken });
+    } catch (error) {
+      const status = Number.isInteger(error?.status) ? error.status : 503;
+      const code = typeof error?.code === 'string' ? error.code : 'firebase_sso_bridge_unavailable';
+      return jsonResponse(request, env, { error: code }, status);
+    }
+  }
 
   const service = createResearchSourceService({ env });
   if (url.pathname === '/api/v1/research/works' && request.method === 'GET') {

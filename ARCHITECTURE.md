@@ -2,19 +2,23 @@
 
 ```text
 React / Vite
-  ├─ Firebase Web SDK
-  │    ├─ Firebase Authentication
-  │    └─ Firestore project CRUD (owner scoped by users/{uid})
-  └─ Cloudflare Worker (sjs-api)
-       ├─ verifies Firebase ID tokens
-       ├─ calls OpenAlex, Crossref, and future scholarly sources
-       └─ computes compact analysis summaries
+  ├── HyperDataLab SSO (Authorization Code + PKCE)
+  ├── Firebase Web SDK
+  │    ├── Firebase Auth custom-token session
+  │    └── Direct owner-scoped Firestore project CRUD
+  └── Cloudflare Worker (sjs-api)
+       ├── validates SSO access tokens through provider userinfo
+       ├── maps SSO sub to an existing Firebase UID by verified email
+       ├── issues Firebase custom tokens
+       ├── verifies Firebase ID tokens for research routes
+       ├── calls OpenAlex, Crossref, and future scholarly sources
+       └── computes compact analysis summaries
 ```
 
-The Worker is the serverless backend for business logic and external scholarly sources. It does not proxy project CRUD. Firestore Security Rules enforce that a signed-in user can access only their own `users/{uid}/projects/{projectId}` documents.
+HyperDataLab SSO is the only production sign-in method. The SSO client is public and uses PKCE; its client secret is never placed in the FE. Firebase Auth remains the internal identity used by Firestore Security Rules. The Worker handles the SSO-to-Firebase token exchange and business logic, but it does not proxy project CRUD.
 
-The project create/list/detail/delete flow stores project inputs and a compact analysis summary in Firestore. The Worker returns normalized works for direct searches and aggregate summaries for project analysis; the FE does not persist bulk work metadata.
+Firestore stores owner-scoped projects and compact analysis summaries. A private `ssoIdentityMappings/{sha256(sub)}` collection preserves the Firebase UID linked to each stable SSO subject; the FE has no rule access to that collection. The FE does not persist bulk scholarly metadata.
 
-The development login uses Firebase Auth Emulator, and local Firestore reads and writes use Firestore Emulator. Local emulator settings and API credentials belong in ignored `.env.local` and `sjs-api/.dev.vars` files. Production Worker provider keys belong in Cloudflare secrets.
+The development login uses Firebase Auth Emulator, and local Firestore reads and writes use Firestore Emulator. Local emulator settings and API credentials belong in ignored `.env` and `sjs-api/.dev.vars` files. Production service-account and provider credentials belong in Cloudflare Worker secrets.
 
-This branch migrates the core project flow and authentication entry points. Other legacy sections of the FE may still call the former API service and must be migrated as separate features.
+Other legacy sections of the FE may still call the former API and must be migrated as separate features.

@@ -405,6 +405,13 @@
     "referenceLabel": "参考"
   },
   "auth": {
+    "dangNhapBangSso": "HyperDataLab SSOでログイン",
+    "ssoContactAdmin": "HyperDataLabアカウントを使用してください。アクセスが必要な場合は管理者にお問い合わせください。",
+    "ssoDangXuLy": "SSOログインを完了しています...",
+    "ssoDangNhapThatBai": "SSOログインを完了できませんでした。もう一度お試しください。",
+    "ssoChuaCauHinh": "この環境ではSSOが設定されていません。",
+    "ssoPhienKhongHopLe": "ログイン要求の有効期限が切れているか、無効です。最初からやり直してください。",
+    "ssoTaiKhoanChuaDuDieuKien": "このHyperDataLabアカウントは、このアプリへのアクセスが許可されていません。",
     "mienPhiHoanToanKhongCanThe": "完全無料 カードなし",
     "truyCap200mBaiBaoKhoaHoc": "200M以上の科学論文にアクセスできます",
     "theoDoiKeywordVaNhanThongBao": "キーワードを追跡し 通知を受けます",

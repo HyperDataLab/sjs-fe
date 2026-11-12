@@ -6,11 +6,11 @@ This repository contains the React/Vite frontend and the `sjs-api/` Cloudflare W
 
 ## Architecture
 
-- The frontend uses the Firebase Web SDK for Firebase Authentication and direct Firestore access.
-- Firestore is the durable store for user-owned projects and compact analysis parameters/results.
+- Production sign-in uses HyperDataLab SSO with Authorization Code + PKCE. Firebase Auth remains the internal custom-token identity used by Firestore Security Rules; do not add another production login method.
+- Firestore stores user-owned projects, compact analysis parameters/results, and a private SSO-sub-to-Firebase-UID mapping used to preserve existing project ownership.
 - Project CRUD must go directly from the frontend SDK to Firestore under `users/{uid}/projects/{projectId}`, protected by Firestore Security Rules. Do not route project CRUD through the Worker.
 - `sjs-api/` is the serverless backend. Use it for business logic, scholarly-source requests (OpenAlex, Crossref, and future providers), and analysis. Keep provider credentials in Cloudflare Worker secrets; never expose them to Vite or commit them.
-- Do not persist bulk scholarly metadata in Firestore. Store project inputs and compact analysis summaries only.
+- Do not persist bulk scholarly metadata in Firestore. Store project inputs and compact analysis summaries; keep the private SSO UID mapping limited to identity hashes and Firebase UIDs.
 - Development mock login must use the Firebase Auth Emulator so Firestore receives an emulator-authenticated `uid`. Never add a production mock-login bypass.
 - Legacy screens and API services may still use the old API. Migrate them only when the requested feature requires it; do not imply the whole frontend has already moved.
 

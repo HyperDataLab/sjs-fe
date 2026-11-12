@@ -1,11 +1,13 @@
 # SJS Worker API
 
-`sjs-api/` is the serverless backend for provider requests and analysis. The React app uses Firebase Authentication and the Firebase Web SDK to read and write the signed-in user's Firestore project documents directly. The Worker does not proxy project CRUD.
+`sjs-api/` is the serverless backend for provider requests, analysis, and the SSO-to-Firebase custom-token bridge. Users sign in through HyperDataLab SSO; Firebase Auth remains the internal identity used by Firestore Security Rules. The React app uses the Firebase Web SDK to read and write the signed-in user's Firestore project documents directly. The Worker does not proxy project CRUD.
+
+See [SSO_SETUP.md](./SSO_SETUP.md) for client registration and Worker credential setup.
 
 ## Local development
 
 1. Copy `.env.example` to `.env` at the FE repository root. The local settings connect the FE to Firebase Auth and Firestore emulators and Wrangler at `http://127.0.0.1:8787`.
-2. Copy `sjs-api/.dev.vars.example` to `sjs-api/.dev.vars` and set the OpenAlex base URL, email, API key, and timeout there. Do not put provider configuration or keys in Vite variables.
+2. Copy `sjs-api/.dev.vars.example` to `sjs-api/.dev.vars` and set the OpenAlex base URL, email, API key, and timeout there. Set the SSO provider URL and Firebase service-account signing credentials there when using the SSO callback locally. Do not put provider configuration or keys in Vite variables.
    `OPENALEX_TIMEOUT` is expressed in seconds.
 3. Start the Firebase emulators from the `sjs-api/` directory:
 
@@ -30,7 +32,7 @@ The login page shows a development-only mock login when Vite is in development m
 
 ## Firebase setup
 
-Create a Firebase Web App in project `sjs-be`, then put its Web API key and App ID in `.env` (`VITE_FIREBASE_API_KEY` and `VITE_FIREBASE_APP_ID`). These are client configuration values, not service-account credentials. Enable the desired sign-in providers in Firebase Authentication for production.
+Create a Firebase Web App in project `sjs-be`, then put its Web API key and App ID in `.env` (`VITE_FIREBASE_API_KEY` and `VITE_FIREBASE_APP_ID`). These are client configuration values, not service-account credentials. Configure HyperDataLab SSO for production sign-in; do not expose service-account credentials to the FE.
 
 Projects are stored at `users/{uid}/projects/{projectId}`. The owner-scoped rules are in `firestore.rules`. Review and deploy them with:
 
