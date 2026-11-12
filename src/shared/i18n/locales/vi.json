@@ -412,6 +412,13 @@
     "referenceLabel": "Tài liệu"
   },
   "auth": {
+    "dangNhapBangSso": "Đăng nhập bằng HyperDataLab SSO",
+    "ssoContactAdmin": "Dùng tài khoản HyperDataLab của bạn. Liên hệ quản trị viên nếu bạn cần quyền truy cập.",
+    "ssoDangXuLy": "Đang hoàn tất đăng nhập SSO...",
+    "ssoDangNhapThatBai": "Không thể hoàn tất đăng nhập SSO. Vui lòng thử lại.",
+    "ssoChuaCauHinh": "Môi trường này chưa được cấu hình SSO.",
+    "ssoPhienKhongHopLe": "Yêu cầu đăng nhập đã hết hạn hoặc không hợp lệ. Vui lòng bắt đầu lại.",
+    "ssoTaiKhoanChuaDuDieuKien": "Tài khoản HyperDataLab này chưa được cấp quyền truy cập ứng dụng.",
     "mienPhiHoanToanKhongCanThe": "Miễn phí hoàn toàn, không cần thẻ",
     "truyCap200mBaiBaoKhoaHoc": "Truy cập 200M+ bài báo khoa học",
     "theoDoiKeywordVaNhanThongBao": "Theo dõi keyword và nhận thông báo",

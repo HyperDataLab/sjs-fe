@@ -8,8 +8,8 @@ import ArticleDetailPage from '../../features/article/pages/ArticleDetailPage';
 import ArticleVisualDetailPage from '../../features/article/pages/ArticleVisualDetailPage';
 import DashboardPage from '../../features/dashboard/pages/DashboardPage';
 
-import RegisterPage from '../../features/auth/pages/RegisterPage';
-import LoginPage from '../../features/auth/pages/LoginPage';
+import SsoLoginPage from '../../features/auth/pages/SsoLoginPage';
+import SsoCallbackPage from '../../features/auth/pages/SsoCallbackPage';
 import ProfilePage from '../../features/profile/pages/ProfilePage';
 import VerifyEmailPage from '../../features/auth/pages/VerifyEmailPage';
 import WalletLayout from '../../features/wallet/components/WalletLayout';
@@ -53,8 +53,6 @@ import AdminDashboardPage from '../../features/admin/pages/AdminDashboardPage';
 import UpdateArticlePage from '../../features/admin/pages/UpdateArticlePage';
 import ArticleRepositoryPage from '../../features/admin/pages/ArticleRepositoryPage';
 
-import ForgotPasswordPage from '../../features/auth/pages/ForgotPasswordPage';
-import ResetPasswordPage from '../../features/auth/pages/ResetPasswordPage';
 
 import GeographyPage from '../../features/zone/pages/GeographyPage';
 
@@ -67,6 +65,8 @@ import VolumeArchivePage from '../../features/admin/pages/VolumeArchivePage';
 export default function AppRoutes() {
   return (
     <Routes>
+      <Route path="/auth/sso/callback" element={<SsoCallbackPage />} />
+
       {/* Root redirect to language-prefixed root */}
       <Route path="/" element={<LanguageRedirect />} />
 
@@ -84,8 +84,8 @@ export default function AppRoutes() {
         </Route>
 
         <Route element={<PublicRoute />}>
-          <Route path="login" element={<LoginPage />} />
-          <Route path="register" element={<RegisterPage />} />
+          <Route path="login" element={<SsoLoginPage />} />
+          <Route path="register" element={<Navigate to="../login" relative="path" replace />} />
         </Route>
 
         {/* Routes sử dụng layout chung */}
@@ -161,8 +161,8 @@ export default function AppRoutes() {
             element={<KeywordArticlesPage />}
           />
 
-          <Route path="forgot-password" element={<ForgotPasswordPage />} />
-          <Route path="reset-password" element={<ResetPasswordPage />} />
+          <Route path="forgot-password" element={<Navigate to="../login" relative="path" replace />} />
+          <Route path="reset-password" element={<Navigate to="../login" relative="path" replace />} />
 
           <Route path="geography" element={<GeographyPage />} />
 
