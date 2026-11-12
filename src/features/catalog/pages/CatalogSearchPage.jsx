@@ -4,8 +4,8 @@ import { useTranslation } from "react-i18next";
  *
  * File: features\catalog\pages\CatalogSearchPage.jsx
  */
-import { Container, Dropdown, Breadcrumb } from 'react-bootstrap';
-import { Icon } from '@iconify/react';
+import { Container, Dropdown, Breadcrumb } from '@/shared/components/ui/muiAdapters';
+import Icon from '../../../shared/components/Icon.jsx';
 import { useNavigate } from 'react-router-dom';
 import { useCatalogSearch } from '../hooks/useCatalogSearch';
 import FilterPanel from '../components/FilterPanel';
@@ -16,7 +16,10 @@ import Header from '../../landing/components/Header';
 import useAuth from '../../auth/hooks/useAuth';
 import AdminPagination from '../../../shared/components/Pagination';
 import PrimaryButton from '../../../shared/components/Button/PrimaryButton';
-import '../components/CatalogSearch.css';
+
+
+import MuiBox from '@mui/material/Box';
+
 export default function CatalogSearchPage() {
   const {
     t
@@ -62,38 +65,38 @@ export default function CatalogSearchPage() {
   } = useCatalogSearch(user);
   const pageLimit = 10;
   const totalPages = Math.ceil(total / pageLimit) || 1;
-  return <div className="min-vh-100 text-main catalog-search-page">
+  return <MuiBox component="div" sx={{ minHeight: "100vh" }} className="text-main catalog-search-page">
       {/* Navbar Header */}
       <Header />
 
       <Container className="catalog-shell">
         {/* Breadcrumbs */}
         <div aria-label="breadcrumb" className="catalog-breadcrumb">
-          <Breadcrumb className="mb-0 custom-breadcrumb d-flex align-items-center">
-            <Breadcrumb.Item onClick={() => navigate('/')} className="d-flex align-items-center" linkProps={{
+          <Breadcrumb sx={{ marginBottom: "0", display: "flex", alignItems: "center" }} className="custom-breadcrumb">
+            <Breadcrumb.Item sx={{ display: "flex", alignItems: "center" }} onClick={() => navigate('/')}  linkProps={{
             style: {
               cursor: 'pointer'
             }
           }}>{t("home")}</Breadcrumb.Item>
-            <Breadcrumb.Item active className="d-flex align-items-center">{t("search")}</Breadcrumb.Item>
+            <Breadcrumb.Item sx={{ display: "flex", alignItems: "center" }} active >{t("search")}</Breadcrumb.Item>
 
           </Breadcrumb>
         </div>
 
         {/* Page Title & Subtitle */}
-        <section className="catalog-hero text-start">
+        <MuiBox component="section" sx={{ textAlign: "left" }} className="catalog-hero">
           <h1 className="catalog-title">{t("catalog.danhMucTimKiem")}</h1>
           <p className="catalog-subtitle">{t("catalog.timKiemJournalLocTheoLinhVucXe")}</p>
-        </section>
+        </MuiBox>
 
         {/* Catalog Main Layout */}
-        <div className="w-100">
+        <MuiBox component="div" sx={{ width: "100%" }} >
           {/* Toolbar Filter Panel */}
           <FilterPanel searchInput={searchInput} setSearchInput={setSearchInput} onSearchSubmit={handleSearchSubmit} subjectAreas={subjectAreas} subjectCategories={subjectCategories} selectedAreas={selectedAreas} selectedCategories={selectedCategories} selectedAccess={selectedAccess} selectedQuartiles={selectedQuartiles} onAreaSelect={onAreaSelect} onCategorySelect={onCategorySelect} onAccessSelect={onAccessSelect} onQuartileSelect={onQuartileSelect} selectedYear={selectedYear} selectedZone={selectedZone} zones={zones} onYearSelect={onYearSelect} onZoneSelect={onZoneSelect} isOaDiamond={isOaDiamond} onOaDiamondToggle={handleOaDiamondToggle} onClearAll={handleClearAll} loading={loadingFilters} />
 
           {/* Toolbar Panel */}
-          <div className="catalog-toolbar d-flex flex-column flex-sm-row align-items-sm-center justify-content-between gap-3 text-start">
-            
+          <MuiBox component="div" sx={{ display: "flex", flexDirection: "column", "@media (min-width:576px)": { flexDirection: "row", alignItems: "center" }, justifyContent: "space-between", gap: "1rem", textAlign: "left" }} className="catalog-toolbar">
+
             {/* Summary Counter text */}
             <div className="text-muted-custom catalog-count">
               {loadingJournals ? (
@@ -121,45 +124,45 @@ export default function CatalogSearchPage() {
                 </Dropdown.Menu>
               </Dropdown>
 
-          </div>
+          </MuiBox>
 
           {/* Main Result Area */}
           {loadingJournals ?
         // 3 Skeleton list cards loading placeholder
         <div>
-              {[1, 2, 3].map(s => <section key={s} className="catalog-surface p-4 mb-3 text-start">
-                  <LoadingSkeleton width="60%" height="1.4rem" className="mb-3" />
-                  <LoadingSkeleton width="45%" height="0.8rem" className="mb-3" />
-                  <div className="d-flex align-items-center gap-2 mb-3">
+              {[1, 2, 3].map(s => <MuiBox component="section" sx={{ padding: "1.5rem", marginBottom: "1rem", textAlign: "left" }} key={s} className="catalog-surface">
+                  <LoadingSkeleton sx={{ marginBottom: "1rem" }} width="60%" height="1.4rem"  />
+                  <LoadingSkeleton sx={{ marginBottom: "1rem" }} width="45%" height="0.8rem"  />
+                  <MuiBox component="div" sx={{ display: "flex", alignItems: "center", gap: "0.5rem", marginBottom: "1rem" }} >
                     <LoadingSkeleton width="50px" height="1.2rem" />
                     <LoadingSkeleton width="100px" height="1.2rem" />
                     <LoadingSkeleton width="120px" height="1.2rem" />
-                  </div>
-                </section>)}
+                  </MuiBox>
+                </MuiBox>)}
             </div> : error && journals.length === 0 ? <section className="catalog-surface catalog-state-card">
               <Icon icon={error?.includes(t("catalog.dangNhap")) ? 'lucide:lock' : 'lucide:alert-triangle'} className="catalog-state-icon" width="44" />
               <h2 className="catalog-state-title">
                 {error?.includes(t("catalog.dangNhap")) ? t("catalog.canDangNhapDeTimKiem") : t("catalog.khongTheTaiDuLieuTimKiem")}
               </h2>
-              <p className="text-muted-custom mb-4">{error}</p>
+              <MuiBox component="p" sx={{ marginBottom: "1.5rem" }} className="text-muted-custom">{error}</MuiBox>
               {error?.includes(t("catalog.dangNhap")) ? <PrimaryButton onClick={() => window.location.href = '/login'} variant="outline">{t("signIn")}</PrimaryButton> : <PrimaryButton onClick={() => fetchJournals()} variant="outline">{t("article.thuLai")}</PrimaryButton>}
             </section> : journals.length === 0 ?
         // Empty State Card
         <section className="catalog-surface catalog-state-card">
               <Icon icon="lucide:folder-search" className="catalog-state-icon" width="44" />
               <h2 className="catalog-state-title">{t("catalog.khongTimThayJournalPhuHop")}</h2>
-              <p className="text-muted-custom mb-4">{t("catalog.hayThuThayDoiTuKhoaTimKiemHoac")}</p>
+              <MuiBox component="p" sx={{ marginBottom: "1.5rem" }} className="text-muted-custom">{t("catalog.hayThuThayDoiTuKhoaTimKiemHoac")}</MuiBox>
               <PrimaryButton onClick={handleClearAll} variant="outline">{t("article.xoaBoLoc")}</PrimaryButton>
             </section> : <JournalTable journals={journals} followedJournals={followedJournals} onFollow={handleFollowJournal} />}
 
           {/* Pagination Controls */}
-          {totalPages > 1 && !loadingJournals && <div className="mt-5">
+          {totalPages > 1 && !loadingJournals && <MuiBox component="div" sx={{ marginTop: "3rem" }} >
               <AdminPagination totalItems={total} currentPage={page} limit={pageLimit} onPageChange={handlePageChange} entityName="journals" />
-            </div>}
-        </div>
+            </MuiBox>}
+        </MuiBox>
       </Container>
 
       {/* Guest Authentication Interception Modal */}
       <AuthRequiredModal show={showAuthModal} onHide={() => setShowAuthModal(false)} />
-    </div>;
+    </MuiBox>;
 }

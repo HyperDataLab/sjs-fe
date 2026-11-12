@@ -6,16 +6,19 @@ import { t } from "i18next";
  * File: features\topic\pages\TopicDetailPage.jsx
  */
 import { useEffect, useMemo, useState } from 'react';
-import { Container, Row, Col, Card, Badge, Spinner, Alert } from 'react-bootstrap';
+import { Container, Row, Col, Card, Badge, Spinner, Alert } from '@/shared/components/ui/muiAdapters';
 import { StateCard } from '../../../shared/components/Card';
 import { useNavigate, useParams } from 'react-router-dom';
-import { Icon } from '@iconify/react';
+import Icon from '../../../shared/components/Icon.jsx';
 import Header from '../../landing/components/Header';
 import { getTopicByIdApi, getTopicArticlesApi } from '../api/topic.api';
 import AdminPagination from '../../../shared/components/Pagination';
 import PrimaryButton from '../../../shared/components/Button/PrimaryButton';
 import LatexText from '../../../shared/components/LatexText/LatexText';
-import './TopicDetailPage.css';
+
+
+import MuiBox from '@mui/material/Box';
+
 const PAGE_SIZE = 10;
 const normalizeArticle = (item = {}) => ({
   id: item.article_id,
@@ -105,19 +108,19 @@ export default function TopicDetailPage() {
   return <div className="topic-detail-page grid-bg">
       <Header />
 
-      <Container className="flex-grow-1">
-        <nav aria-label="breadcrumb" className="topic-detail-breadcrumb mb-4">
-          <ol className="breadcrumb">
-            <li className="breadcrumb-item">
+      <Container sx={{ flexGrow: 1 }} >
+        <MuiBox component="nav" sx={{ marginBottom: "1.5rem" }} aria-label="breadcrumb" className="topic-detail-breadcrumb">
+          <MuiBox component="ol" sx={{ display: "flex", flexWrap: "wrap", padding: 0, marginBottom: "1rem", listStyle: "none" }} >
+            <MuiBox component="li" sx={{ display: "flex", alignItems: "center", "&:not(:last-child)::after": { content: "\"/\"", px: "0.5rem", color: "text.secondary" } }} >
               <span role="button" tabIndex={0} onClick={() => navigate('/articles')} onKeyDown={e => e.key === 'Enter' && navigate('/articles')} className="topic-detail-breadcrumb__link">{t("topic.baiBao")}</span>
-            </li>
-            <li className="breadcrumb-item active text-main fw-semibold" aria-current="page">{t("topic.chuDeNghienCuu")}</li>
-          </ol>
-        </nav>
+            </MuiBox>
+            <MuiBox component="li" sx={{ display: "flex", alignItems: "center", "&:not(:last-child)::after": { content: "\"/\"", px: "0.5rem", color: "text.secondary" }, fontWeight: 600 }} className="active text-main" aria-current="page">{t("topic.chuDeNghienCuu")}</MuiBox>
+          </MuiBox>
+        </MuiBox>
 
         <Card className="topic-detail-hero">
           <Card.Body className="topic-detail-hero__body">
-            <Row className="g-5 align-items-center">
+            <Row sx={{ gap: "3rem", alignItems: "center" }} >
               <Col lg={8}>
                 <div className="topic-detail-eyebrow">
                   <Icon icon="solar:atom-bold-duotone" width="20" />
@@ -133,23 +136,23 @@ export default function TopicDetailPage() {
 
               <Col lg={4}>
                 <div className="topic-detail-summary">
-                  <div className="d-flex justify-content-between align-items-center mb-1">
+                  <MuiBox component="div" sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "0.25rem" }} >
                     <div className="topic-detail-summary__label">{t("topic.maTopic")}</div>
                     <Badge className="topic-detail-summary__badge">
                       #{topic?.topic_id || topicId}
                     </Badge>
-                  </div>
+                  </MuiBox>
 
                   <hr className="topic-detail-summary__divider" />
 
-                  <div className="d-flex justify-content-between align-items-center">
+                  <MuiBox component="div" sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }} >
                     <div className="topic-detail-summary__label">{t("project.tongSoBaiBao")}</div>
                     <div className="topic-detail-summary__value">
                       {(pagination.total || 0).toLocaleString('en-US')}
                     </div>
-                  </div>
+                  </MuiBox>
 
-                  <PrimaryButton id="topic-view-all-articles" onClick={() => navigate(`/articles?topic_id=${topicId}`)} className="topic-detail-action mt-2 w-100 justify-content-center">{t("topic.moBoLocBaiBao")}<Icon icon="lucide:arrow-right" width="18" />
+                  <PrimaryButton sx={{ marginTop: "0.5rem", width: "100%", justifyContent: "center" }} id="topic-view-all-articles" onClick={() => navigate(`/articles?topic_id=${topicId}`)} className="topic-detail-action">{t("topic.moBoLocBaiBao")}<Icon icon="lucide:arrow-right" width="18" />
                   </PrimaryButton>
                 </div>
               </Col>
@@ -157,7 +160,7 @@ export default function TopicDetailPage() {
           </Card.Body>
         </Card>
 
-        <div className="topic-detail-section-heading d-flex align-items-center justify-content-between flex-wrap gap-3">
+        <MuiBox component="div" sx={{ display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: "1rem" }} className="topic-detail-section-heading">
           <div>
             <h2 className="topic-detail-section-title">{t("topic.baiBaoThuocTopic")}</h2>
             <p className="topic-detail-section-subtitle">
@@ -166,40 +169,40 @@ export default function TopicDetailPage() {
           </div>
           <Badge className="topic-detail-count-badge">
             {(pagination.total || 0).toLocaleString('en-US')}{t("author.baiBao")}</Badge>
-        </div>
+        </MuiBox>
 
-        {error && <Alert variant="danger" className="topic-detail-alert mb-4">
+        {error && <Alert sx={{ marginBottom: "1.5rem" }} variant="danger" className="topic-detail-alert">
             {error}
           </Alert>}
 
-        {loading ? <div className="d-flex justify-content-center align-items-center py-5">
+        {loading ? <MuiBox component="div" sx={{ display: "flex", justifyContent: "center", alignItems: "center", paddingTop: "3rem", paddingBottom: "3rem" }} >
             <Spinner animation="border" role="status" className="topic-detail-spinner">
-              <span className="visually-hidden">Loading...</span>
+              <MuiBox component="span" sx={{ position: "absolute", width: 1, height: 1, padding: 0, margin: -1, overflow: "hidden", clip: "rect(0,0,0,0)", whiteSpace: "nowrap", border: 0 }} >Loading...</MuiBox>
             </Spinner>
-          </div> : <div className="d-grid gap-3">
-            {articles.length === 0 ? <StateCard variant="neutral" icon="lucide:file-question" title={t("topic.khongCoDuLieu")} description={t("topic.chuaCoBaiBaoNaoChoTopicNay")} className="my-4" /> : articles.map(article => <Card key={article.id} className="topic-detail-article-card">
-                  <Card.Body className="p-4">
-                    <div className="d-flex justify-content-between align-items-start gap-3 flex-wrap">
-                      <div className="flex-grow-1">
-                        <button type="button" className="btn btn-link topic-detail-article-title mb-2" onClick={() => navigate(`/articles/${article.id}/visual`)}>
+          </MuiBox> : <MuiBox component="div" sx={{ display: "grid", gap: "1rem" }} >
+            {articles.length === 0 ? <StateCard sx={{ marginTop: "1.5rem", marginBottom: "1.5rem" }} variant="neutral" icon="lucide:file-question" title={t("topic.khongCoDuLieu")} description={t("topic.chuaCoBaiBaoNaoChoTopicNay")}  /> : articles.map(article => <Card key={article.id} className="topic-detail-article-card">
+                  <Card.Body sx={{ padding: "1.5rem" }} >
+                    <MuiBox component="div" sx={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: "1rem", flexWrap: "wrap" }} >
+                      <MuiBox component="div" sx={{ flexGrow: 1 }} >
+                        <MuiBox component="button" sx={{ display: "inline-flex", alignItems: "center", justifyContent: "center", px: "0.75rem", py: "0.375rem", border: 0, borderRadius: "0.375rem", fontSize: "1rem", fontWeight: 400, lineHeight: 1.5, cursor: "pointer", textDecoration: "underline", bgcolor: "transparent", color: "primary.main", marginBottom: "0.5rem" }} type="button" className="topic-detail-article-title" onClick={() => navigate(`/articles/${article.id}/visual`)}>
                           <LatexText text={article.title} />
-                        </button>
+                        </MuiBox>
 
                         <div className="topic-detail-article-meta">
-                          <span className="d-inline-flex align-items-center gap-1">
+                          <MuiBox component="span" sx={{ display: "inline-flex", alignItems: "center", gap: "0.25rem" }} >
                             <Icon icon="lucide:calendar-range" width="15" />
                             {article.year || 'N/A'}
-                          </span>
-                          {article.doi && <a href={article.doi.startsWith('http') ? article.doi : `https://doi.org/${article.doi}`} target="_blank" rel="noreferrer" className="d-inline-flex align-items-center gap-1">
+                          </MuiBox>
+                          {article.doi && <MuiBox component="a" sx={{ display: "inline-flex", alignItems: "center", gap: "0.25rem" }} href={article.doi.startsWith('http') ? article.doi : `https://doi.org/${article.doi}`} target="_blank" rel="noreferrer" >
                               <Icon icon="lucide:link-2" width="15" />
                               DOI
-                            </a>}
+                            </MuiBox>}
                         </div>
-                      </div>
-                    </div>
+                      </MuiBox>
+                    </MuiBox>
                   </Card.Body>
                 </Card>)}
-          </div>}
+          </MuiBox>}
 
         {articles.length > 0 && totalPages > 1 && <AdminPagination totalItems={pagination.total} currentPage={pagination.page} limit={pagination.limit} onPageChange={handlePageChange} entityName="bài báo" />}
       </Container>

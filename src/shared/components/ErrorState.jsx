@@ -2,12 +2,16 @@ import { useTranslation } from "react-i18next";
 // Component hiển thị giao diện báo lỗi (Error State)
 // Dùng để thông báo cho người dùng khi có lỗi kết nối hoặc API thất bại và cho phép click thử lại
 
-import { Button } from 'react-bootstrap';
+import { Button } from '@/shared/components/ui/muiAdapters';
 import Icon from './Icon';
+import { combineSx, getClassNameSx, stripMappedClassNames } from '../theme/classNameSx';
+
+import MuiBox from '@mui/material/Box';
+
 
 /**
  * Thành phần hiển thị thông báo lỗi kèm nút bấm hành động thử lại (Retry).
- * 
+ *
  * @param {Object} props - Thuộc tính truyền vào component.
  * @param {string} [props.title='Không thể tải dữ liệu'] - Tiêu đề lỗi chính.
  * @param {string} [props.message='Vui lòng kiểm tra lại kết nối mạng hoặc thử lại sau.'] - Chi tiết thông báo lỗi.
@@ -28,7 +32,8 @@ export default function ErrorState({
   // Hàm xử lý sự kiện khi bấm nút thử lại
   retryLabel,
   // Nhãn nút thử lại
-  className = ''
+  className = '',
+  sx,
 }) {
   const {
     t
@@ -52,41 +57,41 @@ export default function ErrorState({
     button.appendChild(ripple);
     if (onRetry) onRetry(event);
   };
-  return <div className={`d-flex flex-column align-items-center justify-content-center text-center py-5 px-4 rounded-3 border ${className}`} style={{
+  return <MuiBox component="div" sx={combineSx(getClassNameSx(`d-flex flex-column align-items-center justify-content-center text-center py-5 px-4 rounded-3 border ${className}`), sx)} className={stripMappedClassNames(`d-flex flex-column align-items-center justify-content-center text-center py-5 px-4 rounded-3 border ${className}`)} style={{
     backgroundColor: 'var(--bg-card)',
     borderColor: 'var(--border)',
     minHeight: '260px'
   }}>
       {/* Vùng hiển thị Icon cảnh báo màu đỏ nhạt */}
-      <div className="d-flex align-items-center justify-content-center mb-3 text-danger" style={{
+      <MuiBox component="div" sx={{ display: "flex", alignItems: "center", justifyContent: "center", marginBottom: "1rem", color: "error.main" }}  style={{
       width: '64px',
       height: '64px',
       borderRadius: '50%',
       backgroundColor: 'rgba(239, 68, 68, 0.08)'
     }}>
         <Icon icon={icon} width="30" />
-      </div>
-      
+      </MuiBox>
+
       {/* Tiêu đề lỗi */}
-      <h3 className="text-main fw-bold mb-2" style={{
+      <MuiBox component="h3" sx={{ fontWeight: 700, marginBottom: "0.5rem" }} className="text-main" style={{
       fontSize: '1.1rem',
       fontFamily: 'var(--font-display)'
     }}>
         {resolvedTitle}
-      </h3>
-      
+      </MuiBox>
+
       {/* Mô tả lỗi chi tiết */}
-      <p className="text-muted-custom mb-4 mx-auto" style={{
+      <MuiBox component="p" sx={{ marginBottom: "1.5rem", mx: "auto" }} className="text-muted-custom" style={{
       fontSize: '0.85rem',
       maxWidth: '380px',
       lineHeight: '1.5'
     }}>
         {resolvedMessage}
-      </p>
-      
-      {onRetry && <Button className="btn-dark-solid btn-ripple rounded-pill px-4 py-2 text-xs font-bold" onClick={handleRetryClick}>
+      </MuiBox>
+
+      {onRetry && <Button sx={{ borderRadius: "50rem", paddingLeft: "1.5rem", paddingRight: "1.5rem", paddingTop: "0.5rem", paddingBottom: "0.5rem" }} className="btn-dark-solid btn-ripple text-xs font-bold" onClick={handleRetryClick}>
           <Icon icon="lucide:rotate-cw" width="12" className="me-1.5" />
           {resolvedRetryLabel}
         </Button>}
-    </div>;
+    </MuiBox>;
 }

@@ -1,7 +1,7 @@
 import { useTranslation } from "react-i18next";
 import { t } from "i18next";
 import { useEffect, useState } from 'react';
-import { Row, Col, Card, ProgressBar } from 'react-bootstrap';
+import { Row, Col, Card, ProgressBar } from '@/shared/components/ui/muiAdapters';
 import Pagination from '../../../../shared/components/Pagination';
 import { useNavigate } from 'react-router-dom';
 import Icon from '../../../../shared/components/Icon';
@@ -10,6 +10,10 @@ import UserTable from '../../components/account/UserTable';
 import UserFilterBar from '../../components/account/UserFilterBar';
 import { getAdminUsers } from '../../api/adminUsers.api';
 import ROUTES from '../../../../app/routes/routePaths';
+
+
+import MuiBox from '@mui/material/Box';
+
 const ITEMS_PER_PAGE = 10;
 const getApiErrorMessage = error => {
   if (error.response?.status === 403) {
@@ -119,115 +123,115 @@ export default function UserDirectoryPage() {
   const handleUnavailableDelete = () => {
     alert(t("admin.beHienChuaCoApiXoaUserCanBoSun"));
   };
-  return <div className="container-fluid py-2">
+  return <MuiBox component="div" sx={{ width: "100%", px: "0.75rem", mx: "auto", paddingTop: "0.5rem", paddingBottom: "0.5rem" }} >
       {/* Page Breadcrumbs */}
-      <nav aria-label="breadcrumb" className="mb-3">
-        <ol className="breadcrumb text-muted-custom small mb-0">
-          <li className="breadcrumb-item">Management</li>
-          <li className="breadcrumb-item active" aria-current="page">User Directory</li>
-        </ol>
-      </nav>
+      <MuiBox component="nav" sx={{ marginBottom: "1rem" }} aria-label="breadcrumb" >
+        <MuiBox component="ol" sx={{ display: "flex", flexWrap: "wrap", padding: 0, marginBottom: "0", listStyle: "none", fontSize: "0.875em" }} className="text-muted-custom">
+          <MuiBox component="li" sx={{ display: "flex", alignItems: "center", "&:not(:last-child)::after": { content: "\"/\"", px: "0.5rem", color: "text.secondary" } }} >Management</MuiBox>
+          <MuiBox component="li" sx={{ display: "flex", alignItems: "center", "&:not(:last-child)::after": { content: "\"/\"", px: "0.5rem", color: "text.secondary" } }} className="active" aria-current="page">User Directory</MuiBox>
+        </MuiBox>
+      </MuiBox>
 
       {/* Main Header title & actions section */}
-      <div className="d-flex flex-column flex-md-row justify-content-between align-items-md-start gap-3 mb-4">
+      <MuiBox component="div" sx={{ display: "flex", flexDirection: "column", "@media (min-width:768px)": { flexDirection: "row", alignItems: "flex-start" }, justifyContent: "space-between", gap: "1rem", marginBottom: "1.5rem" }} >
         <div>
-          <h1 className="font-display fw-bold text-main mb-1" style={{
+          <MuiBox component="h1" sx={{ fontWeight: 700, marginBottom: "0.25rem" }} className="font-display text-main" style={{
           fontSize: '1.8rem'
-        }}>User Directory</h1>
-          <p className="text-muted-custom small mb-0" style={{
+        }}>User Directory</MuiBox>
+          <MuiBox component="p" sx={{ fontSize: "0.875em", marginBottom: "0" }} className="text-muted-custom" style={{
           maxWidth: '680px'
         }}>
             Manage platform contributors, their access levels, and account status within the ResearchPulse ecosystem.
-          </p>
+          </MuiBox>
         </div>
-        
+
         {/* Submit New Account button (leads to Page 17) - Sử dụng hằng số định tuyến */}
-        <PrimaryButton onClick={() => navigate(ROUTES.ADMIN_USERS_CREATE)} icon="lucide:plus-circle" className="px-4 py-2" style={{
+        <PrimaryButton sx={{ paddingLeft: "1.5rem", paddingRight: "1.5rem", paddingTop: "0.5rem", paddingBottom: "0.5rem" }} onClick={() => navigate(ROUTES.ADMIN_USERS_CREATE)} icon="lucide:plus-circle"  style={{
         fontSize: '0.88rem'
       }}>
           <span>Submit New Account</span>
         </PrimaryButton>
-      </div>
+      </MuiBox>
 
-      <Row className="g-4">
+      <Row sx={{ gap: "1.5rem" }} >
         {/* Left column: User filter bar and User Table */}
-        <Col xs={12} lg={8.5} className="col-lg-8">
-          <Card className="p-4 rounded-4 border bg-white shadow-sm">
+        <Col sx={{ "@media (min-width:992px)": { gridColumn: "span 8" } }} xs={12} lg={8.5} >
+          <Card sx={{ padding: "1.5rem", borderRadius: "0.75rem", border: "1px solid #dee2e6", bgcolor: "background.paper", boxShadow: "0 .125rem .25rem rgba(0,0,0,.075)" }} >
             {/* Filter controls */}
             <UserFilterBar search={search} onSearchChange={handleFilterChange(setSearch)} selectedRole={selectedRole} onRoleChange={handleFilterChange(setSelectedRole)} selectedStatus={selectedStatus} onStatusChange={handleFilterChange(setSelectedStatus)} totalCount={totalItems} />
 
-            {loading ? <div className="text-center py-5 text-muted-custom small">{t("admin.dangTaiDanhSachNguoiDung")}</div> : error ? <div className="text-center py-5 border rounded-3 bg-white">
-                <Icon icon="lucide:shield-alert" width="48" className="text-danger mb-2 opacity-75" />
-                <h6 className="text-main fw-bold">{t("admin.khongTheTaiNguoiDung")}</h6>
-                <p className="text-muted-custom small mb-0">{error}</p>
-              </div> : <UserTable users={users} onEdit={id => navigate(ROUTES.ADMIN_USERS_EDIT.replace(':id', id))} onDelete={handleUnavailableDelete} />}
+            {loading ? <MuiBox component="div" sx={{ textAlign: "center", paddingTop: "3rem", paddingBottom: "3rem", fontSize: "0.875em" }} className="text-muted-custom">{t("admin.dangTaiDanhSachNguoiDung")}</MuiBox> : error ? <MuiBox component="div" sx={{ textAlign: "center", paddingTop: "3rem", paddingBottom: "3rem", border: "1px solid #dee2e6", borderRadius: "0.5rem", bgcolor: "background.paper" }} >
+                <Icon sx={{ color: "error.main", marginBottom: "0.5rem", opacity: 0.75 }} icon="lucide:shield-alert" width="48"  />
+                <MuiBox component="h6" sx={{ fontWeight: 700 }} className="text-main">{t("admin.khongTheTaiNguoiDung")}</MuiBox>
+                <MuiBox component="p" sx={{ fontSize: "0.875em", marginBottom: "0" }} className="text-muted-custom">{error}</MuiBox>
+              </MuiBox> : <UserTable users={users} onEdit={id => navigate(ROUTES.ADMIN_USERS_EDIT.replace(':id', id))} onDelete={handleUnavailableDelete} />}
 
             {/* Pagination Controls */}
-            {!loading && !error && totalItems > 0 && <div className="px-3 pb-3 pt-2">
+            {!loading && !error && totalItems > 0 && <MuiBox component="div" sx={{ paddingLeft: "1rem", paddingRight: "1rem", paddingBottom: "1rem", paddingTop: "0.5rem" }} >
                 <Pagination totalItems={totalItems} currentPage={currentPage} limit={ITEMS_PER_PAGE} onPageChange={handlePageChange} entityName="users" />
-              </div>}
+              </MuiBox>}
           </Card>
         </Col>
 
         {/* Right column: Access Control and Pending Requests widgets */}
-        <Col xs={12} lg={3.5} className="col-lg-4 d-flex flex-column gap-4">
+        <Col sx={{ "@media (min-width:992px)": { gridColumn: "span 4" }, display: "flex", flexDirection: "column", gap: "1.5rem" }} xs={12} lg={3.5} >
           {/* Access Control Information box */}
-          <Card className="p-4 rounded-4 border-0 text-white" style={{
+          <Card sx={{ padding: "1.5rem", borderRadius: "0.75rem", border: 0, color: "#fff" }}  style={{
           background: 'linear-gradient(135deg, #ff7a33 0%, #ea580c 100%)',
           boxShadow: '0 4px 20px rgba(234, 88, 12, 0.15)'
         }}>
-            <div className="d-flex align-items-center gap-2 mb-2.5">
-              <Icon icon="lucide:shield-check" width="22" className="text-white" />
-              <h5 className="fw-bold mb-0" style={{
+            <MuiBox component="div" sx={{ display: "flex", alignItems: "center", gap: "0.5rem" }} className="mb-2.5">
+              <Icon sx={{ color: "#fff" }} icon="lucide:shield-check" width="22"  />
+              <MuiBox component="h5" sx={{ fontWeight: 700, marginBottom: "0" }}  style={{
               fontSize: '1.05rem',
               letterSpacing: '-0.01em'
-            }}>Access Control</h5>
-            </div>
-            <p className="mb-4 text-white-50 small lh-sm">
+            }}>Access Control</MuiBox>
+            </MuiBox>
+            <MuiBox component="p" sx={{ marginBottom: "1.5rem", color: "rgba(255,255,255,.5)", fontSize: "0.875em", lineHeight: 1.25 }} >
               Review system permissions and security logs for auditing purposes. Maintain strict compliance across all journal volumes.
-            </p>
-            <a href="#security" onClick={e => {
+            </MuiBox>
+            <MuiBox component="a" sx={{ color: "#fff", fontWeight: 600, fontSize: "0.875em", textDecoration: "none", display: "flex", alignItems: "center" }} href="#security" onClick={e => {
             e.preventDefault();
             alert('Redirecting to Security Logs Overview...');
-          }} className="text-white fw-semibold small text-decoration-none d-flex align-items-center gap-1.5 hover-white-glow">
+          }} className="gap-1.5 hover-white-glow">
               <span>Security Overview</span>
               <Icon icon="lucide:arrow-right" width="16" />
-            </a>
+            </MuiBox>
           </Card>
 
           {/* Pending Requests Sidebar Widget */}
-          <Card className="p-4 rounded-4 border bg-white shadow-sm">
-            <div className="d-flex align-items-center justify-content-between mb-3.5">
-              <div className="d-flex align-items-center gap-2">
-                <h6 className="fw-bold text-main mb-0" style={{
+          <Card sx={{ padding: "1.5rem", borderRadius: "0.75rem", border: "1px solid #dee2e6", bgcolor: "background.paper", boxShadow: "0 .125rem .25rem rgba(0,0,0,.075)" }} >
+            <MuiBox component="div" sx={{ display: "flex", alignItems: "center", justifyContent: "space-between" }} className="mb-3.5">
+              <MuiBox component="div" sx={{ display: "flex", alignItems: "center", gap: "0.5rem" }} >
+                <MuiBox component="h6" sx={{ fontWeight: 700, marginBottom: "0" }} className="text-main" style={{
                 fontSize: '0.925rem'
-              }}>PENDING REQUESTS</h6>
-              </div>
-            </div>
+              }}>PENDING REQUESTS</MuiBox>
+              </MuiBox>
+            </MuiBox>
 
-            <div className="text-center py-4 text-muted-custom small">
-              <Icon icon="lucide:check-circle-2" width="32" className="admin-accent-text mb-2 opacity-50" />
-              <p className="mb-1">{t("admin.chuaCoApiPendingRoleRequests")}</p>
-              <p className="mb-0">{t("admin.daXoaDuLieuMockKhoiKhuVucNay")}</p>
-            </div>
+            <MuiBox component="div" sx={{ textAlign: "center", paddingTop: "1.5rem", paddingBottom: "1.5rem", fontSize: "0.875em" }} className="text-muted-custom">
+              <Icon sx={{ marginBottom: "0.5rem", opacity: 0.5 }} icon="lucide:check-circle-2" width="32" className="admin-accent-text" />
+              <MuiBox component="p" sx={{ marginBottom: "0.25rem" }} >{t("admin.chuaCoApiPendingRoleRequests")}</MuiBox>
+              <MuiBox component="p" sx={{ marginBottom: "0" }} >{t("admin.daXoaDuLieuMockKhoiKhuVucNay")}</MuiBox>
+            </MuiBox>
           </Card>
 
           {/* Platform Health indicators widget */}
-          <Card className="p-4 rounded-4 border bg-white shadow-sm">
-            <h6 className="fw-bold text-main mb-3 text-uppercase tracking-wider" style={{
+          <Card sx={{ padding: "1.5rem", borderRadius: "0.75rem", border: "1px solid #dee2e6", bgcolor: "background.paper", boxShadow: "0 .125rem .25rem rgba(0,0,0,.075)" }} >
+            <MuiBox component="h6" sx={{ fontWeight: 700, marginBottom: "1rem", textTransform: "uppercase" }} className="text-main tracking-wider" style={{
             fontSize: '0.78rem'
           }}>
               Platform Health
-            </h6>
-            
+            </MuiBox>
+
             {/* Storage indicator */}
             <div className="mb-3.5">
-              <div className="d-flex justify-content-between small text-muted-custom mb-1.5" style={{
+              <MuiBox component="div" sx={{ display: "flex", justifyContent: "space-between", fontSize: "0.875em" }} className="text-muted-custom mb-1.5" style={{
               fontSize: '0.825rem'
             }}>
                 <span>Storage Capacity</span>
-                <strong className="text-main fw-semibold">N/A</strong>
-              </div>
+                <MuiBox component="strong" sx={{ fontWeight: 600 }} className="text-main">N/A</MuiBox>
+              </MuiBox>
               <ProgressBar now={0} variant="warning" style={{
               height: '5px'
             }} />
@@ -235,20 +239,16 @@ export default function UserDirectoryPage() {
 
             {/* Active Authors indicator */}
             <div>
-              <div className="d-flex justify-content-between small text-muted-custom mb-1.5" style={{
+              <MuiBox component="div" sx={{ display: "flex", justifyContent: "space-between", fontSize: "0.875em" }} className="text-muted-custom mb-1.5" style={{
               fontSize: '0.825rem'
             }}>
                 <span>Active Authors</span>
-                <strong className="text-main fw-semibold">N/A</strong>
-              </div>
-              <ProgressBar now={0} style={{
-              height: '5px',
-              backgroundColor: '#e2e8f0',
-              '--bs-progress-bar-bg': 'var(--btn-dark)'
-            }} />
+                <MuiBox component="strong" sx={{ fontWeight: 600 }} className="text-main">N/A</MuiBox>
+              </MuiBox>
+              <ProgressBar now={0} sx={{ height: 5, bgcolor: '#e2e8f0', '& .MuiLinearProgress-bar': { bgcolor: 'var(--btn-dark)' } }} />
             </div>
           </Card>
         </Col>
       </Row>
-    </div>;
+    </MuiBox>;
 }

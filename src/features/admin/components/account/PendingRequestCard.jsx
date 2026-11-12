@@ -1,10 +1,14 @@
-import { Card } from 'react-bootstrap';
+import { Card } from '@/shared/components/ui/muiAdapters';
 import PrimaryButton from '../../../../shared/components/Button/PrimaryButton';
+
+
+import MuiBox from '@mui/material/Box';
+
 
 /**
  * PendingRequestCard Component
  * Displays a single authorization upgrade or role request.
- * 
+ *
  * @param {Object} props - Props
  * @param {Object} props.request - The request item object
  * @param {function} props.onApprove - Callback for approval action
@@ -12,7 +16,7 @@ import PrimaryButton from '../../../../shared/components/Button/PrimaryButton';
  */
 export default function PendingRequestCard({ request, onApprove, onDecline }) {
   const { id, name, roleRequested, institution } = request;
-  
+
   // Extract initials for mock avatar circle
   const initials = name
     .split(' ')
@@ -22,15 +26,15 @@ export default function PendingRequestCard({ request, onApprove, onDecline }) {
     .slice(0, 2);
 
   return (
-    <Card 
-      className="p-3 mb-3 border rounded-3 bg-white"
+    <Card sx={{ padding: "1rem", marginBottom: "1rem", border: "1px solid #dee2e6", borderRadius: "0.5rem", bgcolor: "background.paper" }}
+
       style={{ boxShadow: 'none', transition: 'border-color 0.2s' }}
     >
       {/* Card Header section: Initials Avatar + Info metadata */}
-      <div className="d-flex align-items-center gap-3 mb-2.5">
+      <MuiBox component="div" sx={{ display: "flex", alignItems: "center", gap: "1rem" }} className="mb-2.5">
         {/* Mock Circle Avatar with initials */}
-        <div 
-          className="rounded-circle d-flex align-items-center justify-content-center fw-bold flex-shrink-0"
+        <MuiBox component="div" sx={{ borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 700, flexShrink: 0 }}
+
           style={{
             width: '40px',
             height: '40px',
@@ -40,36 +44,36 @@ export default function PendingRequestCard({ request, onApprove, onDecline }) {
           }}
         >
           {initials}
-        </div>
-        <div className="overflow-hidden">
-          <div className="fw-bold text-main text-truncate" style={{ fontSize: '0.88rem' }}>{name}</div>
-          <div className="text-muted-custom text-truncate" style={{ fontSize: '0.72rem', letterSpacing: '0.02em' }}>{institution}</div>
-        </div>
-      </div>
+        </MuiBox>
+        <MuiBox component="div" sx={{ overflow: "hidden" }} >
+          <MuiBox component="div" sx={{ fontWeight: 700, overflow: "hidden", whiteSpace: "nowrap", textOverflow: "ellipsis" }} className="text-main" style={{ fontSize: '0.88rem' }}>{name}</MuiBox>
+          <MuiBox component="div" sx={{ overflow: "hidden", whiteSpace: "nowrap", textOverflow: "ellipsis" }} className="text-muted-custom" style={{ fontSize: '0.72rem', letterSpacing: '0.02em' }}>{institution}</MuiBox>
+        </MuiBox>
+      </MuiBox>
 
       {/* Description payload */}
-      <p className="text-muted-custom small mb-3 lh-sm">
+      <MuiBox component="p" sx={{ fontSize: "0.875em", marginBottom: "1rem", lineHeight: 1.25 }} className="text-muted-custom">
         Requesting <strong className="text-main">{roleRequested}</strong> role for the Platform.
-      </p>
+      </MuiBox>
 
       {/* Action buttons */}
-      <div className="d-flex gap-2">
-        <PrimaryButton
+      <MuiBox component="div" sx={{ display: "flex", gap: "0.5rem" }} >
+        <PrimaryButton sx={{ flexGrow: 1 }}
           onClick={() => onApprove(id)}
-          className="flex-grow-1 py-1.5 text-xs"
+          className="py-1.5 text-xs"
           style={{ fontSize: '0.8rem' }}
         >
           Approve
         </PrimaryButton>
-        <PrimaryButton
+        <PrimaryButton sx={{ flexGrow: 1 }}
           onClick={() => onDecline(id)}
           variant="outline"
-          className="flex-grow-1 py-1.5 text-xs"
+          className="py-1.5 text-xs"
           style={{ fontSize: '0.8rem' }}
         >
           Decline
         </PrimaryButton>
-      </div>
+      </MuiBox>
     </Card>
   );
 }

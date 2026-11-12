@@ -4,8 +4,8 @@ import { useTranslation } from "react-i18next";
  *
  * File: features\article\pages\ArticleListPage.jsx
  */
-import { Container, Modal, Breadcrumb } from 'react-bootstrap';
-import { Icon } from '@iconify/react';
+import { Container, Modal, Breadcrumb } from '@/shared/components/ui/muiAdapters';
+import Icon from '../../../shared/components/Icon.jsx';
 import { useNavigate } from 'react-router-dom';
 import Header from '../../landing/components/Header';
 import useArticleList from '../hooks/useArticleList';
@@ -14,7 +14,10 @@ import ArticleFilterBar from '../components/ArticleFilterBar';
 import ArticleTable from '../components/ArticleTable';
 import AdminPagination from '../../../shared/components/Pagination';
 import PrimaryButton from '../../../shared/components/Button/PrimaryButton';
-import '../Article.css';
+
+
+import MuiBox from '@mui/material/Box';
+
 export default function ArticleListPage() {
   const {
     t
@@ -41,8 +44,8 @@ export default function ArticleListPage() {
 
       <Container className="article-list-shell">
         {/* Breadcrumb */}
-        <nav aria-label="breadcrumb" className="article-list-breadcrumb mb-4">
-          <Breadcrumb className="mb-0 d-flex align-items-center">
+        <MuiBox component="nav" sx={{ marginBottom: "1.5rem" }} aria-label="breadcrumb" className="article-list-breadcrumb">
+          <Breadcrumb sx={{ marginBottom: "0", display: "flex", alignItems: "center" }} >
             <Breadcrumb.Item onClick={() => navigate('/')} linkProps={{
             style: {
               cursor: 'pointer'
@@ -50,7 +53,7 @@ export default function ArticleListPage() {
           }}>{t("home")}</Breadcrumb.Item>
             <Breadcrumb.Item active>{t("articles")}</Breadcrumb.Item>
           </Breadcrumb>
-        </nav>
+        </MuiBox>
 
         {/* Page Header */}
         <section className="article-list-hero" aria-labelledby="article-list-title">
@@ -87,7 +90,7 @@ export default function ArticleListPage() {
         <ArticleFilterBar filters={filters} updateFilters={updateFilters} clearFilters={clearFilters} />
 
         {/* Kết quả đếm */}
-        <div className="d-flex align-items-center justify-content-between mb-3 flex-wrap gap-2">
+        <MuiBox component="div" sx={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "1rem", flexWrap: "wrap", gap: "0.5rem" }} >
           <div className="text-muted-custom text-xs">
             {t("pagination.showing", "Showing")}{" "}
             <span className="text-main font-weight-bold">{articles.length}</span>{" "}
@@ -95,7 +98,7 @@ export default function ArticleListPage() {
             <span className="text-main font-weight-bold">{total ? total.toLocaleString() : 0}</span>{" "}
             {t("article.baiBaoKhoaHoc", "scientific papers")}
           </div>
-        </div>
+        </MuiBox>
 
         {/* Bảng dữ liệu */}
         <ArticleTable articles={articles} isLoading={isLoading} onDetailClick={handleDetailClick} onClearFilters={clearFilters} />
@@ -105,26 +108,23 @@ export default function ArticleListPage() {
       </Container>
 
       {/* Warning Auth Modal */}
-      <Modal show={showAuthModal} onHide={() => setShowAuthModal(false)} centered contentClassName="border-0 text-main" style={{
-      '--bs-modal-bg': 'var(--bg-card)',
-      '--bs-modal-border-radius': '16px'
-    }}>
-        <Modal.Body className="p-4 text-center">
-          <div className="article-modal-icon mb-3">
+      <Modal show={showAuthModal} onHide={() => setShowAuthModal(false)} centered contentClassName="border-0 text-main" contentStyle={{ backgroundColor: 'var(--bg-card)', borderRadius: '16px' }}>
+        <Modal.Body sx={{ padding: "1.5rem", textAlign: "center" }} >
+          <MuiBox component="div" sx={{ marginBottom: "1rem" }} className="article-modal-icon">
             <Icon icon="lucide:lock" width="30" height="30" />
-          </div>
-          <h4 className="font-display font-weight-bold mb-3 text-main">{t("article.yeuCauDangNhap")}</h4>
-          <p className="text-muted-custom text-sm mb-4" style={{
+          </MuiBox>
+          <MuiBox component="h4" sx={{ marginBottom: "1rem" }} className="font-display font-weight-bold text-main">{t("article.yeuCauDangNhap")}</MuiBox>
+          <MuiBox component="p" sx={{ marginBottom: "1.5rem" }} className="text-muted-custom text-sm" style={{
           lineHeight: '1.6'
-        }}>{t("article.deXemToanBoNoiDungChiTietBaiBa")}</p>
-          <div className="d-flex align-items-center justify-content-center gap-3">
-            <PrimaryButton variant="outline" onClick={() => setShowAuthModal(false)} className="px-4 py-2 text-xs" style={{
+        }}>{t("article.deXemToanBoNoiDungChiTietBaiBa")}</MuiBox>
+          <MuiBox component="div" sx={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "1rem" }} >
+            <PrimaryButton sx={{ paddingLeft: "1.5rem", paddingRight: "1.5rem", paddingTop: "0.5rem", paddingBottom: "0.5rem" }} variant="outline" onClick={() => setShowAuthModal(false)} className="text-xs" style={{
             fontSize: '0.85rem'
           }}>{t("article.dong")}</PrimaryButton>
-            <PrimaryButton className="px-4 py-2 text-xs" onClick={handleAuthRedirect} style={{
+            <PrimaryButton sx={{ paddingLeft: "1.5rem", paddingRight: "1.5rem", paddingTop: "0.5rem", paddingBottom: "0.5rem" }} className="text-xs" onClick={handleAuthRedirect} style={{
             fontSize: '0.85rem'
           }}>{t("article.dangNhapNgay")}</PrimaryButton>
-          </div>
+          </MuiBox>
         </Modal.Body>
       </Modal>
     </div>;

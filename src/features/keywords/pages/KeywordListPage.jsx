@@ -4,15 +4,17 @@ import { useTranslation } from "react-i18next";
  *
  * File: features\keywords\pages\KeywordListPage.jsx
  */
-import { Container } from 'react-bootstrap';
+import { Container } from '@/shared/components/ui/muiAdapters';
 import { useNavigate } from 'react-router-dom';
-import { Icon } from '@iconify/react';
+import Icon from '../../../shared/components/Icon.jsx';
 import Header from '../../landing/components/Header';
 import KeywordSearchBar from '../components/KeywordSearchBar';
 import KeywordSortDropdown from '../components/KeywordSortDropdown';
 import KeywordList from '../components/KeywordList';
 import { useKeywords } from '../hooks/useKeywords';
-import './KeywordListPage.css';
+
+
+import MuiBox from '@mui/material/Box';
 
 /**
  * Trang danh sách Keywords.
@@ -50,15 +52,15 @@ export default function KeywordListPage() {
   const handleViewArticles = keywordId => {
     navigate(`/keywords/${keywordId}/articles`);
   };
-  return <div className="grid-bg keyword-list-page d-flex flex-column">
+  return <MuiBox component="div" sx={{ display: "flex", flexDirection: "column" }} className="grid-bg keyword-list-page">
       <Header />
 
-      <Container className="pb-5 flex-grow-1">
-        <nav aria-label="breadcrumb" className="keyword-list-breadcrumb mb-4">
-          <ol className="breadcrumb">
-            <li className="breadcrumb-item active text-main fw-semibold" aria-current="page">Keywords</li>
-          </ol>
-        </nav>
+      <Container sx={{ paddingBottom: "3rem", flexGrow: 1 }} >
+        <MuiBox component="nav" sx={{ marginBottom: "1.5rem" }} aria-label="breadcrumb" className="keyword-list-breadcrumb">
+          <MuiBox component="ol" sx={{ display: "flex", flexWrap: "wrap", padding: 0, marginBottom: "1rem", listStyle: "none" }} >
+            <MuiBox component="li" sx={{ display: "flex", alignItems: "center", "&:not(:last-child)::after": { content: "\"/\"", px: "0.5rem", color: "text.secondary" }, fontWeight: 600 }} className="active text-main" aria-current="page">Keywords</MuiBox>
+          </MuiBox>
+        </MuiBox>
 
         <section className="keyword-list-hero">
           <div className="keyword-list-hero__content">
@@ -88,12 +90,12 @@ export default function KeywordListPage() {
             <span className="keyword-active-filter__term">
               "{filters.keyword}"
             </span>
-            <button type="button" className="btn btn-link btn-sm p-0 keyword-active-filter__clear" onClick={handleClearSearch}>
-              <Icon icon="lucide:x" width="14" className="me-1" />{t("keyword.xoa")}</button>
+            <MuiBox component="button" sx={{ display: "inline-flex", alignItems: "center", justifyContent: "center", px: "0.5rem", py: "0.25rem", border: 0, borderRadius: "0.25rem", fontSize: "0.875rem", fontWeight: 400, lineHeight: 1.5, cursor: "pointer", textDecoration: "underline", bgcolor: "transparent", color: "primary.main", padding: "0" }} type="button" className="keyword-active-filter__clear" onClick={handleClearSearch}>
+              <Icon sx={{ marginInlineEnd: "0.25rem" }} icon="lucide:x" width="14"  />{t("keyword.xoa")}</MuiBox>
           </div>}
 
         {/* Keyword grid */}
         <KeywordList keywords={keywords} loading={loading} error={error} pagination={pagination} onPageChange={handlePageChange} onViewArticles={handleViewArticles} onRetry={actions.refetch} />
       </Container>
-    </div>;
+    </MuiBox>;
 }

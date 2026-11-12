@@ -6,7 +6,7 @@ import { useTranslation } from "react-i18next";
 
 import { useEffect, useState } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
-import { Container, Row, Col, Form, Card } from 'react-bootstrap';
+import { Container, Row, Col, Form, Card } from '@/shared/components/ui/muiAdapters';
 import Icon from '../../../shared/components/Icon';
 import Header from '../../landing/components/Header';
 import useAuthors from '../hooks/useAuthors';
@@ -18,7 +18,10 @@ import AdminPagination from '../../../shared/components/Pagination';
 import PrimaryButton from '../../../shared/components/Button/PrimaryButton';
 import { FilterCard } from '../../../shared/components/Card';
 import { FilterSearch, FilterSelect } from '../../../shared/components/Input';
-import './AuthorListPage.css';
+
+
+import MuiBox from '@mui/material/Box';
+
 export default function AuthorListPage() {
   const {
     t
@@ -115,14 +118,14 @@ export default function AuthorListPage() {
       <Header />
 
       <Container>
-        <nav className="author-list-breadcrumb mb-4" aria-label="breadcrumb">
-          <ol className="breadcrumb">
-            <li className="breadcrumb-item">
+        <MuiBox component="nav" sx={{ marginBottom: "1.5rem" }} className="author-list-breadcrumb" aria-label="breadcrumb">
+          <MuiBox component="ol" sx={{ display: "flex", flexWrap: "wrap", padding: 0, marginBottom: "1rem", listStyle: "none" }} >
+            <MuiBox component="li" sx={{ display: "flex", alignItems: "center", "&:not(:last-child)::after": { content: "\"/\"", px: "0.5rem", color: "text.secondary" } }} >
               <span className="author-list-breadcrumb__link" onClick={() => navigate('/')}>{t("author.tongQuan")}</span>
-            </li>
-            <li className="breadcrumb-item active text-primary" aria-current="page">{t("author.tacGiaNoiBat")}</li>
-          </ol>
-        </nav>
+            </MuiBox>
+            <MuiBox component="li" sx={{ display: "flex", alignItems: "center", "&:not(:last-child)::after": { content: "\"/\"", px: "0.5rem", color: "text.secondary" }, color: "primary.main" }} className="active" aria-current="page">{t("author.tacGiaNoiBat")}</MuiBox>
+          </MuiBox>
+        </MuiBox>
 
         <section className="author-list-hero">
           <div className="author-list-hero__content">
@@ -137,7 +140,7 @@ export default function AuthorListPage() {
 
         <AuthorNavigationTabs activeTab="list" />
 
-        <Row className="g-3 mb-4">
+        <Row sx={{ gap: "1rem", marginBottom: "1.5rem" }} >
           {statCards.map((stat, idx) => <Col xs={12} sm={6} lg={3} key={idx}>
               <Card className="author-stat-card">
                 <div className="author-stat-header">
@@ -150,9 +153,9 @@ export default function AuthorListPage() {
             </Col>)}
         </Row>
 
-        <FilterCard className="author-filter-card mb-4">
+        <FilterCard sx={{ marginBottom: "1.5rem" }} className="author-filter-card">
           <Form onSubmit={handleSearchSubmit}>
-            <Row className="g-3 align-items-center author-filter-row">
+            <Row sx={{ gap: "1rem", alignItems: "center" }} className="author-filter-row">
               <Col xs={12} lg={4}>
                 <FilterSearch value={searchInput} onChange={e => setSearchInput(e.target.value)} placeholder={t("author.timTheoTenVienNghienCuuTuKhoa")} />
               </Col>
@@ -167,36 +170,36 @@ export default function AuthorListPage() {
               }))]} />
               </Col>
 
-              <Col xs={12} sm={6} lg={1} className="d-flex gap-2">
-                <PrimaryButton type="submit" className="w-100 py-2">{t("searchBtn")}</PrimaryButton>
+              <Col sx={{ display: "flex", gap: "0.5rem" }} xs={12} sm={6} lg={1} >
+                <PrimaryButton sx={{ width: "100%", paddingTop: "0.5rem", paddingBottom: "0.5rem" }} type="submit" >{t("searchBtn")}</PrimaryButton>
               </Col>
             </Row>
           </Form>
         </FilterCard>
 
-        <div className="mb-4">
-          {viewMode === 'grid' ? loadingAuthors ? <Row className="g-3">
+        <MuiBox component="div" sx={{ marginBottom: "1.5rem" }} >
+          {viewMode === 'grid' ? loadingAuthors ? <Row sx={{ gap: "1rem" }} >
                 {Array.from({
             length: limitVal
           }).map((_, idx) => <Col xs={12} md={6} key={idx}>
                     <Card className="author-grid-skeleton">
-                      <div className="d-flex gap-3 mb-3">
+                      <MuiBox component="div" sx={{ display: "flex", gap: "1rem", marginBottom: "1rem" }} >
                         <LoadingSkeleton width="48px" height="48px" borderRadius="50%" />
-                        <div className="flex-grow-1">
-                          <LoadingSkeleton width="60%" height="16px" className="mb-2" />
+                        <MuiBox component="div" sx={{ flexGrow: 1 }} >
+                          <LoadingSkeleton sx={{ marginBottom: "0.5rem" }} width="60%" height="16px"  />
                           <LoadingSkeleton width="40%" height="12px" />
-                        </div>
-                      </div>
-                      <LoadingSkeleton width="100%" height="32px" className="mb-3" />
+                        </MuiBox>
+                      </MuiBox>
+                      <LoadingSkeleton sx={{ marginBottom: "1rem" }} width="100%" height="32px"  />
                       <LoadingSkeleton width="30%" height="18px" />
                     </Card>
                   </Col>)}
-              </Row> : authors.length === 0 ? <AuthorTable authors={[]} loading={false} error={errorAuthors} onRetry={() => fetchAuthors()} /> : <Row className="g-3">
+              </Row> : authors.length === 0 ? <AuthorTable authors={[]} loading={false} error={errorAuthors} onRetry={() => fetchAuthors()} /> : <Row sx={{ gap: "1rem" }} >
                 {authors.map(author => <Col xs={12} md={6} key={author.author_id ?? author.id}>
                     <AuthorCard author={author} />
                   </Col>)}
               </Row> : <AuthorTable authors={authors} loading={loadingAuthors} error={errorAuthors} onRetry={() => fetchAuthors()} startIndex={startIndex} />}
-        </div>
+        </MuiBox>
 
         {authors.length > 0 && totalPagesCount > 1 && <AdminPagination totalItems={totalAuthors} currentPage={pageVal} limit={limitVal} onPageChange={handlePageChange} entityName={t("author.tacGia")} />}
       </Container>

@@ -1,9 +1,13 @@
 import { useTranslation } from "react-i18next";
 import { t } from "i18next";
 import { useState } from 'react';
-import { Modal, Form, Row, Col } from 'react-bootstrap';
+import { Modal, Form, Row, Col } from '@/shared/components/ui/muiAdapters';
 import { useJournalManagement } from '../../../journal/hooks/useJournalManagement';
 import PrimaryButton from '../../../../shared/components/Button/PrimaryButton';
+
+
+import MuiBox from '@mui/material/Box';
+
 
 /**
  * Component CreateIssueModal - Cửa sổ Modal bật lên để Admin thêm Số phát hành (Issue) mới vào Volume đang chọn.
@@ -86,26 +90,26 @@ export default function CreateIssueModal({
     }
   };
   return <Modal show={show} onHide={handleClose} centered backdrop="static" className="text-main">
-      <Modal.Header closeButton className="border-bottom-0 pb-0">
-        <Modal.Title className="font-display fw-bold h5 text-main">{t("admin.taoIssueMoi")}</Modal.Title>
+      <Modal.Header sx={{ borderBottom: 0, paddingBottom: "0" }} closeButton >
+        <Modal.Title sx={{ fontWeight: 500, fontSize: "1.25rem", lineHeight: 1.2 }} className="font-display text-main">{t("admin.taoIssueMoi")}</Modal.Title>
       </Modal.Header>
 
       <Form onSubmit={handleSubmit}>
-        <Modal.Body className="py-3 text-start">
-          <p className="text-muted-custom small mb-3">{t("admin.dienThongTinChiTietDeBatDauMot")}</p>
-          
+        <Modal.Body sx={{ paddingTop: "1rem", paddingBottom: "1rem", textAlign: "left" }} >
+          <MuiBox component="p" sx={{ fontSize: "0.875em", marginBottom: "1rem" }} className="text-muted-custom">{t("admin.dienThongTinChiTietDeBatDauMot")}</MuiBox>
+
           {/* Tên Issue */}
-          <Form.Group className="mb-3">
-            <Form.Label className="fw-medium small text-main">{t("admin.tenIssue")}<span className="text-danger">*</span></Form.Label>
+          <Form.Group sx={{ marginBottom: "1rem" }} >
+            <Form.Label sx={{ fontWeight: 500, fontSize: "0.875em" }} className="text-main">{t("admin.tenIssue")}<MuiBox component="span" sx={{ color: "error.main" }} >*</MuiBox></Form.Label>
             <Form.Control type="text" name="issueName" value={formData.issueName} onChange={handleChange} isInvalid={!!errors.issueName} placeholder={t("admin.viDuSpecialEditionOnAi")} />
             <Form.Control.Feedback type="invalid">{errors.issueName}</Form.Control.Feedback>
           </Form.Group>
 
-          <Row className="g-3 mb-0">
+          <Row sx={{ gap: "1rem", marginBottom: "0" }} >
             {/* Số Issue */}
             <Col xs={12} sm={6}>
               <Form.Group>
-                <Form.Label className="fw-medium small text-main">{t("admin.soIssue")}<span className="text-danger">*</span></Form.Label>
+                <Form.Label sx={{ fontWeight: 500, fontSize: "0.875em" }} className="text-main">{t("admin.soIssue")}<MuiBox component="span" sx={{ color: "error.main" }} >*</MuiBox></Form.Label>
                 <Form.Control type="number" name="issueNumber" value={formData.issueNumber} onChange={handleChange} isInvalid={!!errors.issueNumber} placeholder={t("admin.viDu1")} />
                 <Form.Control.Feedback type="invalid">{errors.issueNumber}</Form.Control.Feedback>
               </Form.Group>
@@ -114,16 +118,16 @@ export default function CreateIssueModal({
             {/* Năm xuất bản */}
             <Col xs={12} sm={6}>
               <Form.Group>
-                <Form.Label className="fw-medium small text-main">{t("admin.namXuatBan")}</Form.Label>
+                <Form.Label sx={{ fontWeight: 500, fontSize: "0.875em" }} className="text-main">{t("admin.namXuatBan")}</Form.Label>
                 <Form.Control type="number" name="publicationYear" value={formData.publicationYear} onChange={handleChange} placeholder={t("admin.2024")} />
               </Form.Group>
             </Col>
           </Row>
 
         </Modal.Body>
-        <Modal.Footer className="border-top-0 pt-0">
-          <PrimaryButton variant="outline" onClick={handleClose} className="px-3">{t("admin.huy")}</PrimaryButton>
-          <PrimaryButton type="submit" className="px-3">{t("admin.taoIssue")}</PrimaryButton>
+        <Modal.Footer sx={{ borderTop: 0, paddingTop: "0" }} >
+          <PrimaryButton sx={{ paddingLeft: "1rem", paddingRight: "1rem" }} variant="outline" onClick={handleClose} >{t("admin.huy")}</PrimaryButton>
+          <PrimaryButton sx={{ paddingLeft: "1rem", paddingRight: "1rem" }} type="submit" >{t("admin.taoIssue")}</PrimaryButton>
         </Modal.Footer>
       </Form>
     </Modal>;

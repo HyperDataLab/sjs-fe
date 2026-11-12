@@ -5,9 +5,13 @@
  */
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
-import Container from 'react-bootstrap/Container';
-import Button from 'react-bootstrap/Button';
+import { Container } from '@/shared/components/ui/muiAdapters';
+import { Button } from '@/shared/components/ui/muiAdapters';
 import Icon from '../../../shared/components/Icon';
+
+
+import MuiBox from '@mui/material/Box';
+
 
 export default function FooterCTA() {
   const { t } = useTranslation();
@@ -18,17 +22,17 @@ export default function FooterCTA() {
   };
 
   return (
-    <section 
-      id="footer-cta" 
-      className="py-5 position-relative overflow-hidden text-center"
+    <MuiBox component="section" sx={{ paddingTop: "3rem", paddingBottom: "3rem", position: "relative", overflow: "hidden", textAlign: "center" }}
+      id="footer-cta"
+
       style={{
         backgroundColor: 'var(--bg-main)',
         borderTop: '1px solid var(--border)'
       }}
     >
       {/* Background Spotlight glow effect */}
-      <div 
-        className="position-absolute pointer-events-none"
+      <MuiBox component="div" sx={{ position: "absolute", pointerEvents: "none" }}
+
         style={{
           bottom: '-200px',
           left: '50%',
@@ -40,50 +44,50 @@ export default function FooterCTA() {
           filter: 'blur(80px)'
         }}
       />
-      
-      <Container className="py-5 position-relative z-3 reveal-scale">
-        
+
+      <Container sx={{ paddingTop: "3rem", paddingBottom: "3rem", position: "relative", zIndex: 3 }} className="reveal-scale">
+
         {/* Main Heading */}
-        <h2 
-          className="font-display text-main mb-3" 
+        <MuiBox component="h2" sx={{ marginBottom: "1rem" }}
+          className="font-display text-main"
           style={{ fontWeight: 800, fontSize: 'calc(1.5rem + 1.8vw)', letterSpacing: '-0.02em', lineHeight: 1.2 }}
         >
           {t('ctaHeading')}
-        </h2>
-        
+        </MuiBox>
+
         {/* Sub Heading */}
-        <p 
-          className="text-muted-custom mx-auto mb-5 leading-relaxed"
+        <MuiBox component="p" sx={{ mx: "auto", marginBottom: "3rem" }}
+          className="text-muted-custom leading-relaxed"
           style={{ fontSize: 'calc(0.9rem + 0.1vw)', maxWidth: '600px', lineHeight: 1.6 }}
         >
           {t('ctaSubheading')}
-        </p>
+        </MuiBox>
 
         {/* Buttons */}
-        <div className="d-flex flex-column flex-sm-row justify-content-center align-items-center gap-3 w-100 w-sm-auto">
+        <MuiBox component="div" sx={{ display: "flex", flexDirection: "column", "@media (min-width:576px)": { flexDirection: "row", width: "auto" }, justifyContent: "center", alignItems: "center", gap: "1rem", width: "100%" }} >
           {/* Try Searching Now Button */}
-          <Button
+          <Button sx={{ width: "100%", "@media (min-width:576px)": { width: "auto" }, borderRadius: "50rem", paddingLeft: "3rem", paddingRight: "3rem", paddingTop: "1rem", paddingBottom: "1rem", display: "flex", alignItems: "center", justifyContent: "center", gap: "0.5rem" }}
             href="#search-sandbox"
             variant="outline-secondary"
-            className="btn-view-trends w-100 w-sm-auto rounded-pill px-5 py-3 d-flex align-items-center justify-content-center gap-2"
+            className="btn-view-trends"
             style={{ fontSize: '0.875rem', fontWeight: 600 }}
           >
-            <Icon icon="lucide:search" className="btn-view-trends-icon fs-5" />
+            <Icon sx={{ fontSize: "1.25rem" }} icon="lucide:search" className="btn-view-trends-icon" />
             <span>{t('ctaTryNowBtn')}</span>
           </Button>
 
           {/* Create Free Account Button */}
-          <Button
+          <Button sx={{ width: "100%", "@media (min-width:576px)": { width: "auto" }, borderRadius: "50rem", paddingLeft: "3rem", paddingRight: "3rem", paddingTop: "1rem", paddingBottom: "1rem", display: "flex", alignItems: "center", justifyContent: "center", gap: "0.5rem", border: 0 }}
             onClick={handleCreateAccount}
-            className="btn-primary-glow w-100 w-sm-auto rounded-pill px-5 py-3 d-flex align-items-center justify-content-center gap-2 border-0"
+            className="btn-primary-glow"
             style={{ fontSize: '0.875rem', fontWeight: 700 }}
           >
-            <Icon icon="lucide:user-plus" className="fs-5" />
+            <Icon sx={{ fontSize: "1.25rem" }} icon="lucide:user-plus"  />
             <span>{t('ctaCreateAccountBtn')}</span>
           </Button>
-        </div>
+        </MuiBox>
 
       </Container>
-    </section>
+    </MuiBox>
   );
 }

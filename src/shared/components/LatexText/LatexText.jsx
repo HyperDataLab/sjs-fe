@@ -1,10 +1,9 @@
 import { memo } from 'react';
+import Box from '@mui/material/Box';
 import ReactMarkdown from 'react-markdown';
 import remarkMath from 'remark-math';
 import rehypeKatex from 'rehype-katex';
 import 'katex/dist/katex.min.css';
-import './LatexText.css';
-
 const LatexText = memo(({ text, className = "", as = "span", ...restProps }) => {
   if (!text) return null;
 
@@ -25,7 +24,22 @@ const LatexText = memo(({ text, className = "", as = "span", ...restProps }) => 
   };
 
   return (
-    <span className={`latex-container ${className}`} {...restProps}>
+    <Box
+      component="span"
+      className={className}
+      sx={{
+        display: 'inline',
+        wordBreak: 'break-word',
+        '& .math': { fontSize: 'inherit', lineHeight: 'inherit', color: 'inherit' },
+        '& .math-display': {
+          overflowX: 'auto',
+          overflowY: 'hidden',
+          maxWidth: '100%',
+          pb: 0.5,
+        },
+      }}
+      {...restProps}
+    >
       <ReactMarkdown
         remarkPlugins={[remarkMath]}
         rehypePlugins={[rehypeKatex]}
@@ -33,7 +47,7 @@ const LatexText = memo(({ text, className = "", as = "span", ...restProps }) => 
       >
         {text}
       </ReactMarkdown>
-    </span>
+    </Box>
   );
 });
 

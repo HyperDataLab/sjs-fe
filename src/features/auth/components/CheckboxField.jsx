@@ -3,8 +3,12 @@
  *
  * File: features\auth\components\CheckboxField.jsx
  */
-import { Form } from 'react-bootstrap';
+import { Form } from '@/shared/components/ui/muiAdapters';
 import Icon from '../../../shared/components/Icon';
+
+
+import MuiBox from '@mui/material/Box';
+
 
 export default function CheckboxField({
   name,
@@ -15,8 +19,8 @@ export default function CheckboxField({
   labelMarkup
 }) {
   return (
-    <Form.Group className="mb-4">
-      <div className="d-flex align-items-start gap-2">
+    <Form.Group sx={{ marginBottom: "1.5rem" }} >
+      <MuiBox component="div" sx={{ display: "flex", alignItems: "flex-start", gap: "0.5rem" }} >
         <Form.Check
           type="checkbox"
           name={name}
@@ -30,23 +34,23 @@ export default function CheckboxField({
             borderColor: error ? '#ef4444' : 'var(--border)',
           }}
         />
-        <Form.Label
+        <Form.Label sx={{ marginBottom: "0" }}
           htmlFor={`checkbox-${name}`}
-          className="text-muted-custom text-xs font-normal mb-0 select-none"
+          className="text-muted-custom text-xs font-normal select-none"
           style={{ cursor: disabled ? 'not-allowed' : 'pointer', lineHeight: '1.4' }}
         >
           {labelMarkup}
         </Form.Label>
-      </div>
+      </MuiBox>
 
       {error && (
-        <div 
-          className="text-danger text-xs mt-1.5 d-flex align-items-center gap-1 animate-fade-in"
+        <MuiBox component="div" sx={{ color: "error.main", display: "flex", alignItems: "center", gap: "0.25rem" }}
+          className="text-xs mt-1.5 animate-fade-in"
           style={{ fontWeight: 500 }}
         >
           <Icon icon="lucide:alert-circle" width="12" />
           <span>{error}</span>
-        </div>
+        </MuiBox>
       )}
     </Form.Group>
   );

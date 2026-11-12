@@ -1,12 +1,16 @@
 import { useTranslation } from "react-i18next";
 import { t } from "i18next";
 import { useState } from 'react';
-import { Alert, Card, Row, Col } from 'react-bootstrap';
+import { Alert, Card, Row, Col } from '@/shared/components/ui/muiAdapters';
 import { useNavigate, Link } from 'react-router-dom';
 import Icon from '../../../../shared/components/Icon';
 import UserAccountForm from '../../components/account/UserAccountForm';
 import { createAdminUser } from '../../api/adminUsers.api';
 import ROUTES from '../../../../app/routes/routePaths';
+
+
+import MuiBox from '@mui/material/Box';
+
 const getApiErrorMessage = error => {
   if (error.response?.status === 403) {
     return t("admin.backendTuChoiQuyenAdminTokenHi");
@@ -46,39 +50,39 @@ export default function AddNewAccountPage() {
       setSubmitting(false);
     }
   };
-  return <div className="container-fluid py-2">
+  return <MuiBox component="div" sx={{ width: "100%", px: "0.75rem", mx: "auto", paddingTop: "0.5rem", paddingBottom: "0.5rem" }} >
       {/* Page Breadcrumbs - Sử dụng hằng số ROUTES */}
-      <nav className="mb-2">
-        <div className="d-flex align-items-center gap-2 text-xs text-muted-custom fw-semibold select-none" style={{
+      <MuiBox component="nav" sx={{ marginBottom: "0.5rem" }} >
+        <MuiBox component="div" sx={{ display: "flex", alignItems: "center", gap: "0.5rem", fontWeight: 600 }} className="text-xs text-muted-custom select-none" style={{
         fontSize: '0.78rem'
       }}>
-          <Link to={ROUTES.ADMIN_USERS} className="text-decoration-none text-muted-custom hover-primary">Account</Link>
-          <span className="text-muted-custom opacity-50">&gt;</span>
-          <Link to={ROUTES.ADMIN_USERS} className="text-decoration-none text-muted-custom hover-primary">User Directory</Link>
-          <span className="text-muted-custom opacity-50">&gt;</span>
+          <MuiBox component={Link} sx={{ textDecoration: "none" }} to={ROUTES.ADMIN_USERS} className="text-muted-custom hover-primary">Account</MuiBox>
+          <MuiBox component="span" sx={{ opacity: 0.5 }} className="text-muted-custom">&gt;</MuiBox>
+          <MuiBox component={Link} sx={{ textDecoration: "none" }} to={ROUTES.ADMIN_USERS} className="text-muted-custom hover-primary">User Directory</MuiBox>
+          <MuiBox component="span" sx={{ opacity: 0.5 }} className="text-muted-custom">&gt;</MuiBox>
           <span className="text-main">New Account</span>
-        </div>
-      </nav>
+        </MuiBox>
+      </MuiBox>
 
       {/* Main title banner matching Page 17 */}
-      <div className="mb-4">
-        <h1 className="font-display fw-bold text-main mb-1.5" style={{
+      <MuiBox component="div" sx={{ marginBottom: "1.5rem" }} >
+        <MuiBox component="h1" sx={{ fontWeight: 700 }} className="font-display text-main mb-1.5" style={{
         fontSize: '1.8rem',
         letterSpacing: '-0.02em'
-      }}>{t("admin.themTaiKhoanMoi")}</h1>
-        <p className="text-muted-custom small mb-0" style={{
+      }}>{t("admin.themTaiKhoanMoi")}</MuiBox>
+        <MuiBox component="p" sx={{ fontSize: "0.875em", marginBottom: "0" }} className="text-muted-custom" style={{
         maxWidth: '750px',
         fontSize: '0.85rem',
         lineHeight: '1.5'
-      }}>{t("admin.vuiLongDienDayDuCacThongTinBen")}</p>
-      </div>
+      }}>{t("admin.vuiLongDienDayDuCacThongTinBen")}</MuiBox>
+      </MuiBox>
 
-      <div className="mx-auto" style={{
+      <MuiBox component="div" sx={{ mx: "auto" }}  style={{
       maxWidth: '820px'
     }}>
         {/* Core Account Form card */}
-        <Card className="p-4 p-md-5 rounded-4 border bg-white shadow-sm mb-4">
-          {submitError && <Alert variant="danger" className="border-0 rounded-3 small">
+        <Card sx={{ padding: "1.5rem", "@media (min-width:768px)": { padding: "3rem" }, borderRadius: "0.75rem", border: "1px solid #dee2e6", bgcolor: "background.paper", boxShadow: "0 .125rem .25rem rgba(0,0,0,.075)", marginBottom: "1.5rem" }} >
+          {submitError && <Alert sx={{ border: 0, borderRadius: "0.5rem", fontSize: "0.875em" }} variant="danger" >
               {submitError}
             </Alert>}
 
@@ -86,97 +90,97 @@ export default function AddNewAccountPage() {
         </Card>
 
         {/* Informational Feature Highlights (Page 17 bottom cards) */}
-        <Row className="g-3 mb-5">
+        <Row sx={{ gap: "1rem", marginBottom: "3rem" }} >
           <Col xs={12} md={4}>
-            <Card className="p-4 border h-100 rounded-3" style={{
+            <Card sx={{ padding: "1.5rem", border: "1px solid #dee2e6", height: "100%", borderRadius: "0.5rem" }}  style={{
             backgroundColor: '#fef2f2',
             borderColor: '#fee2e2',
             boxShadow: 'none'
           }}>
-              <div className="d-flex flex-column align-items-start gap-3">
-                <div className="rounded-circle d-flex align-items-center justify-content-center flex-shrink-0" style={{
+              <MuiBox component="div" sx={{ display: "flex", flexDirection: "column", alignItems: "flex-start", gap: "1rem" }} >
+                <MuiBox component="div" sx={{ borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}  style={{
                 width: '32px',
                 height: '32px',
                 backgroundColor: '#fee2e2',
                 color: '#ef4444'
               }}>
                   <Icon icon="lucide:mail" width="16" />
-                </div>
+                </MuiBox>
                 <div>
-                  <h6 className="fw-bold mb-1.5" style={{
+                  <MuiBox component="h6" sx={{ fontWeight: 700 }} className="mb-1.5" style={{
                   fontSize: '0.85rem',
                   color: '#7f1d1d'
-                }}>{t("admin.thongBaoTuDong")}</h6>
-                  <p className="small mb-0 lh-sm" style={{
+                }}>{t("admin.thongBaoTuDong")}</MuiBox>
+                  <MuiBox component="p" sx={{ fontSize: "0.875em", marginBottom: "0", lineHeight: 1.25 }}  style={{
                   fontSize: '0.78rem',
                   color: '#991b1b',
                   opacity: 0.95
-                }}>{t("admin.heThongSeTuDongGuiEmailKichHoa")}</p>
+                }}>{t("admin.heThongSeTuDongGuiEmailKichHoa")}</MuiBox>
                 </div>
-              </div>
+              </MuiBox>
             </Card>
           </Col>
 
           <Col xs={12} md={4}>
-            <Card className="p-4 border h-100 rounded-3" style={{
+            <Card sx={{ padding: "1.5rem", border: "1px solid #dee2e6", height: "100%", borderRadius: "0.5rem" }}  style={{
             backgroundColor: '#fff7ed',
             borderColor: '#fed7aa',
             boxShadow: 'none'
           }}>
-              <div className="d-flex flex-column align-items-start gap-3">
-                <div className="rounded-circle d-flex align-items-center justify-content-center flex-shrink-0" style={{
+              <MuiBox component="div" sx={{ display: "flex", flexDirection: "column", alignItems: "flex-start", gap: "1rem" }} >
+                <MuiBox component="div" sx={{ borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}  style={{
                 width: '32px',
                 height: '32px',
                 backgroundColor: '#ffedd5',
                 color: '#ea580c'
               }}>
                   <Icon icon="lucide:shield-check" width="16" />
-                </div>
+                </MuiBox>
                 <div>
-                  <h6 className="fw-bold mb-1.5" style={{
+                  <MuiBox component="h6" sx={{ fontWeight: 700 }} className="mb-1.5" style={{
                   fontSize: '0.85rem',
                   color: '#9a3412'
-                }}>{t("admin.phanQuyenThongMinh")}</h6>
-                  <p className="small mb-0 lh-sm" style={{
+                }}>{t("admin.phanQuyenThongMinh")}</MuiBox>
+                  <MuiBox component="p" sx={{ fontSize: "0.875em", marginBottom: "0", lineHeight: 1.25 }}  style={{
                   fontSize: '0.78rem',
                   color: '#9a3412',
                   opacity: 0.95
-                }}>{t("admin.vaiTroXacDinhCacQuyenTruyCapVa")}</p>
+                }}>{t("admin.vaiTroXacDinhCacQuyenTruyCapVa")}</MuiBox>
                 </div>
-              </div>
+              </MuiBox>
             </Card>
           </Col>
 
           <Col xs={12} md={4}>
-            <Card className="p-4 border h-100 rounded-3" style={{
+            <Card sx={{ padding: "1.5rem", border: "1px solid #dee2e6", height: "100%", borderRadius: "0.5rem" }}  style={{
             backgroundColor: '#f8fafc',
             borderColor: '#e2e8f0',
             boxShadow: 'none'
           }}>
-              <div className="d-flex flex-column align-items-start gap-3">
-                <div className="rounded-circle d-flex align-items-center justify-content-center flex-shrink-0" style={{
+              <MuiBox component="div" sx={{ display: "flex", flexDirection: "column", alignItems: "flex-start", gap: "1rem" }} >
+                <MuiBox component="div" sx={{ borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}  style={{
                 width: '32px',
                 height: '32px',
                 backgroundColor: '#e2e8f0',
                 color: '#64748b'
               }}>
                   <Icon icon="lucide:clock" width="16" />
-                </div>
+                </MuiBox>
                 <div>
-                  <h6 className="fw-bold mb-1.5" style={{
+                  <MuiBox component="h6" sx={{ fontWeight: 700 }} className="mb-1.5" style={{
                   fontSize: '0.85rem',
                   color: '#1e293b'
-                }}>{t("admin.lichSuThaoTac")}</h6>
-                  <p className="small mb-0 lh-sm" style={{
+                }}>{t("admin.lichSuThaoTac")}</MuiBox>
+                  <MuiBox component="p" sx={{ fontSize: "0.875em", marginBottom: "0", lineHeight: 1.25 }}  style={{
                   fontSize: '0.78rem',
                   color: '#475569',
                   opacity: 0.95
-                }}>{t("admin.moiHanhDongTaoTaiKhoanDeuDuocG")}</p>
+                }}>{t("admin.moiHanhDongTaoTaiKhoanDeuDuocG")}</MuiBox>
                 </div>
-              </div>
+              </MuiBox>
             </Card>
           </Col>
         </Row>
-      </div>
-    </div>;
+      </MuiBox>
+    </MuiBox>;
 }

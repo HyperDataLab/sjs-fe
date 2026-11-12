@@ -1,7 +1,11 @@
 import { useTranslation } from "react-i18next";
 import { Link } from 'react-router-dom';
-import { Icon } from '@iconify/react';
+import Icon from '../../../shared/components/Icon.jsx';
 import LatexText from '../../../shared/components/LatexText/LatexText';
+
+
+import MuiBox from '@mui/material/Box';
+
 const KeywordRelatedArticleList = ({
   articles,
   loading
@@ -10,54 +14,54 @@ const KeywordRelatedArticleList = ({
     t
   } = useTranslation();
   if (loading) {
-    return <div className="d-flex flex-column gap-3">
-        {[...Array(3)].map((_, i) => <div key={i} className="p-3 border rounded">
-            <div className="skeleton-shimmer mb-2" style={{
+    return <MuiBox component="div" sx={{ display: "flex", flexDirection: "column", gap: "1rem" }} >
+        {[...Array(3)].map((_, i) => <MuiBox component="div" sx={{ padding: "1rem", border: "1px solid #dee2e6", borderRadius: "0.375rem" }} key={i} >
+            <MuiBox component="div" sx={{ marginBottom: "0.5rem" }} className="skeleton-shimmer" style={{
           width: '40%',
           height: '20px'
-        }}></div>
-            <div className="skeleton-shimmer mb-2" style={{
+        }}></MuiBox>
+            <MuiBox component="div" sx={{ marginBottom: "0.5rem" }} className="skeleton-shimmer" style={{
           width: '100%',
           height: '24px'
-        }}></div>
+        }}></MuiBox>
             <div className="skeleton-shimmer" style={{
           width: '60%',
           height: '16px'
         }}></div>
-          </div>)}
-      </div>;
+          </MuiBox>)}
+      </MuiBox>;
   }
   if (!Array.isArray(articles) || articles.length === 0) {
-    return <div className="text-center py-4 text-muted-custom border rounded">{t("keyword.khongCoBaiBaoNaoLienQuanDenCac")}</div>;
+    return <MuiBox component="div" sx={{ textAlign: "center", paddingTop: "1.5rem", paddingBottom: "1.5rem", border: "1px solid #dee2e6", borderRadius: "0.375rem" }} className="text-muted-custom">{t("keyword.khongCoBaiBaoNaoLienQuanDenCac")}</MuiBox>;
   }
-  return <div className="d-flex flex-column gap-3">
-      {articles.map((article, idx) => <div key={article.id || idx} className="p-3 border rounded bg-card hover-shadow transition-all">
-          <div className="d-flex justify-content-between align-items-start mb-2">
-            <div className="d-flex gap-2 flex-wrap">
-              {article.matched_keywords?.map((kw, kwIdx) => <span key={kwIdx} className="badge fw-medium text-nowrap mb-2 d-inline-flex align-items-center" style={{
+  return <MuiBox component="div" sx={{ display: "flex", flexDirection: "column", gap: "1rem" }} >
+      {articles.map((article, idx) => <MuiBox component="div" sx={{ padding: "1rem", border: "1px solid #dee2e6", borderRadius: "0.375rem" }} key={article.id || idx} className="bg-card hover-shadow transition-all">
+          <MuiBox component="div" sx={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "0.5rem" }} >
+            <MuiBox component="div" sx={{ display: "flex", gap: "0.5rem", flexWrap: "wrap" }} >
+              {article.matched_keywords?.map((kw, kwIdx) => <MuiBox component="span" sx={{ display: "inline-flex", px: "0.65em", py: "0.35em", fontSize: "0.75em", fontWeight: 500, lineHeight: 1, color: "#fff", textAlign: "center", whiteSpace: "nowrap", verticalAlign: "baseline", borderRadius: "0.375rem", marginBottom: "0.5rem", alignItems: "center" }} key={kwIdx}  style={{
             fontSize: '0.7rem',
             backgroundColor: 'var(--primary-light)',
             color: 'var(--primary)'
           }}>
-                  <Icon icon="lucide:sparkles" className="me-1" width="12" />
+                  <Icon sx={{ marginInlineEnd: "0.25rem" }} icon="lucide:sparkles"  width="12" />
                   {kw}
-                </span>)}
-            </div>
-            <span className="text-muted-custom small">
+                </MuiBox>)}
+            </MuiBox>
+            <MuiBox component="span" sx={{ fontSize: "0.875em" }} className="text-muted-custom">
               {article.publication_year || article.year || t("keyword.ganDay")}
-            </span>
-          </div>
-          <h5 className="font-display fw-bold mb-2">
-            <Link to={`/articles/${article.id || article.article_id}/visual`} className="text-main text-decoration-none">
+            </MuiBox>
+          </MuiBox>
+          <MuiBox component="h5" sx={{ fontWeight: 700, marginBottom: "0.5rem" }} className="font-display">
+            <MuiBox component={Link} sx={{ textDecoration: "none" }} to={`/articles/${article.id || article.article_id}/visual`} className="text-main">
               <LatexText text={article.title} />
-            </Link>
-          </h5>
-          <div className="text-muted-custom small d-flex flex-wrap gap-3">
-            {article.journal_name && <span><i className="bi bi-journal-text me-1"></i> {article.journal_name}</span>}
-            {article.doi && <span><i className="bi bi-link-45deg me-1"></i> {article.doi}</span>}
-            {article.citations != null && <span><i className="bi bi-quote me-1"></i> {article.citations} citations</span>}
-          </div>
-        </div>)}
-    </div>;
+            </MuiBox>
+          </MuiBox>
+          <MuiBox component="div" sx={{ fontSize: "0.875em", display: "flex", flexWrap: "wrap", gap: "1rem" }} className="text-muted-custom">
+            {article.journal_name && <span><Icon icon="lucide:book-open" width="16" sx={{ mr: 0.5 }} />{article.journal_name}</span>}
+            {article.doi && <span><Icon icon="lucide:link" width="16" sx={{ mr: 0.5 }} />{article.doi}</span>}
+            {article.citations != null && <span><Icon icon="lucide:quote" width="16" sx={{ mr: 0.5 }} />{article.citations} citations</span>}
+          </MuiBox>
+        </MuiBox>)}
+    </MuiBox>;
 };
 export default KeywordRelatedArticleList;

@@ -4,10 +4,14 @@ import { useTranslation } from "react-i18next";
  *
  * File: features\article\components\LoginRequiredModal.jsx
  */
-import { Modal, Button } from 'react-bootstrap';
-import { Icon } from '@iconify/react';
+import { Modal, Button } from '@/shared/components/ui/muiAdapters';
+import Icon from '../../../shared/components/Icon.jsx';
 import { useNavigate } from 'react-router-dom';
 import PrimaryButton from '../../../shared/components/Button/PrimaryButton';
+
+
+import MuiBox from '@mui/material/Box';
+
 export default function LoginRequiredModal({
   show,
   onHide
@@ -27,36 +31,36 @@ export default function LoginRequiredModal({
   return <Modal show={show} onHide={onHide} centered contentClassName="border-0 shadow-lg" style={{
     backdropFilter: 'blur(4px)'
   }}>
-      <div className="p-4 text-center rounded-3 bg-white" style={{
+      <MuiBox component="div" sx={{ padding: "1.5rem", textAlign: "center", borderRadius: "0.5rem", bgcolor: "background.paper" }}  style={{
       border: '1px solid var(--border)'
     }}>
         {/* Header Icon */}
-        <div className="d-inline-flex align-items-center justify-content-center mb-3" style={{
+        <MuiBox component="div" sx={{ display: "inline-flex", alignItems: "center", justifyContent: "center", marginBottom: "1rem" }}  style={{
         width: '64px',
         height: '64px',
         borderRadius: '50%',
         backgroundColor: 'var(--primary-light)',
         border: '1px solid rgba(255, 122, 51, 0.2)'
       }}>
-          <Icon icon="lucide:lock" className="text-primary" width="30" />
-        </div>
+          <Icon sx={{ color: "primary.main" }} icon="lucide:lock"  width="30" />
+        </MuiBox>
 
         {/* Modal Title */}
-        <h4 className="font-display fw-bold text-main mb-2">{t("article.dangNhapDeLuuBaiBao")}</h4>
-        
+        <MuiBox component="h4" sx={{ fontWeight: 700, marginBottom: "0.5rem" }} className="font-display text-main">{t("article.dangNhapDeLuuBaiBao")}</MuiBox>
+
         {/* Modal Content */}
-        <p className="text-muted-custom text-sm mb-4 leading-relaxed" style={{
+        <MuiBox component="p" sx={{ marginBottom: "1.5rem" }} className="text-muted-custom text-sm leading-relaxed" style={{
         fontSize: '0.9rem'
-      }}>{t("article.banCanDangNhapTaiKhoanResearch")}</p>
+      }}>{t("article.banCanDangNhapTaiKhoanResearch")}</MuiBox>
 
         {/* Buttons Grid */}
-        <div className="d-flex flex-column gap-2">
-          <PrimaryButton className="w-100" onClick={handleLogin}>{t("article.dangNhapNgay")}</PrimaryButton>
-          
-          <PrimaryButton variant="outline" className="w-100" onClick={handleRegister}>{t("article.dangKyTaiKhoan")}</PrimaryButton>
+        <MuiBox component="div" sx={{ display: "flex", flexDirection: "column", gap: "0.5rem" }} >
+          <PrimaryButton sx={{ width: "100%" }}  onClick={handleLogin}>{t("article.dangNhapNgay")}</PrimaryButton>
 
-          <Button variant="link" className="w-full text-muted-custom hover:text-dark text-xs mt-1 p-0 text-decoration-none font-semibold" onClick={onHide}>{t("article.dongCuaSo")}</Button>
-        </div>
-      </div>
+          <PrimaryButton sx={{ width: "100%" }} variant="outline"  onClick={handleRegister}>{t("article.dangKyTaiKhoan")}</PrimaryButton>
+
+          <Button sx={{ marginTop: "0.25rem", padding: "0", textDecoration: "none" }} variant="link" className="w-full text-muted-custom hover:text-dark text-xs font-semibold" onClick={onHide}>{t("article.dongCuaSo")}</Button>
+        </MuiBox>
+      </MuiBox>
     </Modal>;
 }

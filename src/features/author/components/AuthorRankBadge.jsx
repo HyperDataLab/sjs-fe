@@ -1,7 +1,7 @@
 /**
  * @file AuthorRankBadge.jsx
  * @description Component hiển thị huy hiệu xếp hạng (rank badge) của tác giả trên bảng xếp hạng.
- * 
+ *
  * Chức năng chính:
  * - Hiển thị thứ hạng nổi bật cho Top 1, 2, 3 bằng vương miện hoặc màu sắc tương ứng (Vàng, Bạc, Đồng).
  * - Hiển thị vòng tròn số thứ tự thông thường cho các thứ hạng sau Top 3.
@@ -9,9 +9,13 @@
 
 import Icon from '../../../shared/components/Icon';
 
+
+import MuiBox from '@mui/material/Box';
+
+
 /**
  * Component hiển thị huy hiệu thứ hạng tác giả.
- * 
+ *
  * @param {Object} props - Thuộc tính truyền vào component.
  * @param {number|string} props.rank - Thứ hạng hiển thị.
  * @returns {JSX.Element} Giao diện huy hiệu xếp hạng tác giả.
@@ -34,8 +38,8 @@ export default function AuthorRankBadge({ rank }) {
   };
 
   return (
-    <div
-      className="d-flex align-items-center justify-content-center rounded-circle flex-shrink-0"
+    <MuiBox component="div" sx={{ display: "flex", alignItems: "center", justifyContent: "center", borderRadius: "50%", flexShrink: 0 }}
+
       style={{
         width: '30px',
         height: '30px',
@@ -49,10 +53,10 @@ export default function AuthorRankBadge({ rank }) {
     >
       {/* Hiển thị Icon vương miện cho vị trí số 1, các vị trí khác hiển thị số */}
       {currentConfig.icon ? (
-        <Icon icon={currentConfig.icon} width="14" className="text-white" />
+        <Icon sx={{ color: "#fff" }} icon={currentConfig.icon} width="14"  />
       ) : (
         rank
       )}
-    </div>
+    </MuiBox>
   );
 }

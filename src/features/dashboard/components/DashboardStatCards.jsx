@@ -4,8 +4,10 @@ import { useTranslation } from "react-i18next";
  *
  * File: features\dashboard\components\DashboardStatCards.jsx
  */
-import { Row, Col } from 'react-bootstrap';
+import { Row, Col } from '@/shared/components/ui/muiAdapters';
 import StatCard from './StatCard';
+
+
 
 /**
  * DashboardStatCards — renders 4 stat cards in a responsive grid.
@@ -47,7 +49,7 @@ export default function DashboardStatCards({
     growth: null,
     growthLabel: ''
   }];
-  return <Row className="g-3 mb-4">
+  return <Row sx={{ gap: "1rem", marginBottom: "1.5rem" }} >
       {cards.map((card, idx) => <Col xs={6} lg={3} key={idx}>
           <StatCard {...card} loading={loading} />
         </Col>)}

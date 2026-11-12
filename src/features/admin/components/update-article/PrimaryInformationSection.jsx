@@ -1,3 +1,5 @@
+
+import MuiBox from '@mui/material/Box';
 /**
  * - title / leadAuthor / journal: giá trị hiện tại của từng field.
  * - journalOptions:               danh sách journal cho <select>.
@@ -14,7 +16,7 @@ export default function PrimaryInformationSection({
 }) {
   return (
     <div className="admin-card admin-form-section">
-      <h3 className="admin-card__title mb-3">Primary Information</h3>
+      <MuiBox component="h3" sx={{ marginBottom: "1rem" }} className="admin-card__title">Primary Information</MuiBox>
 
       {/* Article Title - full width */}
       <div className="admin-form-group">

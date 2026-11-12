@@ -12,6 +12,10 @@ import AuthLayout from '../../../app/layouts/AuthLayout';
 import AuthBanner from '../components/AuthBanner';
 import RegisterForm from '../components/RegisterForm';
 import Icon from '../../../shared/components/Icon';
+
+
+import MuiBox from '@mui/material/Box';
+
 export default function RegisterPage() {
   const { t: _t } = useTranslation();
   const navigate = useNavigate();
@@ -52,8 +56,8 @@ export default function RegisterPage() {
     alert(t("auth.dangNhapdangKyBangGoogleOauthD"));
   };
   return <AuthLayout banner={<AuthBanner />}>
-      {isSuccess ? <div className="text-center py-4 animate-fade-in">
-          <div className="d-inline-flex align-items-center justify-content-center mb-4" style={{
+      {isSuccess ? <MuiBox component="div" sx={{ textAlign: "center", paddingTop: "1.5rem", paddingBottom: "1.5rem" }} className="animate-fade-in">
+          <MuiBox component="div" sx={{ display: "inline-flex", alignItems: "center", justifyContent: "center", marginBottom: "1.5rem" }}  style={{
         width: '80px',
         height: '80px',
         borderRadius: '50%',
@@ -61,26 +65,26 @@ export default function RegisterPage() {
         border: '2px solid #10b981',
         boxShadow: '0 0 20px rgba(16, 185, 129, 0.1)'
       }}>
-            <Icon icon="lucide:check-circle" className="text-success" style={{
+            <Icon sx={{ color: "success.main" }} icon="lucide:check-circle"  style={{
           fontSize: '40px'
         }} />
-          </div>
+          </MuiBox>
 
-          <h2 className="font-display fw-bold mb-3" style={{
+          <MuiBox component="h2" sx={{ fontWeight: 700, marginBottom: "1rem" }} className="font-display" style={{
         fontSize: '1.75rem',
         color: 'var(--text-main)'
-      }}>{t("auth.dangKyThanhCong")}</h2>
+      }}>{t("auth.dangKyThanhCong")}</MuiBox>
 
-          <p className="text-muted-custom mb-4" style={{
+          <MuiBox component="p" sx={{ marginBottom: "1.5rem" }} className="text-muted-custom" style={{
         color: 'var(--text-muted) !important',
         lineHeight: '1.6',
         fontSize: '14px'
       }}>{t("auth.motEmailXacThucDaDuocGuiToiDia")}{' '}<strong style={{
           color: 'var(--text-main)',
           margin: '0 4px'
-        }}>{registeredEmail}</strong>{' '}{t("auth.vuiLongKiemTraHopThuHoacThuRac")}</p>
+        }}>{registeredEmail}</strong>{' '}{t("auth.vuiLongKiemTraHopThuHoacThuRac")}</MuiBox>
 
-          <button onClick={() => navigate('/login')} className="w-100 py-2.5 rounded-3 border-0 text-sm font-semibold transition-all" style={{
+          <MuiBox component="button" sx={{ width: "100%", borderRadius: "0.5rem", border: 0 }} onClick={() => navigate('/login')} className="py-2.5 text-sm font-semibold transition-all" style={{
         background: 'var(--btn-dark)',
         color: '#ffffff',
         boxShadow: 'none'
@@ -88,31 +92,31 @@ export default function RegisterPage() {
         e.currentTarget.style.background = 'var(--primary)';
       }} onMouseLeave={e => {
         e.currentTarget.style.background = 'var(--btn-dark)';
-      }}>{t("auth.diDenDangNhap")}</button>
-        </div> : <>
-          <div className="mb-4">
-            <h2 className="font-display fw-bold mb-1" style={{
+      }}>{t("auth.diDenDangNhap")}</MuiBox>
+        </MuiBox> : <>
+          <MuiBox component="div" sx={{ marginBottom: "1.5rem" }} >
+            <MuiBox component="h2" sx={{ fontWeight: 700, marginBottom: "0.25rem" }} className="font-display" style={{
           fontSize: '1.85rem',
           color: 'var(--text-main)'
-        }}>{t("auth.taoTaiKhoan")}</h2>
-            <p className="text-muted-custom text-sm mb-0" style={{
+        }}>{t("auth.taoTaiKhoan")}</MuiBox>
+            <MuiBox component="p" sx={{ marginBottom: "0" }} className="text-muted-custom text-sm" style={{
           color: 'var(--text-muted) !important'
-        }}>{t("auth.dangKyMienPhiKhongCanTheTinDun")}</p>
-          </div>
+        }}>{t("auth.dangKyMienPhiKhongCanTheTinDun")}</MuiBox>
+          </MuiBox>
 
           {/* Đường phân cách giữa phần tiêu đề và form đăng ký. */}
-          <div className="d-flex align-items-center justify-content-center mb-4 text-xs font-semibold select-none text-muted-custom" style={{
+          <MuiBox component="div" sx={{ display: "flex", alignItems: "center", justifyContent: "center", marginBottom: "1.5rem" }} className="text-xs font-semibold select-none text-muted-custom" style={{
         color: 'var(--text-muted) !important'
       }}>
-            <div className="w-100" style={{
+            <MuiBox component="div" sx={{ width: "100%" }}  style={{
           height: '1px',
           background: 'var(--border)'
         }} />
-            <div className="w-100" style={{
+            <MuiBox component="div" sx={{ width: "100%" }}  style={{
           height: '1px',
           background: 'var(--border)'
         }} />
-          </div>
+          </MuiBox>
 
           <RegisterForm onSubmit={handleRegisterSubmit} isLoading={isLoading} apiError={error} onGoogleAuth={handleGoogleAuth} />
         </>}

@@ -5,10 +5,14 @@ import { t } from "i18next";
  *
  * File: features\article\components\ArticleTableRow.jsx
  */
-import { Button } from 'react-bootstrap';
-import { Icon } from '@iconify/react';
+import { Button } from '@/shared/components/ui/muiAdapters';
+import Icon from '../../../shared/components/Icon.jsx';
 import { useNavigate } from 'react-router-dom';
 import LatexText from '../../../shared/components/LatexText/LatexText';
+
+
+import MuiBox from '@mui/material/Box';
+
 export default function ArticleTableRow({
   article,
   index,
@@ -50,23 +54,23 @@ export default function ArticleTableRow({
       navigate(`/journals/${journalId}`);
     }
   };
-  return <tr onClick={() => onDetailClick(article.article_id)} style={{
+  return <MuiBox component="tr" sx={{ verticalAlign: "middle" }} onClick={() => onDetailClick(article.article_id)} style={{
     cursor: 'pointer',
     borderBottom: '1px solid var(--border)',
     transition: 'all 0.15s'
-  }} className="align-middle article-table-row">
+  }} className="article-table-row">
       {/* Index */}
-      <td className="text-muted-custom ps-3 font-display" style={{
+      <MuiBox component="td" sx={{ paddingInlineStart: "1rem" }} className="text-muted-custom font-display" style={{
       width: '40px',
       fontSize: '0.8rem'
     }}>
         {index + 1}
-      </td>
+      </MuiBox>
 
       {/* Article Title */}
-      <td style={{
+      <MuiBox component="td" sx={{ paddingTop: "1rem", paddingBottom: "1rem" }} style={{
       maxWidth: '400px'
-    }} className="py-3">
+    }} >
         <div className="text-main font-weight-semibold hover:text-primary transition-colors duration-150 text-sm" style={{
         lineHeight: '1.4',
         fontWeight: 600,
@@ -77,7 +81,7 @@ export default function ArticleTableRow({
       }}>
           <LatexText text={article.title} />
         </div>
-        {article.abstract && <div className="text-muted-custom mt-1 text-xs" style={{
+        {article.abstract && <MuiBox component="div" sx={{ marginTop: "0.25rem" }} className="text-muted-custom text-xs" style={{
         fontWeight: 400,
         overflow: 'hidden',
         display: '-webkit-box',
@@ -85,45 +89,45 @@ export default function ArticleTableRow({
         WebkitBoxOrient: 'vertical'
       }}>
             <LatexText text={article.abstract} />
-          </div>}
-      </td>
+          </MuiBox>}
+      </MuiBox>
 
       {/* Journal Name */}
       <td style={{
       maxWidth: '180px'
     }}>
-        {article.journal_id || article.journal?.journal_id ? <div onClick={e => handleJournalClick(e, article.journal_id || article.journal?.journal_id)} className="text-main hover:text-primary text-sm text-truncate" style={{
+        {article.journal_id || article.journal?.journal_id ? <MuiBox component="div" sx={{ overflow: "hidden", whiteSpace: "nowrap", textOverflow: "ellipsis" }} onClick={e => handleJournalClick(e, article.journal_id || article.journal?.journal_id)} className="text-main hover:text-primary text-sm" style={{
         textDecoration: 'none',
         cursor: 'pointer',
         fontWeight: 500
       }} title={article.journal_name || article.journal?.display_name}>
             {article.journal_name || article.journal?.display_name || t("article.chuaCoThongTinJournal")}
-          </div> : <span className="text-muted text-xs">{t("article.chuaCoThongTinJournal")}</span>}
+          </MuiBox> : <MuiBox component="span" sx={{ color: "text.secondary" }} className="text-xs">{t("article.chuaCoThongTinJournal")}</MuiBox>}
       </td>
 
       {/* Publication Year */}
-      <td className="text-center font-display" style={{
+      <MuiBox component="td" sx={{ textAlign: "center" }} className="font-display" style={{
       width: '80px',
       fontSize: '0.85rem',
       color: 'var(--text-muted)'
     }}>
         {article.publication_year}
-      </td>
+      </MuiBox>
 
       {/* DOI */}
       <td style={{
       maxWidth: '160px'
     }}>
-        {article.doi ? <div className="d-flex align-items-center gap-1.5">
-            <span className="text-muted-custom text-xs text-truncate font-display" style={{
+        {article.doi ? <MuiBox component="div" sx={{ display: "flex", alignItems: "center" }} className="gap-1.5">
+            <MuiBox component="span" sx={{ overflow: "hidden", whiteSpace: "nowrap", textOverflow: "ellipsis" }} className="text-muted-custom text-xs font-display" style={{
           fontSize: '0.75rem'
         }}>
               {article.doi}
-            </span>
-            <Button variant="link" className="p-0 text-muted-custom hover:text-dark d-flex align-items-center" onClick={e => handleCopyDoi(e, article.doi)} title="Copy DOI">
+            </MuiBox>
+            <Button sx={{ padding: "0", display: "flex", alignItems: "center" }} variant="link" className="text-muted-custom hover:text-dark" onClick={e => handleCopyDoi(e, article.doi)} title="Copy DOI">
               <Icon icon="lucide:copy" width="12" />
             </Button>
-          </div> : <span className="text-muted text-xs">—</span>}
+          </MuiBox> : <MuiBox component="span" sx={{ color: "text.secondary" }} className="text-xs">—</MuiBox>}
       </td>
 
       {/* Topic Badge */}
@@ -136,20 +140,20 @@ export default function ArticleTableRow({
       </td>
 
       {/* Open Access */}
-      <td className="text-center" style={{
+      <MuiBox component="td" sx={{ textAlign: "center" }}  style={{
       width: '80px'
     }}>
         {article.is_open_access ? <span className="article-oa-badge">
             OA
           </span> : <span className="text-muted-custom text-xs">—</span>}
-      </td>
+      </MuiBox>
 
       {/* Actions */}
-      <td className="text-end pe-3" style={{
+      <MuiBox component="td" sx={{ textAlign: "right", paddingInlineEnd: "1rem" }}  style={{
       width: '80px'
     }}>
-        <span className="article-action-link d-flex align-items-center justify-content-end gap-0.5">{t("article.chiTiet1")}<Icon icon="lucide:arrow-right" width="12" />
-        </span>
-      </td>
-    </tr>;
+        <MuiBox component="span" sx={{ display: "flex", alignItems: "center", justifyContent: "flex-end" }} className="article-action-link gap-0.5">{t("article.chiTiet1")}<Icon icon="lucide:arrow-right" width="12" />
+        </MuiBox>
+      </MuiBox>
+    </MuiBox>;
 }

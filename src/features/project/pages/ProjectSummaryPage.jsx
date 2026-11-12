@@ -10,6 +10,10 @@ import { useAuthStore } from '../../../app/store/authStore';
 import { getProjectByIdApi, saveProjectAnalysisApi } from '../api/project.api';
 import { runProjectAnalysisApi } from '../api/research.api';
 
+
+import MuiBox from '@mui/material/Box';
+
+
 export default function ProjectSummaryPage() {
   const { t } = useTranslation();
   const { id } = useParams();
@@ -61,11 +65,11 @@ export default function ProjectSummaryPage() {
   };
 
   if (isLoading) {
-    return <div className="container-fluid min-vh-100 d-flex justify-content-center align-items-center"><div className="spinner-border text-primary" role="status"><span className="visually-hidden">{t('common.dangTai')}</span></div></div>;
+    return <MuiBox component="div" sx={{ width: "100%", px: "0.75rem", mx: "auto", minHeight: "100vh", display: "flex", justifyContent: "center", alignItems: "center" }} ><MuiBox component="div" sx={{ display: "inline-block", width: "2rem", height: "2rem", verticalAlign: "-0.125em", border: "0.25em solid currentColor", borderRightColor: "transparent", borderRadius: "50%", animation: "spin .75s linear infinite", color: "primary.main" }}  role="status"><MuiBox component="span" sx={{ position: "absolute", width: 1, height: 1, padding: 0, margin: -1, overflow: "hidden", clip: "rect(0,0,0,0)", whiteSpace: "nowrap", border: 0 }} >{t('common.dangTai')}</MuiBox></MuiBox></MuiBox>;
   }
 
   if (error || !project) {
-    return <div className="container-fluid min-vh-100 py-5"><div className="container"><div role="alert" className="alert alert-danger">{error?.message || t('project.duAnKhongTonTaiHoacDaBiXoa')} <button className="btn btn-link" onClick={() => refetch()}>{t('article.thuLai')}</button><button className="btn btn-link" onClick={() => navigate(ROUTES.PROJECTS)}>{t('auth.quayLai')}</button></div></div></div>;
+    return <MuiBox component="div" sx={{ width: "100%", px: "0.75rem", mx: "auto", minHeight: "100vh", paddingTop: "3rem", paddingBottom: "3rem" }} ><MuiBox component="div" sx={{ width: "100%", mx: "auto", px: "0.75rem", "@media (min-width:576px)": { maxWidth: 540 }, "@media (min-width:768px)": { maxWidth: 720 }, "@media (min-width:992px)": { maxWidth: 960 }, "@media (min-width:1200px)": { maxWidth: 1140 }, "@media (min-width:1400px)": { maxWidth: 1320 } }} ><MuiBox component="div" sx={{ position: "relative", p: "1rem", mb: "1rem", border: "1px solid transparent", borderRadius: "0.375rem", bgcolor: "#f8d7da", borderColor: "#f5c2c7", color: "#842029" }} role="alert" >{error?.message || t('project.duAnKhongTonTaiHoacDaBiXoa')} <MuiBox component="button" sx={{ display: "inline-flex", alignItems: "center", justifyContent: "center", px: "0.75rem", py: "0.375rem", border: 0, borderRadius: "0.375rem", fontSize: "1rem", fontWeight: 400, lineHeight: 1.5, cursor: "pointer", textDecoration: "underline", bgcolor: "transparent", color: "primary.main" }}  onClick={() => refetch()}>{t('article.thuLai')}</MuiBox><MuiBox component="button" sx={{ display: "inline-flex", alignItems: "center", justifyContent: "center", px: "0.75rem", py: "0.375rem", border: 0, borderRadius: "0.375rem", fontSize: "1rem", fontWeight: 400, lineHeight: 1.5, cursor: "pointer", textDecoration: "underline", bgcolor: "transparent", color: "primary.main" }}  onClick={() => navigate(ROUTES.PROJECTS)}>{t('auth.quayLai')}</MuiBox></MuiBox></MuiBox></MuiBox>;
   }
 
   const result = project.analysisSummary?.result;
@@ -76,70 +80,70 @@ export default function ProjectSummaryPage() {
   }
 
   return (
-    <div className="container-fluid pb-5 grid-bg min-vh-100" style={{ paddingTop: '80px' }}>
+    <MuiBox component="div" sx={{ width: "100%", px: "0.75rem", mx: "auto", paddingBottom: "3rem", minHeight: "100vh" }} className="grid-bg" style={{ paddingTop: '80px' }}>
       <Header />
-      <main className="container mx-auto mt-4" style={{ maxWidth: '1100px' }}>
-        <nav aria-label="breadcrumb" className="mb-4">
-          <ol className="breadcrumb small">
-            <li className="breadcrumb-item"><Link to={ROUTES.PROJECTS}>{t('project.duAnTheoDoi')}</Link></li>
-            <li className="breadcrumb-item active" aria-current="page">{project.title}</li>
-          </ol>
-        </nav>
+      <MuiBox component="main" sx={{ width: "100%", mx: "auto", px: "0.75rem", "@media (min-width:576px)": { maxWidth: 540 }, "@media (min-width:768px)": { maxWidth: 720 }, "@media (min-width:992px)": { maxWidth: 960 }, "@media (min-width:1200px)": { maxWidth: 1140 }, "@media (min-width:1400px)": { maxWidth: 1320 }, marginTop: "1.5rem" }}  style={{ maxWidth: '1100px' }}>
+        <MuiBox component="nav" sx={{ marginBottom: "1.5rem" }} aria-label="breadcrumb" >
+          <MuiBox component="ol" sx={{ display: "flex", flexWrap: "wrap", padding: 0, marginBottom: "1rem", listStyle: "none", fontSize: "0.875em" }} >
+            <MuiBox component="li" sx={{ display: "flex", alignItems: "center", "&:not(:last-child)::after": { content: "\"/\"", px: "0.5rem", color: "text.secondary" } }} ><Link to={ROUTES.PROJECTS}>{t('project.duAnTheoDoi')}</Link></MuiBox>
+            <MuiBox component="li" sx={{ display: "flex", alignItems: "center", "&:not(:last-child)::after": { content: "\"/\"", px: "0.5rem", color: "text.secondary" } }} className="active" aria-current="page">{project.title}</MuiBox>
+          </MuiBox>
+        </MuiBox>
 
-        <section className="glass-card border rounded-4 p-4 p-md-5 mb-4">
-          <div className="d-flex flex-column flex-md-row justify-content-between gap-4">
+        <MuiBox component="section" sx={{ border: "1px solid #dee2e6", borderRadius: "0.75rem", padding: "1.5rem", "@media (min-width:768px)": { padding: "3rem" }, marginBottom: "1.5rem" }} className="glass-card">
+          <MuiBox component="div" sx={{ display: "flex", flexDirection: "column", "@media (min-width:768px)": { flexDirection: "row" }, justifyContent: "space-between", gap: "1.5rem" }} >
             <div>
-              <span className="badge rounded-pill bg-light text-dark border mb-3">{project.subjectArea}</span>
-              <h1 className="font-display fw-bold text-main">{project.title}</h1>
-              <p className="text-muted-custom mb-0">Created {project.createdAt ? new Date(project.createdAt).toLocaleDateString() : 'recently'}</p>
-              {project.keywords.length > 0 && <div className="d-flex flex-wrap gap-2 mt-3">{project.keywords.map((keyword) => <span key={keyword} className="badge rounded-pill bg-light text-muted border fw-normal">{keyword}</span>)}</div>}
+              <MuiBox component="span" sx={{ display: "inline-block", px: "0.65em", py: "0.35em", fontSize: "0.75em", fontWeight: 700, lineHeight: 1, color: "#212529", textAlign: "center", whiteSpace: "nowrap", verticalAlign: "baseline", borderRadius: "50rem", bgcolor: "#f8f9fa", border: "1px solid #dee2e6", marginBottom: "1rem" }} >{project.subjectArea}</MuiBox>
+              <MuiBox component="h1" sx={{ fontWeight: 700 }} className="font-display text-main">{project.title}</MuiBox>
+              <MuiBox component="p" sx={{ marginBottom: "0" }} className="text-muted-custom">Created {project.createdAt ? new Date(project.createdAt).toLocaleDateString() : 'recently'}</MuiBox>
+              {project.keywords.length > 0 && <MuiBox component="div" sx={{ display: "flex", flexWrap: "wrap", gap: "0.5rem", marginTop: "1rem" }} >{project.keywords.map((keyword) => <MuiBox component="span" sx={{ display: "inline-block", px: "0.65em", py: "0.35em", fontSize: "0.75em", fontWeight: 400, lineHeight: 1, color: "text.secondary", textAlign: "center", whiteSpace: "nowrap", verticalAlign: "baseline", borderRadius: "50rem", bgcolor: "#f8f9fa", border: "1px solid #dee2e6" }} key={keyword} >{keyword}</MuiBox>)}</MuiBox>}
             </div>
-            <div className="d-flex align-items-start">
-              <Link className="btn btn-outline-secondary me-2" to={`/projects/${project.id}/edit`}>Edit project</Link>
+            <MuiBox component="div" sx={{ display: "flex", alignItems: "flex-start" }} >
+              <MuiBox component={Link} sx={{ display: "inline-flex", alignItems: "center", justifyContent: "center", px: "0.75rem", py: "0.375rem", border: "1px solid #6c757d", borderRadius: "0.375rem", fontSize: "1rem", fontWeight: 400, lineHeight: 1.5, cursor: "pointer", textDecoration: "none", bgcolor: "transparent", color: "#6c757d", marginInlineEnd: "0.5rem" }}  to={`/projects/${project.id}/edit`}>Edit project</MuiBox>
               <PrimaryButton onClick={runAnalysis} disabled={analysisLoading} icon="lucide:refresh-cw">
                 {analysisLoading ? 'Analyzing…' : result ? 'Run analysis again' : 'Run analysis'}
               </PrimaryButton>
-            </div>
-          </div>
-        </section>
+            </MuiBox>
+          </MuiBox>
+        </MuiBox>
 
-        {analysisError && <div role="alert" className="alert alert-danger">{analysisError}</div>}
-        {project.analysisSummary?.status === 'failed' && !analysisError && <div role="status" className="alert alert-warning">{project.analysisSummary.error || 'The last analysis could not finish. You can retry it.'}</div>}
+        {analysisError && <MuiBox component="div" sx={{ position: "relative", p: "1rem", mb: "1rem", border: "1px solid transparent", borderRadius: "0.375rem", bgcolor: "#f8d7da", borderColor: "#f5c2c7", color: "#842029" }} role="alert" >{analysisError}</MuiBox>}
+        {project.analysisSummary?.status === 'failed' && !analysisError && <MuiBox component="div" sx={{ position: "relative", p: "1rem", mb: "1rem", border: "1px solid transparent", borderRadius: "0.375rem", bgcolor: "#fff3cd", borderColor: "#ffecb5", color: "#664d03" }} role="status" >{project.analysisSummary.error || 'The last analysis could not finish. You can retry it.'}</MuiBox>}
 
-        {analysisLoading && <div role="status" className="alert alert-info">Searching OpenAlex and Crossref and calculating a compact summary…</div>}
+        {analysisLoading && <MuiBox component="div" sx={{ position: "relative", p: "1rem", mb: "1rem", border: "1px solid transparent", borderRadius: "0.375rem", bgcolor: "#cff4fc", borderColor: "#b6effb", color: "#055160" }} role="status" >Searching OpenAlex and Crossref and calculating a compact summary…</MuiBox>}
         {result ? (
           <>
-            <div className="row g-3 mb-4">
-              <div className="col-12 col-md-4"><div className="glass-card border rounded-4 p-4 h-100"><div className="text-muted-custom small">Records analyzed</div><div className="display-6 fw-bold text-main">{result.totalWorks.toLocaleString()}</div></div></div>
-              <div className="col-12 col-md-4"><div className="glass-card border rounded-4 p-4 h-100"><div className="text-muted-custom small">Sources</div><div className="display-6 fw-bold text-main">{sources.length}</div></div></div>
-              <div className="col-12 col-md-4"><div className="glass-card border rounded-4 p-4 h-100"><div className="text-muted-custom small">Analyzed</div><div className="fs-5 fw-semibold text-main mt-2">{new Date(result.analyzedAt).toLocaleString()}</div></div></div>
-            </div>
+            <MuiBox component="div" sx={{ display: "grid", gridTemplateColumns: "repeat(12,minmax(0,1fr))", width: "100%", gap: "1rem", marginBottom: "1.5rem" }} >
+              <MuiBox component="div" sx={{ gridColumn: "span 12", "@media (min-width:768px)": { gridColumn: "span 4" } }} ><MuiBox component="div" sx={{ border: "1px solid #dee2e6", borderRadius: "0.75rem", padding: "1.5rem", height: "100%" }} className="glass-card"><MuiBox component="div" sx={{ fontSize: "0.875em" }} className="text-muted-custom">Records analyzed</MuiBox><MuiBox component="div" sx={{ fontSize: "calc(1.375rem + 1.5vw)", fontWeight: 700, lineHeight: 1.2 }} className="text-main">{result.totalWorks.toLocaleString()}</MuiBox></MuiBox></MuiBox>
+              <MuiBox component="div" sx={{ gridColumn: "span 12", "@media (min-width:768px)": { gridColumn: "span 4" } }} ><MuiBox component="div" sx={{ border: "1px solid #dee2e6", borderRadius: "0.75rem", padding: "1.5rem", height: "100%" }} className="glass-card"><MuiBox component="div" sx={{ fontSize: "0.875em" }} className="text-muted-custom">Sources</MuiBox><MuiBox component="div" sx={{ fontSize: "calc(1.375rem + 1.5vw)", fontWeight: 700, lineHeight: 1.2 }} className="text-main">{sources.length}</MuiBox></MuiBox></MuiBox>
+              <MuiBox component="div" sx={{ gridColumn: "span 12", "@media (min-width:768px)": { gridColumn: "span 4" } }} ><MuiBox component="div" sx={{ border: "1px solid #dee2e6", borderRadius: "0.75rem", padding: "1.5rem", height: "100%" }} className="glass-card"><MuiBox component="div" sx={{ fontSize: "0.875em" }} className="text-muted-custom">Analyzed</MuiBox><MuiBox component="div" sx={{ fontSize: "1.25rem", fontWeight: 600, marginTop: "0.5rem" }} className="text-main">{new Date(result.analyzedAt).toLocaleString()}</MuiBox></MuiBox></MuiBox>
+            </MuiBox>
 
-            <div className="row g-4">
-              <div className="col-12 col-lg-6">
-                <section className="glass-card border rounded-4 p-4 h-100">
-                  <h2 className="h5 fw-bold text-main mb-3">Results by source</h2>
-                  {sources.map(([name, summary]) => <div key={name} className="d-flex justify-content-between align-items-center border-bottom py-2"><span className="text-capitalize">{name}</span><span className="fw-semibold">{summary.workCount} works · {summary.citationCount.toLocaleString()} citations</span></div>)}
-                </section>
-              </div>
-              <div className="col-12 col-lg-6">
-                <section className="glass-card border rounded-4 p-4 h-100">
-                  <h2 className="h5 fw-bold text-main mb-3">Publications by year</h2>
-                  {years.size === 0 ? <p className="text-muted-custom mb-0">The sources returned no publication years.</p> : [...years].sort(([a], [b]) => a - b).map(([year, count]) => <div key={year} className="d-flex justify-content-between border-bottom py-2"><span>{year}</span><span className="fw-semibold">{count}</span></div>)}
-                </section>
-              </div>
-              <div className="col-12">
-                <section className="glass-card border rounded-4 p-4">
-                  <h2 className="h5 fw-bold text-main mb-3">Frequently listed venues</h2>
+            <MuiBox component="div" sx={{ display: "grid", gridTemplateColumns: "repeat(12,minmax(0,1fr))", width: "100%", gap: "1.5rem" }} >
+              <MuiBox component="div" sx={{ gridColumn: "span 12", "@media (min-width:992px)": { gridColumn: "span 6" } }} >
+                <MuiBox component="section" sx={{ border: "1px solid #dee2e6", borderRadius: "0.75rem", padding: "1.5rem", height: "100%" }} className="glass-card">
+                  <MuiBox component="h2" sx={{ fontSize: "1.25rem", fontWeight: 700, lineHeight: 1.2, marginBottom: "1rem" }} className="text-main">Results by source</MuiBox>
+                  {sources.map(([name, summary]) => <MuiBox component="div" sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", borderBottom: "1px solid #dee2e6", paddingTop: "0.5rem", paddingBottom: "0.5rem" }} key={name} ><MuiBox component="span" sx={{ textTransform: "capitalize" }} >{name}</MuiBox><MuiBox component="span" sx={{ fontWeight: 600 }} >{summary.workCount} works · {summary.citationCount.toLocaleString()} citations</MuiBox></MuiBox>)}
+                </MuiBox>
+              </MuiBox>
+              <MuiBox component="div" sx={{ gridColumn: "span 12", "@media (min-width:992px)": { gridColumn: "span 6" } }} >
+                <MuiBox component="section" sx={{ border: "1px solid #dee2e6", borderRadius: "0.75rem", padding: "1.5rem", height: "100%" }} className="glass-card">
+                  <MuiBox component="h2" sx={{ fontSize: "1.25rem", fontWeight: 700, lineHeight: 1.2, marginBottom: "1rem" }} className="text-main">Publications by year</MuiBox>
+                  {years.size === 0 ? <MuiBox component="p" sx={{ marginBottom: "0" }} className="text-muted-custom">The sources returned no publication years.</MuiBox> : [...years].sort(([a], [b]) => a - b).map(([year, count]) => <MuiBox component="div" sx={{ display: "flex", justifyContent: "space-between", borderBottom: "1px solid #dee2e6", paddingTop: "0.5rem", paddingBottom: "0.5rem" }} key={year} ><span>{year}</span><MuiBox component="span" sx={{ fontWeight: 600 }} >{count}</MuiBox></MuiBox>)}
+                </MuiBox>
+              </MuiBox>
+              <MuiBox component="div" sx={{ gridColumn: "span 12" }} >
+                <MuiBox component="section" sx={{ border: "1px solid #dee2e6", borderRadius: "0.75rem", padding: "1.5rem" }} className="glass-card">
+                  <MuiBox component="h2" sx={{ fontSize: "1.25rem", fontWeight: 700, lineHeight: 1.2, marginBottom: "1rem" }} className="text-main">Frequently listed venues</MuiBox>
                   {sources.flatMap(([source, summary]) => (summary.topVenues || []).map((venue) => ({ ...venue, source }))).length === 0
-                    ? <p className="text-muted-custom mb-0">No venue summary is available.</p>
-                    : sources.flatMap(([source, summary]) => (summary.topVenues || []).map((venue) => ({ ...venue, source }))).map((venue) => <div key={`${venue.source}-${venue.name}`} className="d-flex justify-content-between border-bottom py-2"><span>{venue.name} <small className="text-muted-custom">({venue.source})</small></span><span className="fw-semibold">{venue.count}</span></div>)}
-                </section>
-              </div>
-            </div>
+                    ? <MuiBox component="p" sx={{ marginBottom: "0" }} className="text-muted-custom">No venue summary is available.</MuiBox>
+                    : sources.flatMap(([source, summary]) => (summary.topVenues || []).map((venue) => ({ ...venue, source }))).map((venue) => <MuiBox component="div" sx={{ display: "flex", justifyContent: "space-between", borderBottom: "1px solid #dee2e6", paddingTop: "0.5rem", paddingBottom: "0.5rem" }} key={`${venue.source}-${venue.name}`} ><span>{venue.name} <small className="text-muted-custom">({venue.source})</small></span><MuiBox component="span" sx={{ fontWeight: 600 }} >{venue.count}</MuiBox></MuiBox>)}
+                </MuiBox>
+              </MuiBox>
+            </MuiBox>
           </>
-        ) : !analysisLoading && <section className="glass-card border rounded-4 p-4 text-center"><Icon icon="lucide:chart-no-axes-combined" width="32" className="text-muted mb-2" /><p className="text-muted-custom mb-0">No analysis summary yet. Run the analysis to fetch current results from the configured scholarly sources.</p></section>}
-      </main>
-    </div>
+        ) : !analysisLoading && <MuiBox component="section" sx={{ border: "1px solid #dee2e6", borderRadius: "0.75rem", padding: "1.5rem", textAlign: "center" }} className="glass-card"><Icon sx={{ color: "text.secondary", marginBottom: "0.5rem" }} icon="lucide:chart-no-axes-combined" width="32"  /><MuiBox component="p" sx={{ marginBottom: "0" }} className="text-muted-custom">No analysis summary yet. Run the analysis to fetch current results from the configured scholarly sources.</MuiBox></MuiBox>}
+      </MuiBox>
+    </MuiBox>
   );
 }

@@ -1,8 +1,12 @@
 import Icon from './Icon';
+import { getClassNameSx, stripMappedClassNames } from '../theme/classNameSx';
+
+import MuiBox from '@mui/material/Box';
+
 
 /**
  * Logo component that matches the style of the ResearchPulse header.
- * 
+ *
  * @param {Object} props - Component props
  * @param {number} props.size - Size of the icon box (default: 32)
  * @param {string} props.fontSize - Font size of the text (default: '1.25rem')
@@ -10,14 +14,14 @@ import Icon from './Icon';
  */
 export default function Logo({ size = 32, fontSize = '1.25rem', className = '', ...props }) {
   return (
-    <div 
-      className={`d-flex align-items-center text-main fw-bold ${className}`} 
-      style={{ fontFamily: "var(--font-display)", fontWeight: 800, cursor: "pointer", ...props.style }} 
+    <MuiBox component="div" sx={getClassNameSx(`d-flex align-items-center text-main fw-bold ${className}`)}
+      className={stripMappedClassNames(`d-flex align-items-center text-main fw-bold ${className}`)}
+      style={{ fontFamily: "var(--font-display)", fontWeight: 800, cursor: "pointer", ...props.style }}
       {...props}
     >
       {/* Icon block resembling the original brand design */}
-      <div
-        className="d-flex align-items-center justify-content-center me-2"
+      <MuiBox component="div" sx={{ display: "flex", alignItems: "center", justifyContent: "center", marginInlineEnd: "0.5rem" }}
+
         style={{
           width: `${size}px`,
           height: `${size}px`,
@@ -26,9 +30,9 @@ export default function Logo({ size = 32, fontSize = '1.25rem', className = '', 
           boxShadow: "0 0 10px rgba(7, 26, 28, 0.15)",
         }}
       >
-        <Icon icon="lucide:activity" className="text-white text-sm" />
-      </div>
+        <Icon sx={{ color: "#fff" }} icon="lucide:activity" className="text-sm" />
+      </MuiBox>
       <span style={{ fontSize }}>ResearchPulse</span>
-    </div>
+    </MuiBox>
   );
 }

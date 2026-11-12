@@ -1,14 +1,18 @@
 import { useTranslation } from "react-i18next";
 import { useState, useEffect } from 'react';
-import { Row, Col, Form } from 'react-bootstrap';
+import { Row, Col, Form } from '@/shared/components/ui/muiAdapters';
 import KeywordInput from './KeywordInput';
 import { getSubjectCategoriesApi } from '../../../catalog/api/catalogApi';
 import { searchJournalsApi } from '../../../journal/api/journalApi';
 
+
+import MuiBox from '@mui/material/Box';
+
+
 /**
  * ManualArticleForm Component
  * Renders manual entry input form for submit article flow.
- * 
+ *
  * @param {Object} props - Props
  * @param {Object} props.formData - Parent state object containing form values
  * @param {function} props.onChange - Handler to update parent state values
@@ -62,24 +66,24 @@ export default function ManualArticleForm({
       [key]: value
     });
   };
-  return <div className="d-flex flex-column gap-4">
+  return <MuiBox component="div" sx={{ display: "flex", flexDirection: "column", gap: "1.5rem" }} >
       <Form.Group controlId="articleTitle">
         <Form.Label className="account-form-label">
-          Article Title <span className="text-danger">*</span>
+          Article Title <MuiBox component="span" sx={{ color: "error.main" }} >*</MuiBox>
         </Form.Label>
         <Form.Control type="text" placeholder={t("admin.egQuantumNeuralDynamicsInSynth")} value={formData.title || ''} onChange={e => handleFieldChange('title', e.target.value)} required className="account-form-input" />
       </Form.Group>
 
       <Form.Group controlId="articleAbstract">
         <Form.Label className="account-form-label">
-          Abstract <span className="text-danger">*</span>
+          Abstract <MuiBox component="span" sx={{ color: "error.main" }} >*</MuiBox>
         </Form.Label>
         <Form.Control as="textarea" rows={5} placeholder={t("admin.provideAConciseSummaryOfYourRe")} value={formData.abstract || ''} onChange={e => handleFieldChange('abstract', e.target.value)} required className="account-form-input" style={{
         resize: 'vertical'
       }} />
       </Form.Group>
 
-      <Row className="g-3">
+      <Row sx={{ gap: "1rem" }} >
         <Col xs={12} md={6}>
           <Form.Group controlId="articleKeywords">
             <Form.Label className="account-form-label">
@@ -92,18 +96,18 @@ export default function ManualArticleForm({
         <Col xs={12} md={6}>
           <Form.Group controlId="articleAuthor">
             <Form.Label className="account-form-label">
-              Author Name <span className="text-danger">*</span>
+              Author Name <MuiBox component="span" sx={{ color: "error.main" }} >*</MuiBox>
             </Form.Label>
             <Form.Control type="text" placeholder={t("admin.fullNameAsItAppearsInPublicati")} value={formData.author || ''} onChange={e => handleFieldChange('author', e.target.value)} required className="account-form-input" />
           </Form.Group>
         </Col>
       </Row>
 
-      <Row className="g-3">
+      <Row sx={{ gap: "1rem" }} >
         <Col xs={12} md={6}>
           <Form.Group controlId="articleJournal">
             <Form.Label className="account-form-label">
-              Journal Selection <span className="text-danger">*</span>
+              Journal Selection <MuiBox component="span" sx={{ color: "error.main" }} >*</MuiBox>
             </Form.Label>
             <Form.Select value={formData.journalId || ''} onChange={e => handleFieldChange('journalId', e.target.value)} required className="account-form-input" style={{
             cursor: 'pointer'
@@ -120,7 +124,7 @@ export default function ManualArticleForm({
         <Col xs={12} md={6}>
           <Form.Group controlId="articleCategory">
             <Form.Label className="account-form-label">
-              Section / Category <span className="text-danger">*</span>
+              Section / Category <MuiBox component="span" sx={{ color: "error.main" }} >*</MuiBox>
             </Form.Label>
             <Form.Select value={formData.categoryId || ''} onChange={e => handleFieldChange('categoryId', e.target.value)} required className="account-form-input" style={{
             cursor: 'pointer'
@@ -134,5 +138,5 @@ export default function ManualArticleForm({
           </Form.Group>
         </Col>
       </Row>
-    </div>;
+    </MuiBox>;
 }

@@ -10,6 +10,10 @@ import ResetPasswordForm from '../components/ResetPasswordForm';
 import ResetPasswordSuccess from '../components/ResetPasswordSuccess';
 import Icon from '../../../shared/components/Icon';
 import ROUTES from '../../../app/routes/routePaths';
+import { getClassNameSx } from '../../../shared/theme/classNameSx';
+
+import MuiBox from '@mui/material/Box';
+
 export default function ResetPasswordPage() {
   const { t: _t } = useTranslation();
   const [searchParams] = useSearchParams();
@@ -37,57 +41,57 @@ export default function ResetPasswordPage() {
   return <AuthLayout banner={<AuthBanner />}>
       {isSubmitted ? <ResetPasswordSuccess /> : <>
           {/* Logo on mobile only */}
-          <div className="d-flex d-md-none align-items-center gap-2 mb-4">
-            <div className="d-flex align-items-center justify-content-center" style={{
+          <MuiBox component="div" sx={{ display: "flex", "@media (min-width:768px)": { display: "none" }, alignItems: "center", gap: "0.5rem", marginBottom: "1.5rem" }} >
+            <MuiBox component="div" sx={{ display: "flex", alignItems: "center", justifyContent: "center" }}  style={{
           width: '36px',
           height: '36px',
           borderRadius: '8px',
           background: 'var(--btn-dark)',
           boxShadow: '0 4px 10px rgba(7, 26, 28, 0.15)'
         }}>
-              <Icon icon="lucide:activity" className="text-white text-sm" />
-            </div>
-            <span className="fs-5 fw-bold font-display" style={{
+              <Icon sx={{ color: "#fff" }} icon="lucide:activity" className="text-sm" />
+            </MuiBox>
+            <MuiBox component="span" sx={{ fontSize: "1.25rem", fontWeight: 700 }} className="font-display" style={{
           letterSpacing: '0.03em',
           color: 'var(--text-main)'
         }}>
               ResearchPulse
-            </span>
-          </div>
+            </MuiBox>
+          </MuiBox>
 
-          <div className="mb-4">
-            <h2 className="font-display fw-bold mb-1" style={{
+          <MuiBox component="div" sx={{ marginBottom: "1.5rem" }} >
+            <MuiBox component="h2" sx={{ fontWeight: 700, marginBottom: "0.25rem" }} className="font-display" style={{
           fontSize: '1.85rem',
           color: 'var(--text-main)'
-        }}>{t("auth.datLaiMatKhau")}</h2>
-            <p className="text-muted-custom text-sm mb-0" style={{
+        }}>{t("auth.datLaiMatKhau")}</MuiBox>
+            <MuiBox component="p" sx={{ marginBottom: "0" }} className="text-muted-custom text-sm" style={{
           color: 'var(--text-muted)'
-        }}>{t("auth.vuiLongNhapMatKhauMoiCuaBanBen")}</p>
-          </div>
+        }}>{t("auth.vuiLongNhapMatKhauMoiCuaBanBen")}</MuiBox>
+          </MuiBox>
 
-          {!token ? <div className="alert alert-danger d-flex align-items-center gap-3 py-3 px-3 border-0 rounded-3 mb-4 text-danger bg-danger bg-opacity-10" style={{
+          {!token ? <MuiBox component="div" sx={getClassNameSx("alert alert-danger d-flex align-items-center gap-3 py-3 px-3 border-0 rounded-3 mb-4 text-danger bg-danger bg-opacity-10")} style={{
         fontSize: '13px',
         fontWeight: 500
       }}>
-              <Icon icon="lucide:alert-triangle" width="18" className="flex-shrink-0" />
-              <div>{t("auth.lienKetKhoiPhucMatKhauKhongHop")}<div className="mt-2">
+              <Icon sx={{ flexShrink: 0 }} icon="lucide:alert-triangle" width="18"  />
+              <div>{t("auth.lienKetKhoiPhucMatKhauKhongHop")}<MuiBox component="div" sx={{ marginTop: "0.5rem" }} >
                   <Link to={ROUTES.FORGOT_PASSWORD} style={{
               color: 'var(--primary)',
               textDecoration: 'none',
               fontWeight: 600
             }}>{t("auth.yeuCauLienKetMoi")}</Link>
-                </div>
+                </MuiBox>
               </div>
-            </div> : <ResetPasswordForm onSubmit={handleResetPasswordSubmit} isLoading={isLoading} apiError={error} />}
+            </MuiBox> : <ResetPasswordForm onSubmit={handleResetPasswordSubmit} isLoading={isLoading} apiError={error} />}
 
           {/* Link back to Login */}
-          {!isSubmitted && <div className="text-center mt-4 text-sm font-medium">
+          {!isSubmitted && <MuiBox component="div" sx={{ textAlign: "center", marginTop: "1.5rem" }} className="text-sm font-medium">
               <span className="text-muted-custom">{t("auth.quayLai")}</span>{' '}
-              <Link to={ROUTES.LOGIN} className="text-decoration-none transition-all" style={{
+              <MuiBox component={Link} sx={{ textDecoration: "none" }} to={ROUTES.LOGIN} className="transition-all" style={{
           color: 'var(--primary)',
           fontWeight: 600
-        }}>{t("signIn")}</Link>
-            </div>}
+        }}>{t("signIn")}</MuiBox>
+            </MuiBox>}
         </>}
     </AuthLayout>;
 }

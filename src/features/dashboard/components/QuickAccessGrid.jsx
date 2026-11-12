@@ -4,10 +4,8 @@ import { useTranslation } from "react-i18next";
  *
  * File: features\dashboard\components\QuickAccessGrid.jsx
  */
-import { Icon } from '@iconify/react';
+import Icon from '../../../shared/components/Icon.jsx';
 import { useNavigate } from 'react-router-dom';
-import '../Dashboard.css';
-
 /**
  * QUICK_ACCESS_ITEMS — constant config, dễ mở rộng sau này
  */

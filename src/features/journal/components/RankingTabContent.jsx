@@ -4,8 +4,12 @@ import { useTranslation } from "react-i18next";
  *
  * File: features\journal\components\RankingTabContent.jsx
  */
-import { Row, Col, Table } from 'react-bootstrap';
+import { Row, Col, Table } from '@/shared/components/ui/muiAdapters';
 import LoadingSkeleton from '../../../shared/components/LoadingSkeleton';
+
+
+import MuiBox from '@mui/material/Box';
+
 export default function RankingTabContent({
   rankingHistory = [],
   metricName = 'Impact Factor',
@@ -15,18 +19,18 @@ export default function RankingTabContent({
     t
   } = useTranslation();
   if (loading) {
-    return <Row className="gy-4">
+    return <Row sx={{ rowGap: "1.5rem" }} >
         <Col lg={7}>
-          <section className="journal-surface p-4 h-100">
-            <LoadingSkeleton width="180px" height="24px" className="mb-4" />
+          <MuiBox component="section" sx={{ padding: "1.5rem", height: "100%" }} className="journal-surface">
+            <LoadingSkeleton sx={{ marginBottom: "1.5rem" }} width="180px" height="24px"  />
             <LoadingSkeleton width="100%" height="280px" />
-          </section>
+          </MuiBox>
         </Col>
         <Col lg={5}>
-          <section className="journal-surface p-4 h-100">
-            <LoadingSkeleton width="150px" height="24px" className="mb-4" />
+          <MuiBox component="section" sx={{ padding: "1.5rem", height: "100%" }} className="journal-surface">
+            <LoadingSkeleton sx={{ marginBottom: "1.5rem" }} width="150px" height="24px"  />
             <LoadingSkeleton width="100%" height="280px" />
-          </section>
+          </MuiBox>
         </Col>
       </Row>;
   }
@@ -69,13 +73,13 @@ export default function RankingTabContent({
     const ratio = value / yMax;
     return chartHeight - paddingBottom - ratio * graphHeight;
   };
-  return <Row className="gy-4 align-items-stretch">
-      <Col lg={7} className="d-flex flex-column">
-        <section className="journal-surface p-4 h-100 d-flex flex-column">
+  return <Row sx={{ rowGap: "1.5rem", alignItems: "stretch" }} >
+      <Col sx={{ display: "flex", flexDirection: "column" }} lg={7} >
+        <MuiBox component="section" sx={{ padding: "1.5rem", height: "100%", display: "flex", flexDirection: "column" }} className="journal-surface">
           <h2 className="journal-section-title">
             {metricName} {t("journal.theoNam")}</h2>
 
-          <div className="flex-grow-1 d-flex justify-content-center align-items-center overflow-auto py-2">
+          <MuiBox component="div" sx={{ flexGrow: 1, display: "flex", justifyContent: "center", alignItems: "center", overflow: "auto", paddingTop: "0.5rem", paddingBottom: "0.5rem" }} >
             <svg viewBox={`0 0 ${chartWidth} ${chartHeight}`} width="100%" style={{
             minWidth: '400px',
             height: 'auto'
@@ -131,16 +135,16 @@ export default function RankingTabContent({
                   </text>;
             })}
             </svg>
-          </div>
-        </section>
+          </MuiBox>
+        </MuiBox>
       </Col>
 
-      <Col lg={5} className="d-flex flex-column">
-        <section className="journal-surface p-4 h-100 d-flex flex-column">
+      <Col sx={{ display: "flex", flexDirection: "column" }} lg={5} >
+        <MuiBox component="section" sx={{ padding: "1.5rem", height: "100%", display: "flex", flexDirection: "column" }} className="journal-surface">
           <h2 className="journal-section-title">{t("journal.bangXepHangLichSu")}</h2>
 
-          <div className="table-responsive flex-grow-1">
-            <Table borderless className="journal-ranking-table align-middle mb-0 text-start">
+          <MuiBox component="div" sx={{ width: "100%", overflowX: "auto", WebkitOverflowScrolling: "touch", flexGrow: 1 }} >
+            <Table sx={{ verticalAlign: "middle", marginBottom: "0", textAlign: "left" }} borderless className="journal-ranking-table">
               <thead>
                 <tr>
                   <th>{t("article.nam")}</th>
@@ -162,8 +166,8 @@ export default function RankingTabContent({
                   </tr>)}
               </tbody>
             </Table>
-          </div>
-        </section>
+          </MuiBox>
+        </MuiBox>
       </Col>
     </Row>;
 }

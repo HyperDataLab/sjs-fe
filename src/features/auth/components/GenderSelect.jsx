@@ -4,8 +4,12 @@ import { useTranslation } from "react-i18next";
  *
  * File: features\auth\components\GenderSelect.jsx
  */
-import { Form } from 'react-bootstrap';
+import { Form } from '@/shared/components/ui/muiAdapters';
 import Icon from '../../../shared/components/Icon';
+import { getClassNameSx, stripMappedClassNames } from '../../../shared/theme/classNameSx';
+
+import MuiBox from '@mui/material/Box';
+
 export default function GenderSelect({
   label,
   name,
@@ -27,77 +31,57 @@ export default function GenderSelect({
       }
     });
   };
-  return <Form.Group className="mb-3">
-      {label && <Form.Label className="text-xs font-bold mb-1.5 d-flex align-items-center gap-1" style={{
+  const optionSx = (selected) => [
+    getClassNameSx(`gender-option ${selected ? 'selected' : ''} ${disabled ? 'disabled' : ''} flex-fill h-100 d-flex align-items-center justify-content-center gap-2 rounded-2 select-none`),
+    {
+      cursor: disabled ? 'not-allowed' : 'pointer',
+      background: selected ? '#ffffff' : 'transparent',
+      color: selected ? 'var(--primary)' : 'var(--text-muted)',
+      fontWeight: selected ? 600 : 500,
+      fontSize: 14,
+      border: selected ? '1px solid rgba(255, 122, 51, 0.15)' : '1px solid transparent',
+      opacity: disabled ? 0.6 : 1,
+      transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)',
+      '&:hover:not(.disabled):not(.selected)': {
+        backgroundColor: 'rgba(255, 122, 51, 0.05)',
+        color: 'var(--primary)',
+      },
+      '&.selected': { boxShadow: '0 2px 6px rgba(255, 122, 51, 0.12)' },
+    },
+  ];
+  return <Form.Group sx={{ marginBottom: "1rem" }} >
+      {label && <Form.Label sx={{ display: "flex", alignItems: "center", gap: "0.25rem" }} className="text-xs font-bold mb-1.5" style={{
       letterSpacing: '0.05em',
       color: 'var(--text-main)',
       textTransform: 'uppercase'
     }}>
           {label}
-          {required && <span className="text-danger">*</span>}
+          {required && <MuiBox component="span" sx={{ color: "error.main" }} >*</MuiBox>}
         </Form.Label>}
 
-      <div className="p-1 rounded-3 d-flex align-items-center" style={{
+      <MuiBox component="div" sx={{ padding: "0.25rem", borderRadius: "0.5rem", display: "flex", alignItems: "center" }}  style={{
       background: 'var(--bg-chip)',
       border: '1px solid var(--border)',
       width: '100%',
       height: '44px'
     }}>
         {/* Option: Male */}
-        <div onClick={() => handleSelect(true)} className={`gender-option ${value === true ? 'selected' : ''} ${disabled ? 'disabled' : ''} flex-fill h-100 d-flex align-items-center justify-content-center gap-2 rounded-2 select-none`} style={{
-        cursor: disabled ? 'not-allowed' : 'pointer',
-        background: value === true ? '#ffffff' : 'transparent',
-        color: value === true ? 'var(--primary)' : 'var(--text-muted)',
-        fontWeight: value === true ? '600' : '500',
-        fontSize: '14px',
-        border: '1px solid transparent',
-        opacity: disabled ? 0.6 : 1
-      }}>
-          <Icon icon="lucide:check-circle" width="16" style={{
-          opacity: value === true ? 1 : 0,
-          transition: 'opacity 0.2s'
-        }} />
+        <MuiBox component="div" sx={optionSx(value === true)} onClick={() => handleSelect(true)} className={stripMappedClassNames(`gender-option ${value === true ? 'selected' : ''} ${disabled ? 'disabled' : ''} flex-fill h-100 d-flex align-items-center justify-content-center gap-2 rounded-2 select-none`)}>
+          <Icon sx={{ opacity: value === true ? 1 : 0, transition: 'opacity 0.2s' }} icon="lucide:check-circle" width="16" />
           <span>{t("auth.nam")}</span>
-        </div>
+        </MuiBox>
 
         {/* Option: Female */}
-        <div onClick={() => handleSelect(false)} className={`gender-option ${value === false ? 'selected' : ''} ${disabled ? 'disabled' : ''} flex-fill h-100 d-flex align-items-center justify-content-center gap-2 rounded-2 select-none`} style={{
-        cursor: disabled ? 'not-allowed' : 'pointer',
-        background: value === false ? '#ffffff' : 'transparent',
-        color: value === false ? 'var(--primary)' : 'var(--text-muted)',
-        fontWeight: value === false ? '600' : '500',
-        fontSize: '14px',
-        border: '1px solid transparent',
-        opacity: disabled ? 0.6 : 1
-      }}>
-          <Icon icon="lucide:check-circle" width="16" style={{
-          opacity: value === false ? 1 : 0,
-          transition: 'opacity 0.2s'
-        }} />
+        <MuiBox component="div" sx={optionSx(value === false)} onClick={() => handleSelect(false)} className={stripMappedClassNames(`gender-option ${value === false ? 'selected' : ''} ${disabled ? 'disabled' : ''} flex-fill h-100 d-flex align-items-center justify-content-center gap-2 rounded-2 select-none`)}>
+          <Icon sx={{ opacity: value === false ? 1 : 0, transition: 'opacity 0.2s' }} icon="lucide:check-circle" width="16" />
           <span>{t("auth.nu")}</span>
-        </div>
-      </div>
+        </MuiBox>
+      </MuiBox>
 
-      {error && <div className="text-danger text-xs mt-1.5 d-flex align-items-center gap-1 animate-fade-in" style={{
-      fontWeight: 500
-    }}>
+      {error && <MuiBox component="div" sx={{ color: "error.main", display: "flex", alignItems: "center", gap: "0.25rem", fontWeight: 500 }} className="text-xs mt-1.5 animate-fade-in">
           <Icon icon="lucide:alert-circle" width="12" />
           <span>{error}</span>
-        </div>}
+        </MuiBox>}
 
-      {/* Dynamic hover and active selection styling */}
-      <style>{`
-        .gender-option {
-          transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        .gender-option:hover:not(.disabled):not(.selected) {
-          background-color: rgba(255, 122, 51, 0.05) !important;
-          color: var(--primary) !important;
-        }
-        .gender-option.selected {
-          box-shadow: 0 2px 6px rgba(255, 122, 51, 0.12) !important;
-          border-color: rgba(255, 122, 51, 0.15) !important;
-        }
-      `}</style>
     </Form.Group>;
 }

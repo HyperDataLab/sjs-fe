@@ -1,13 +1,17 @@
 import { useTranslation } from "react-i18next";
-import { Form } from 'react-bootstrap';
+import { Form } from '@/shared/components/ui/muiAdapters';
 import Icon from '../../../../shared/components/Icon';
 import { HeaderFilterCard } from '../../../../shared/components/Card';
 import { SYSTEM_ROLES, ACCOUNT_STATUSES } from '../../../../shared/constants/systemConstants';
 
+
+import MuiBox from '@mui/material/Box';
+
+
 /**
  * UserFilterBar Component
  * Renders filter controls for searching and filtering the user directory.
- * 
+ *
  * @param {Object} props - Props
  * @param {string} props.search - Current search text
  * @param {function} props.onSearchChange - Search input change handler
@@ -31,7 +35,7 @@ export default function UserFilterBar({
   } = useTranslation();
   return <HeaderFilterCard title="All Contributors" count={totalCount} singularLabel="User" pluralLabel="Users">
       {/* Search Field */}
-      <div className="d-flex align-items-center gap-2 px-3 py-1 rounded-3" style={{
+      <MuiBox component="div" sx={{ display: "flex", alignItems: "center", gap: "0.5rem", paddingLeft: "1rem", paddingRight: "1rem", paddingTop: "0.25rem", paddingBottom: "0.25rem", borderRadius: "0.5rem" }}  style={{
       backgroundColor: 'var(--bg-card)',
       border: '1px solid var(--border)',
       minWidth: '220px'
@@ -39,14 +43,14 @@ export default function UserFilterBar({
         <Icon icon="lucide:search" width="16" style={{
         color: 'var(--text-muted)'
       }} />
-        <input type="text" placeholder={t("admin.searchByNameemail")} value={search} onChange={e => onSearchChange(e.target.value)} className="border-0 bg-transparent text-main w-100" style={{
+        <MuiBox component="input" sx={{ border: 0, bgcolor: "transparent", width: "100%" }} type="text" placeholder={t("admin.searchByNameemail")} value={search} onChange={e => onSearchChange(e.target.value)} className="text-main" style={{
         outline: 'none',
         fontSize: '0.85rem'
       }} />
-      </div>
+      </MuiBox>
 
       {/* Filter by Role Dropdown */}
-      <Form.Select size="sm" value={selectedRole} onChange={e => onRoleChange(e.target.value)} className="form-control rounded-3" style={{
+      <Form.Select sx={{ display: "block", width: "100%", px: "0.75rem", py: "0.375rem", fontSize: "1rem", lineHeight: 1.5, color: "text.primary", bgcolor: "background.paper", border: "1px solid #dee2e6", borderRadius: "0.5rem" }} size="sm" value={selectedRole} onChange={e => onRoleChange(e.target.value)}  style={{
       width: '130px',
       height: '34px',
       borderColor: 'var(--border)',
@@ -60,7 +64,7 @@ export default function UserFilterBar({
       </Form.Select>
 
       {/* Lọc theo trạng thái tài khoản - Lấy động từ hằng số hệ thống */}
-      <Form.Select size="sm" value={selectedStatus} onChange={e => onStatusChange(e.target.value)} className="form-control rounded-3" style={{
+      <Form.Select sx={{ display: "block", width: "100%", px: "0.75rem", py: "0.375rem", fontSize: "1rem", lineHeight: 1.5, color: "text.primary", bgcolor: "background.paper", border: "1px solid #dee2e6", borderRadius: "0.5rem" }} size="sm" value={selectedStatus} onChange={e => onStatusChange(e.target.value)}  style={{
       width: '130px',
       height: '34px',
       borderColor: 'var(--border)',
@@ -74,15 +78,15 @@ export default function UserFilterBar({
       </Form.Select>
 
       {/* Clear Filters indicator */}
-      {(search || selectedRole !== 'all' || selectedStatus !== 'all') && <button type="button" onClick={() => {
+      {(search || selectedRole !== 'all' || selectedStatus !== 'all') && <MuiBox component="button" sx={{ display: "flex", alignItems: "center", justifyContent: "center", px: "0.75rem", py: "0.375rem", border: 0, borderRadius: "0.375rem", fontSize: "1rem", fontWeight: 400, lineHeight: 1.5, cursor: "pointer", textDecoration: "none", bgcolor: "transparent", color: "primary.main", padding: "0", gap: "0.25rem" }} type="button" onClick={() => {
       onSearchChange('');
       onRoleChange('all');
       onStatusChange('all');
-    }} className="btn btn-link p-0 text-decoration-none text-muted-custom hover-primary d-flex align-items-center gap-1" style={{
+    }} className="text-muted-custom hover-primary" style={{
       fontSize: '0.85rem'
     }}>
           <Icon icon="lucide:x-circle" width="16" />
           <span>Reset</span>
-        </button>}
+        </MuiBox>}
     </HeaderFilterCard>;
 }

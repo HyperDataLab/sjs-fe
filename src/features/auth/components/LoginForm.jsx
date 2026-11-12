@@ -1,11 +1,15 @@
 import { useTranslation } from "react-i18next";
 import { useState, useEffect } from 'react';
-import { Form } from 'react-bootstrap';
+import { Form } from '@/shared/components/ui/muiAdapters';
 import InputField from '../../../shared/components/InputField';
 import PasswordInput from './PasswordInput';
 import CheckboxField from './CheckboxField';
 import SubmitButton from './SubmitButton';
 import FormErrorMessage from './FormErrorMessage';
+
+
+import MuiBox from '@mui/material/Box';
+
 
 export default function LoginForm({
   onSubmit,
@@ -109,24 +113,24 @@ export default function LoginForm({
       <InputField label="Email" name="email" type="email" value={formData.email} onChange={handleChange} onBlur={handleBlur} placeholder={t("auth.nameemailcom")} error={errors.email} icon="lucide:mail" required disabled={isLoading} />
 
       {/* Password Input */}
-      <div className="position-relative mb-3">
-        <div className="d-flex justify-content-between align-items-center mb-1.5">
-          <Form.Label className="text-xs font-bold mb-0 d-flex align-items-center gap-1" style={{
+      <MuiBox component="div" sx={{ position: "relative", marginBottom: "1rem" }} >
+        <MuiBox component="div" sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }} className="mb-1.5">
+          <Form.Label sx={{ marginBottom: "0", display: "flex", alignItems: "center", gap: "0.25rem" }} className="text-xs font-bold" style={{
           letterSpacing: '0.05em',
           color: 'var(--text-main)',
           textTransform: 'uppercase'
-        }}>{t("auth.matKhau")}<span className="text-danger">*</span>
+        }}>{t("auth.matKhau")}<MuiBox component="span" sx={{ color: "error.main" }} >*</MuiBox>
           </Form.Label>
-          <a href="/forgot-password" className="text-xs font-semibold text-decoration-none" style={{
+          <MuiBox component="a" sx={{ textDecoration: "none" }} href="/forgot-password" className="text-xs font-semibold" style={{
           color: 'var(--primary)',
           letterSpacing: '0.01em'
         }} onClick={e => {
           e.preventDefault();
           window.location.href = '/forgot-password';
-        }}>{t("auth.quenMatKhau")}</a>
-        </div>
+        }}>{t("auth.quenMatKhau")}</MuiBox>
+        </MuiBox>
         <PasswordInput label={null} name="password" value={formData.password} onChange={handleChange} onBlur={handleBlur} placeholder={t("admin.key")} error={errors.password} required disabled={isLoading} />
-      </div>
+      </MuiBox>
 
       {/* Remember Login Checkbox */}
       <CheckboxField name="remember_login" checked={formData.remember_login} onChange={handleChange} labelMarkup={rememberLabel} disabled={isLoading} />

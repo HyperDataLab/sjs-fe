@@ -1,6 +1,6 @@
 import { useTranslation } from "react-i18next";
 import { useEffect, useState, useCallback, useRef } from 'react';
-import { Container, Row, Col, Form } from 'react-bootstrap';
+import { Container, Row, Col, Form } from '@/shared/components/ui/muiAdapters';
 import { useNavigate } from 'react-router-dom';
 import useZoneStats from '../hooks/useZoneStats';
 import { getCountryArticlesApi } from '../api/zone.api';
@@ -11,7 +11,10 @@ import Header from '../../landing/components/Header';
 import AuthRequiredModal from '../../../shared/components/AuthRequiredModal';
 import { useAuthStore } from '../../../app/store/authStore';
 import { isAuthenticated as checkAuthSession } from '../../../shared/utils/auth';
-import './GeographyPage.css';
+
+
+import MuiBox from '@mui/material/Box';
+
 export default function GeographyPage() {
   const {
     t
@@ -127,58 +130,58 @@ export default function GeographyPage() {
     }
   };
   return <div className="geography-page-wrapper grid-bg">
-      <div className="radial-fade position-absolute inset-0" style={{
+      <MuiBox component="div" sx={{ position: "absolute" }} className="radial-fade inset-0" style={{
       pointerEvents: 'none',
       zIndex: 0
     }} />
       <Header />
-      <Container fluid className="px-4 py-4 position-relative" style={{
+      <Container sx={{ paddingLeft: "1.5rem", paddingRight: "1.5rem", paddingTop: "1.5rem", paddingBottom: "1.5rem", position: "relative" }} fluid  style={{
       zIndex: 1
     }}>
         {/* Breadcrumb */}
-        <div className="geography-breadcrumb mb-2">
-          <span>{t("author.tongQuan")}<span className="mx-1">&rsaquo;</span> <span className="geography-breadcrumb-active">{t("zone.phanBoDiaLy")}</span>
+        <MuiBox component="div" sx={{ marginBottom: "0.5rem" }} className="geography-breadcrumb">
+          <span>{t("author.tongQuan")}<MuiBox component="span" sx={{ marginLeft: "0.25rem", marginRight: "0.25rem" }} >&rsaquo;</MuiBox> <span className="geography-breadcrumb-active">{t("zone.phanBoDiaLy")}</span>
           </span>
-        </div>
+        </MuiBox>
 
         {/* Header */}
-        <div className="mb-4 pb-2 d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-3">
+        <MuiBox component="div" sx={{ marginBottom: "1.5rem", paddingBottom: "0.5rem", display: "flex", flexDirection: "column", "@media (min-width:768px)": { flexDirection: "row", alignItems: "center" }, justifyContent: "space-between", gap: "1rem" }} >
           <div>
             <h1 className="geography-title">{t("zone.phanBoTapChiTheoQuocGia")}</h1>
             <p className="geography-subtitle">{t("zone.xemThongKeSoLuongAnPhamKhoaHoc")}</p>
           </div>
 
           {/* Year Filter Dropdown */}
-          <div className="d-flex align-items-center gap-2" style={{
+          <MuiBox component="div" sx={{ display: "flex", alignItems: "center", gap: "0.5rem" }}  style={{
           minWidth: '220px'
         }}>
-            <span className="text-muted-custom fw-semibold text-nowrap" style={{
+            <MuiBox component="span" sx={{ fontWeight: 600, whiteSpace: "nowrap" }} className="text-muted-custom" style={{
             fontSize: '0.82rem'
-          }}>{t("article.namXuatBan")}</span>
-            <Form.Select value={selectedYear} onChange={e => {
+          }}>{t("article.namXuatBan")}</MuiBox>
+            <Form.Select sx={{ boxShadow: "0 .125rem .25rem rgba(0,0,0,.075)" }} value={selectedYear} onChange={e => {
             setSelectedYear(e.target.value);
             setArticlesPage(1);
-          }} className="geography-select shadow-sm">
+          }} className="geography-select">
               <option value="All">{t("zone.tatCaCacNam")}</option>
               {['2026', '2025', '2024', '2023', '2022', '2021', '2020', '2019', '2018', '2017', '2016', '2015'].map(yr => <option key={yr} value={yr}>{yr}</option>)}
             </Form.Select>
-          </div>
-        </div>
+          </MuiBox>
+        </MuiBox>
 
         {/* Error handling for countries */}
-        {errorCountries && <div className="alert alert-danger d-flex align-items-center gap-2 mb-4" role="alert">
+        {errorCountries && <MuiBox component="div" sx={{ position: "relative", p: "1rem", mb: "1rem", border: "1px solid transparent", borderRadius: "0.375rem", bgcolor: "#f8d7da", borderColor: "#f5c2c7", color: "#842029", display: "flex", alignItems: "center", gap: "0.5rem", marginBottom: "1.5rem" }}  role="alert">
             <div>
               <strong>{t("zone.loiTaiDuLieu")}</strong>
               {errorCountries}
             </div>
-            <button className="btn btn-sm btn-outline-danger ms-auto" onClick={() => fetchCountryStats({
+            <MuiBox component="button" sx={{ display: "inline-flex", alignItems: "center", justifyContent: "center", px: "0.5rem", py: "0.25rem", border: "1px solid", borderRadius: "0.25rem", fontSize: "0.875rem", fontWeight: 400, lineHeight: 1.5, cursor: "pointer", textDecoration: "none", borderColor: "error.main", bgcolor: "transparent", color: "error.main", ml: "auto" }}  onClick={() => fetchCountryStats({
           limit: 1000,
           year: selectedYear === 'All' ? undefined : selectedYear
-        })}>{t("article.thuLai")}</button>
-          </div>}
+        })}>{t("article.thuLai")}</MuiBox>
+          </MuiBox>}
 
         {/* Main Content Layout */}
-        <Row className="g-4">
+        <Row sx={{ gap: "1.5rem" }} >
           {/* Left Column: Chart Area */}
           <Col xs={12} lg={7} xl={8}>
             <GeographyTerritoryChart data={countryStats} loading={loadingCountries} selectedCountry={selectedCountry} onSelectCountry={handleSelectCountry} selectedYear={selectedYear} />
@@ -191,7 +194,7 @@ export default function GeographyPage() {
         </Row>
 
         {/* Selected Country Articles List */}
-        {selectedCountry && <Row className="mt-4" ref={articlesRef}>
+        {selectedCountry && <Row sx={{ marginTop: "1.5rem" }}  ref={articlesRef}>
             <Col xs={12}>
               <GeographyArticleList articles={articles} loading={loadingArticles} total={totalArticles} page={articlesPage} totalPages={totalPages} onPageChange={setArticlesPage} onDetailClick={handleDetailClick} countryName={selectedCountry.name} />
             </Col>

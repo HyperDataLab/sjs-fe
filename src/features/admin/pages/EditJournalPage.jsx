@@ -1,11 +1,15 @@
 import { useTranslation } from "react-i18next";
 import { t } from "i18next";
 import { useState, useEffect } from 'react';
-import { Form, Row, Col, Card } from 'react-bootstrap';
+import { Form, Row, Col, Card } from '@/shared/components/ui/muiAdapters';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Icon } from '@iconify/react';
+import Icon from '../../../shared/components/Icon.jsx';
 import { useJournalManagement } from '../../journal/hooks/useJournalManagement';
 import PrimaryButton from '../../../shared/components/Button/PrimaryButton';
+
+
+import MuiBox from '@mui/material/Box';
+
 export default function EditJournalPage() {
   const { t: _t } = useTranslation();
   const {
@@ -170,7 +174,7 @@ export default function EditJournalPage() {
       publisher_name: selectedPub ? selectedPub.display_name : 'ResearchPulse Press',
       publisher: formData.publisher
     };
-    
+
     try {
       await updateJournal(id, payload);
       navigate(`${basePath}/journals`);
@@ -179,57 +183,57 @@ export default function EditJournalPage() {
       alert(t("admin.loiCapNhatTapChi") + " " + errorMsg);
     }
   };
-  return <div className="d-flex flex-column gap-3 text-start">
+  return <MuiBox component="div" sx={{ display: "flex", flexDirection: "column", gap: "1rem", textAlign: "left" }} >
       <div>
-        <div className="admin-breadcrumb mb-2">
+        <MuiBox component="div" sx={{ marginBottom: "0.5rem" }} className="admin-breadcrumb">
           <span className="cursor-pointer text-muted-custom" onClick={() => navigate(`${basePath}/journals`)}>
             Journals
           </span>
-          <Icon icon="lucide:chevron-right" className="mx-1" />
+          <Icon sx={{ marginLeft: "0.25rem", marginRight: "0.25rem" }} icon="lucide:chevron-right"  />
           <span className="admin-breadcrumb__current">Edit Journal</span>
-        </div>
-        <h2 className="font-display fw-bold text-main mb-1">Edit Journal</h2>
-        <p className="text-muted-custom small mb-0">
+        </MuiBox>
+        <MuiBox component="h2" sx={{ fontWeight: 700, marginBottom: "0.25rem" }} className="font-display text-main">Edit Journal</MuiBox>
+        <MuiBox component="p" sx={{ fontSize: "0.875em", marginBottom: "0" }} className="text-muted-custom">
           Modify general information, editorial settings, and visibility for your journal.
-        </p>
+        </MuiBox>
       </div>
 
-      <Form onSubmit={handleSubmit} className="mt-2">
-        <Row className="g-4">
+      <Form sx={{ marginTop: "0.5rem" }} onSubmit={handleSubmit} >
+        <Row sx={{ gap: "1.5rem" }} >
           {/* Left Column */}
           <Col xs={12} lg={8}>
-            <Card className="border p-4 shadow-none bg-white rounded-3">
-              <h5 className="font-display fw-bold text-main border-bottom pb-2.5 mb-4">
+            <Card sx={{ border: "1px solid #dee2e6", padding: "1.5rem", boxShadow: "none", bgcolor: "background.paper", borderRadius: "0.5rem" }} >
+              <MuiBox component="h5" sx={{ fontWeight: 700, borderBottom: "1px solid #dee2e6", marginBottom: "1.5rem" }} className="font-display text-main pb-2.5">
                 General Information
-              </h5>
+              </MuiBox>
 
               {/* Journal Title */}
-              <Form.Group className="mb-4">
-                <Form.Label className="fw-medium small text-main">Journal Title <span className="text-danger">*</span></Form.Label>
+              <Form.Group sx={{ marginBottom: "1.5rem" }} >
+                <Form.Label sx={{ fontWeight: 500, fontSize: "0.875em" }} className="text-main">Journal Title <MuiBox component="span" sx={{ color: "error.main" }} >*</MuiBox></Form.Label>
                 <Form.Control type="text" name="title" value={formData.title} onChange={handleChange} isInvalid={!!errors.title} placeholder={t("admin.egJournalOfComputerScience")} />
                 <Form.Control.Feedback type="invalid">{errors.title}</Form.Control.Feedback>
               </Form.Group>
 
               {/* ISSN inputs */}
-              <Row className="g-3 mb-4">
+              <Row sx={{ gap: "1rem", marginBottom: "1.5rem" }} >
                 <Col xs={12} sm={6}>
                   <Form.Group>
-                    <Form.Label className="fw-medium small text-main">Print ISSN <span className="text-danger">*</span></Form.Label>
+                    <Form.Label sx={{ fontWeight: 500, fontSize: "0.875em" }} className="text-main">Print ISSN <MuiBox component="span" sx={{ color: "error.main" }} >*</MuiBox></Form.Label>
                     <Form.Control type="text" name="issn" value={formData.issn} onChange={handleChange} isInvalid={!!errors.issn} placeholder={t("admin.eg15493636")} />
                     <Form.Control.Feedback type="invalid">{errors.issn}</Form.Control.Feedback>
                   </Form.Group>
                 </Col>
                 <Col xs={12} sm={6}>
                   <Form.Group>
-                    <Form.Label className="fw-medium small text-main">Online ISSN</Form.Label>
+                    <Form.Label sx={{ fontWeight: 500, fontSize: "0.875em" }} className="text-main">Online ISSN</Form.Label>
                     <Form.Control type="text" name="onlineIssn" value={formData.onlineIssn} onChange={handleChange} placeholder={t("admin.eg1937478x")} />
                   </Form.Group>
                 </Col>
               </Row>
 
               {/* Aim & Scope */}
-              <Form.Group className="mb-0">
-                <Form.Label className="fw-medium small text-main">Aim and Scope</Form.Label>
+              <Form.Group sx={{ marginBottom: "0" }} >
+                <Form.Label sx={{ fontWeight: 500, fontSize: "0.875em" }} className="text-main">Aim and Scope</Form.Label>
                 <Form.Control as="textarea" rows={6} name="aimScope" value={formData.aimScope} onChange={handleChange} placeholder={t("admin.describeTheEditorialAimsScopes")} />
               </Form.Group>
             </Card>
@@ -237,33 +241,33 @@ export default function EditJournalPage() {
 
           {/* Right Column */}
           <Col xs={12} lg={4}>
-            <div className="d-flex flex-column gap-4">
+            <MuiBox component="div" sx={{ display: "flex", flexDirection: "column", gap: "1.5rem" }} >
               {/* Visibility Card */}
-              <Card className="border p-4 shadow-none bg-white rounded-3">
-                <h5 className="font-display fw-bold text-main border-bottom pb-2.5 mb-3">
+              <Card sx={{ border: "1px solid #dee2e6", padding: "1.5rem", boxShadow: "none", bgcolor: "background.paper", borderRadius: "0.5rem" }} >
+                <MuiBox component="h5" sx={{ fontWeight: 700, borderBottom: "1px solid #dee2e6", marginBottom: "1rem" }} className="font-display text-main pb-2.5">
                   Visibility
-                </h5>
-                <div className="d-flex align-items-center justify-content-between py-2">
+                </MuiBox>
+                <MuiBox component="div" sx={{ display: "flex", alignItems: "center", justifyContent: "space-between", paddingTop: "0.5rem", paddingBottom: "0.5rem" }} >
                   <div>
-                    <div className="fw-bold text-main small mb-0.5">Publicly Listed</div>
+                    <MuiBox component="div" sx={{ fontWeight: 700, fontSize: "0.875em" }} className="text-main mb-0.5">Publicly Listed</MuiBox>
                     <small className="text-muted-custom">Visible in main index</small>
                   </div>
                   <Form.Check type="switch" id="visibility-switch" className="admin-toggle-switch" checked={formData.visibility === 'Public'} onChange={handleToggleVisibility} style={{
                   fontSize: '1.2rem',
                   cursor: 'pointer'
                 }} />
-                </div>
+                </MuiBox>
               </Card>
 
               {/* Editorial Board Card */}
-              <Card className="border p-4 shadow-none bg-white rounded-3">
-                <h5 className="font-display fw-bold text-main border-bottom pb-2.5 mb-4">
+              <Card sx={{ border: "1px solid #dee2e6", padding: "1.5rem", boxShadow: "none", bgcolor: "background.paper", borderRadius: "0.5rem" }} >
+                <MuiBox component="h5" sx={{ fontWeight: 700, borderBottom: "1px solid #dee2e6", marginBottom: "1.5rem" }} className="font-display text-main pb-2.5">
                   Editorial Board
-                </h5>
+                </MuiBox>
 
                 {/* Publisher Select Dropdown */}
-                <Form.Group className="mb-4">
-                  <Form.Label className="fw-medium small text-main">{t("admin.nhaXuatBanPublisher")}<span className="text-danger">*</span></Form.Label>
+                <Form.Group sx={{ marginBottom: "1.5rem" }} >
+                  <Form.Label sx={{ fontWeight: 500, fontSize: "0.875em" }} className="text-main">{t("admin.nhaXuatBanPublisher")}<MuiBox component="span" sx={{ color: "error.main" }} >*</MuiBox></Form.Label>
                   <Form.Select name="publisher" value={formData.publisher} onChange={handleChange} isInvalid={!!errors.publisher} style={{
                   cursor: 'pointer'
                 }}>
@@ -275,8 +279,8 @@ export default function EditJournalPage() {
                 </Form.Group>
 
                 {/* Category Selector */}
-                <Form.Group className="mb-4">
-                  <Form.Label className="fw-medium small text-main">Broad Category <span className="text-danger">*</span></Form.Label>
+                <Form.Group sx={{ marginBottom: "1.5rem" }} >
+                  <Form.Label sx={{ fontWeight: 500, fontSize: "0.875em" }} className="text-main">Broad Category <MuiBox component="span" sx={{ color: "error.main" }} >*</MuiBox></Form.Label>
                   <Form.Select name="subjectCategory" value={formData.subjectCategory} onChange={handleChange} isInvalid={!!errors.subjectCategory} style={{
                   cursor: 'pointer'
                 }}>
@@ -289,8 +293,8 @@ export default function EditJournalPage() {
                 </Form.Group>
 
                 {/* Specific Research Area */}
-                <Form.Group className="mb-0">
-                  <Form.Label className="fw-medium small text-main">Specific Research Area <span className="text-danger">*</span></Form.Label>
+                <Form.Group sx={{ marginBottom: "0" }} >
+                  <Form.Label sx={{ fontWeight: 500, fontSize: "0.875em" }} className="text-main">Specific Research Area <MuiBox component="span" sx={{ color: "error.main" }} >*</MuiBox></Form.Label>
                   <Form.Select name="subjectArea" value={formData.subjectArea} onChange={handleChange} isInvalid={!!errors.subjectArea} style={{
                   cursor: 'pointer'
                 }}>
@@ -302,21 +306,21 @@ export default function EditJournalPage() {
                   <Form.Control.Feedback type="invalid">{errors.subjectArea}</Form.Control.Feedback>
                 </Form.Group>
               </Card>
-            </div>
+            </MuiBox>
           </Col>
         </Row>
 
         {/* Form Actions Footer */}
-        <div className="d-flex justify-content-end gap-3 mt-4 pt-3 border-top" style={{
+        <MuiBox component="div" sx={{ display: "flex", justifyContent: "flex-end", gap: "1rem", marginTop: "1.5rem", paddingTop: "1rem", borderTop: "1px solid #dee2e6" }}  style={{
         borderColor: 'var(--border)'
       }}>
-          <PrimaryButton type="button" variant="outline" className="py-2.5 px-4" onClick={() => navigate(`${basePath}/journals`)}>
+          <PrimaryButton sx={{ paddingLeft: "1.5rem", paddingRight: "1.5rem" }} type="button" variant="outline" className="py-2.5" onClick={() => navigate(`${basePath}/journals`)}>
             Cancel Changes
           </PrimaryButton>
-          <PrimaryButton type="submit" className="py-2.5 px-4">
+          <PrimaryButton sx={{ paddingLeft: "1.5rem", paddingRight: "1.5rem" }} type="submit" className="py-2.5">
             Update Journal
           </PrimaryButton>
-        </div>
+        </MuiBox>
       </Form>
-    </div>;
+    </MuiBox>;
 }

@@ -1,5 +1,9 @@
 ﻿import { useState } from "react";
 import Icon from "../../../shared/components/Icon";
+import { getClassNameSx, stripMappedClassNames } from '../../../shared/theme/classNameSx';
+
+import MuiBox from '@mui/material/Box';
+
 
 /**
  * @file AuthorResearchImpact.jsx
@@ -34,20 +38,20 @@ export default function AuthorResearchImpact({ metrics, trend = [] }) {
           <h2 className="ap-section-title">Research Impact & Trajectory</h2>
         </div>
         <div className="ap-impact-toggle-group">
-          <button
+          <MuiBox component="button" sx={getClassNameSx(`ap-impact-toggle-btn ${metricMode === "citations" ? "active" : ""}`)}
             type="button"
-            className={`ap-impact-toggle-btn ${metricMode === "citations" ? "active" : ""}`}
+            className={stripMappedClassNames(`ap-impact-toggle-btn ${metricMode === "citations" ? "active" : ""}`)}
             onClick={() => setMetricMode("citations")}
           >
             Citations Over Time
-          </button>
-          <button
+          </MuiBox>
+          <MuiBox component="button" sx={getClassNameSx(`ap-impact-toggle-btn ${metricMode === "publications" ? "active" : ""}`)}
             type="button"
-            className={`ap-impact-toggle-btn ${metricMode === "publications" ? "active" : ""}`}
+            className={stripMappedClassNames(`ap-impact-toggle-btn ${metricMode === "publications" ? "active" : ""}`)}
             onClick={() => setMetricMode("publications")}
           >
             Publications Output
-          </button>
+          </MuiBox>
         </div>
       </div>
 

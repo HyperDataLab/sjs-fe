@@ -8,6 +8,10 @@ import AuthBanner from '../components/AuthBanner';
 import ForgotPasswordForm from '../components/ForgotPasswordForm';
 import ForgotPasswordSuccess from '../components/ForgotPasswordSuccess';
 import Icon from '../../../shared/components/Icon';
+
+
+import MuiBox from '@mui/material/Box';
+
 export default function ForgotPasswordPage() {
   const { t: _t } = useTranslation();
   const [isLoading, setIsLoading] = useState(false);
@@ -44,33 +48,33 @@ export default function ForgotPasswordPage() {
   return <AuthLayout banner={<AuthBanner />}>
       {!isSubmitted ? <>
           {/* Logo on mobile only */}
-          <div className="d-flex d-md-none align-items-center gap-2 mb-4">
-            <div className="d-flex align-items-center justify-content-center" style={{
+          <MuiBox component="div" sx={{ display: "flex", "@media (min-width:768px)": { display: "none" }, alignItems: "center", gap: "0.5rem", marginBottom: "1.5rem" }} >
+            <MuiBox component="div" sx={{ display: "flex", alignItems: "center", justifyContent: "center" }}  style={{
           width: '36px',
           height: '36px',
           borderRadius: '8px',
           background: 'var(--btn-dark)',
           boxShadow: '0 4px 10px rgba(7, 26, 28, 0.15)'
         }}>
-              <Icon icon="lucide:activity" className="text-white text-sm" />
-            </div>
-            <span className="fs-5 fw-bold font-display" style={{
+              <Icon sx={{ color: "#fff" }} icon="lucide:activity" className="text-sm" />
+            </MuiBox>
+            <MuiBox component="span" sx={{ fontSize: "1.25rem", fontWeight: 700 }} className="font-display" style={{
           letterSpacing: '0.03em',
           color: 'var(--text-main)'
         }}>
               ResearchPulse
-            </span>
-          </div>
+            </MuiBox>
+          </MuiBox>
 
-          <div className="mb-4">
-            <h2 className="font-display fw-bold mb-1" style={{
+          <MuiBox component="div" sx={{ marginBottom: "1.5rem" }} >
+            <MuiBox component="h2" sx={{ fontWeight: 700, marginBottom: "0.25rem" }} className="font-display" style={{
           fontSize: '1.85rem',
           color: 'var(--text-main)'
-        }}>{t("auth.quenMatKhau")}</h2>
-            <p className="text-muted-custom text-sm mb-0" style={{
+        }}>{t("auth.quenMatKhau")}</MuiBox>
+            <MuiBox component="p" sx={{ marginBottom: "0" }} className="text-muted-custom text-sm" style={{
           color: 'var(--text-muted)'
-        }}>{t("auth.nhapEmailTaiKhoanCuaBanNeuEmai")}</p>
-          </div>
+        }}>{t("auth.nhapEmailTaiKhoanCuaBanNeuEmai")}</MuiBox>
+          </MuiBox>
 
           <ForgotPasswordForm onSubmit={handleForgotPasswordSubmit} isLoading={isLoading} apiError={error} />
         </> : <ForgotPasswordSuccess onResend={handleResendEmail} isLoading={isLoading} />}

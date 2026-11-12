@@ -1,8 +1,12 @@
 import { useTranslation } from "react-i18next";
 import { useState } from 'react';
-import { Modal, Form, Row, Col } from 'react-bootstrap';
+import { Modal, Form, Row, Col } from '@/shared/components/ui/muiAdapters';
 import { useJournalManagement } from '../../../journal/hooks/useJournalManagement';
 import PrimaryButton from '../../../../shared/components/Button/PrimaryButton';
+
+
+import MuiBox from '@mui/material/Box';
+
 
 /**
  * Component CreateVolumeModal - Cửa sổ Modal bật lên để Admin tạo Tập (Volume) mới.
@@ -89,18 +93,18 @@ export default function CreateVolumeModal({
     handleClose();
   };
   return <Modal show={show} onHide={handleClose} centered backdrop="static" className="text-main">
-      <Modal.Header closeButton className="border-bottom-0 pb-0">
-        <Modal.Title className="font-display fw-bold h5 text-main">Create New Volume</Modal.Title>
+      <Modal.Header sx={{ borderBottom: 0, paddingBottom: "0" }} closeButton >
+        <Modal.Title sx={{ fontWeight: 500, fontSize: "1.25rem", lineHeight: 1.2 }} className="font-display text-main">Create New Volume</Modal.Title>
       </Modal.Header>
 
       <Form onSubmit={handleSubmit}>
-        <Modal.Body className="py-3 text-start">
-          
+        <Modal.Body sx={{ paddingTop: "1rem", paddingBottom: "1rem", textAlign: "left" }} >
+
           {/* Row 1: Volume Number & Publication Year */}
-          <Row className="g-3 mb-3">
+          <Row sx={{ gap: "1rem", marginBottom: "1rem" }} >
             <Col xs={12} sm={6}>
               <Form.Group>
-                <Form.Label className="fw-medium small text-main">Volume Number <span className="text-danger">*</span></Form.Label>
+                <Form.Label sx={{ fontWeight: 500, fontSize: "0.875em" }} className="text-main">Volume Number <MuiBox component="span" sx={{ color: "error.main" }} >*</MuiBox></Form.Label>
                 <Form.Control type="text" name="volumeNumber" value={formData.volumeNumber} onChange={handleChange} isInvalid={!!errors.volumeNumber} placeholder={t("admin.egVolume15")} />
                 <Form.Control.Feedback type="invalid">{errors.volumeNumber}</Form.Control.Feedback>
               </Form.Group>
@@ -108,7 +112,7 @@ export default function CreateVolumeModal({
 
             <Col xs={12} sm={6}>
               <Form.Group>
-                <Form.Label className="fw-medium small text-main">Publication Year <span className="text-danger">*</span></Form.Label>
+                <Form.Label sx={{ fontWeight: 500, fontSize: "0.875em" }} className="text-main">Publication Year <MuiBox component="span" sx={{ color: "error.main" }} >*</MuiBox></Form.Label>
                 <Form.Select name="publicationYear" value={formData.publicationYear} onChange={handleChange} isInvalid={!!errors.publicationYear} style={{
                 cursor: 'pointer'
               }}>
@@ -125,10 +129,10 @@ export default function CreateVolumeModal({
           </Row>
 
           {/* Row 2: Frequency & Total Expected Issues */}
-          <Row className="g-3 mb-3">
+          <Row sx={{ gap: "1rem", marginBottom: "1rem" }} >
             <Col xs={12} sm={6}>
               <Form.Group>
-                <Form.Label className="fw-medium small text-main">Frequency</Form.Label>
+                <Form.Label sx={{ fontWeight: 500, fontSize: "0.875em" }} className="text-main">Frequency</Form.Label>
                 <Form.Select name="frequency" value={formData.frequency} onChange={handleChange} style={{
                 cursor: 'pointer'
               }}>
@@ -141,7 +145,7 @@ export default function CreateVolumeModal({
 
             <Col xs={12} sm={6}>
               <Form.Group>
-                <Form.Label className="fw-medium small text-main">Total Expected Issues <span className="text-danger">*</span></Form.Label>
+                <Form.Label sx={{ fontWeight: 500, fontSize: "0.875em" }} className="text-main">Total Expected Issues <MuiBox component="span" sx={{ color: "error.main" }} >*</MuiBox></Form.Label>
                 <Form.Control type="number" name="totalExpectedIssues" value={formData.totalExpectedIssues} onChange={handleChange} isInvalid={!!errors.totalExpectedIssues} placeholder={t("admin.eg4")} />
                 <Form.Control.Feedback type="invalid">{errors.totalExpectedIssues}</Form.Control.Feedback>
               </Form.Group>
@@ -149,17 +153,17 @@ export default function CreateVolumeModal({
           </Row>
 
           {/* Row 3: Description / Internal Notes */}
-          <Form.Group className="mb-0">
-            <Form.Label className="fw-medium small text-main">Description / Internal Notes</Form.Label>
+          <Form.Group sx={{ marginBottom: "0" }} >
+            <Form.Label sx={{ fontWeight: 500, fontSize: "0.875em" }} className="text-main">Description / Internal Notes</Form.Label>
             <Form.Control as="textarea" rows={4} name="description" value={formData.description} onChange={handleChange} placeholder={t("admin.enterAdministrativeNotesOrVolu")} />
           </Form.Group>
 
         </Modal.Body>
-        <Modal.Footer className="border-top-0 pt-0">
-          <PrimaryButton variant="outline" onClick={handleClose} className="px-3">
+        <Modal.Footer sx={{ borderTop: 0, paddingTop: "0" }} >
+          <PrimaryButton sx={{ paddingLeft: "1rem", paddingRight: "1rem" }} variant="outline" onClick={handleClose} >
             Cancel
           </PrimaryButton>
-          <PrimaryButton type="submit" className="px-3">
+          <PrimaryButton sx={{ paddingLeft: "1rem", paddingRight: "1rem" }} type="submit" >
             Create Volume
           </PrimaryButton>
         </Modal.Footer>

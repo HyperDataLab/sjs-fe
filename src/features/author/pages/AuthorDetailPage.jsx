@@ -39,7 +39,8 @@ import {
   MOCK_RELATED_RESEARCHERS,
 } from "../data/authorProfile.mock";
 
-import "./AuthorDetailPage.css";
+
+import MuiBox from '@mui/material/Box';
 
 /**
  * @file AuthorDetailPage.jsx
@@ -73,21 +74,21 @@ export default function AuthorDetailPage() {
       <main className="ap-main-container">
         {/* 1. BREADCRUMB */}
         <nav className="ap-breadcrumb" aria-label="breadcrumb">
-          <ol className="breadcrumb">
-            <li className="breadcrumb-item">
+          <MuiBox component="ol" sx={{ display: "flex", flexWrap: "wrap", padding: 0, marginBottom: "1rem", listStyle: "none" }} >
+            <MuiBox component="li" sx={{ display: "flex", alignItems: "center", "&:not(:last-child)::after": { content: "\"/\"", px: "0.5rem", color: "text.secondary" } }} >
               <span className="ap-breadcrumb__link" onClick={() => navigate("/")}>
                 ResearchPulse
               </span>
-            </li>
-            <li className="breadcrumb-item">
+            </MuiBox>
+            <MuiBox component="li" sx={{ display: "flex", alignItems: "center", "&:not(:last-child)::after": { content: "\"/\"", px: "0.5rem", color: "text.secondary" } }} >
               <span className="ap-breadcrumb__link" onClick={() => navigate("/authors")}>
                 Tác giả
               </span>
-            </li>
-            <li className="breadcrumb-item active" aria-current="page">
+            </MuiBox>
+            <MuiBox component="li" sx={{ display: "flex", alignItems: "center", "&:not(:last-child)::after": { content: "\"/\"", px: "0.5rem", color: "text.secondary" } }} className="active" aria-current="page">
               <span className="ap-breadcrumb__current">{author.full_name}</span>
-            </li>
-          </ol>
+            </MuiBox>
+          </MuiBox>
         </nav>
 
         {/* 2. RESEARCHER HERO */}

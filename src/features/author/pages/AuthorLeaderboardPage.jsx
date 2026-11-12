@@ -5,7 +5,7 @@ import { useTranslation } from "react-i18next";
  */
 
 import { useEffect, useState } from 'react';
-import { Container, Row, Col } from 'react-bootstrap';
+import { Container, Row, Col } from '@/shared/components/ui/muiAdapters';
 import { useNavigate } from 'react-router-dom';
 import Icon from '../../../shared/components/Icon';
 import Header from '../../landing/components/Header';
@@ -16,7 +16,10 @@ import PrimaryButton from '../../../shared/components/Button/PrimaryButton';
 import { FilterCard } from '../../../shared/components/Card';
 import { FilterSelect } from '../../../shared/components/Input';
 import AdminPagination from '../../../shared/components/Pagination';
-import './AuthorLeaderboardPage.css';
+
+
+import MuiBox from '@mui/material/Box';
+
 export default function AuthorLeaderboardPage() {
   const {
     t
@@ -63,20 +66,20 @@ export default function AuthorLeaderboardPage() {
       <Header />
 
       <Container>
-        <nav className="author-leaderboard-breadcrumb mb-4" aria-label="breadcrumb">
-          <ol className="breadcrumb">
-            <li className="breadcrumb-item">
+        <MuiBox component="nav" sx={{ marginBottom: "1.5rem" }} className="author-leaderboard-breadcrumb" aria-label="breadcrumb">
+          <MuiBox component="ol" sx={{ display: "flex", flexWrap: "wrap", padding: 0, marginBottom: "1rem", listStyle: "none" }} >
+            <MuiBox component="li" sx={{ display: "flex", alignItems: "center", "&:not(:last-child)::after": { content: "\"/\"", px: "0.5rem", color: "text.secondary" } }} >
               <span className="author-leaderboard-breadcrumb__link" onClick={() => navigate('/')}>{t("author.tongQuan")}</span>
-            </li>
-            <li className="breadcrumb-item">
+            </MuiBox>
+            <MuiBox component="li" sx={{ display: "flex", alignItems: "center", "&:not(:last-child)::after": { content: "\"/\"", px: "0.5rem", color: "text.secondary" } }} >
               <span className="author-leaderboard-breadcrumb__link" onClick={() => navigate('/authors')}>{t("author.tacGiaNoiBat")}</span>
-            </li>
-            <li className="breadcrumb-item active text-primary" aria-current="page">{t("author.bangXepHang")}</li>
-          </ol>
-        </nav>
+            </MuiBox>
+            <MuiBox component="li" sx={{ display: "flex", alignItems: "center", "&:not(:last-child)::after": { content: "\"/\"", px: "0.5rem", color: "text.secondary" }, color: "primary.main" }} className="active" aria-current="page">{t("author.bangXepHang")}</MuiBox>
+          </MuiBox>
+        </MuiBox>
 
         <section className="author-leaderboard-hero">
-          <div className="author-leaderboard-hero__content d-flex flex-column flex-md-row justify-content-between align-items-start gap-3">
+          <MuiBox component="div" sx={{ display: "flex", flexDirection: "column", "@media (min-width:768px)": { flexDirection: "row" }, justifyContent: "space-between", alignItems: "flex-start", gap: "1rem" }} className="author-leaderboard-hero__content">
             <div>
               <div className="author-leaderboard-eyebrow">
                 <Icon icon="lucide:trophy" width="17" />
@@ -85,16 +88,16 @@ export default function AuthorLeaderboardPage() {
               <h1 className="author-leaderboard-title">{t("author.bangXepHangTacGia")}</h1>
               <p className="author-leaderboard-description">{t("author.cacTacGiaNoiBatNhatHeThongDuoc")}</p>
             </div>
-            <PrimaryButton variant="outline" onClick={() => navigate('/authors')} className="px-3 py-2" icon="lucide:arrow-left">
+            <PrimaryButton sx={{ paddingLeft: "1rem", paddingRight: "1rem", paddingTop: "0.5rem", paddingBottom: "0.5rem" }} variant="outline" onClick={() => navigate('/authors')}  icon="lucide:arrow-left">
               <span>{t("author.quayLaiDanhSachTacGia")}</span>
             </PrimaryButton>
-          </div>
+          </MuiBox>
         </section>
 
         <AuthorNavigationTabs activeTab="leaderboard" />
 
         <FilterCard className="author-leaderboard-filter-card">
-          <Row className="g-3 align-items-center">
+          <Row sx={{ gap: "1rem", alignItems: "center" }} >
             <Col xs={12} sm={6} md={4}>
               <div className="author-leaderboard-filter-control">
                 <span className="author-leaderboard-label">{t("author.linhVuc1")}</span>

@@ -1,10 +1,12 @@
+
+import MuiBox from '@mui/material/Box';
 // AuthLogo.jsx
 // Hiển thị logo ResearchPulse phía trên card.
 // Tách riêng để dễ thay đổi logo sau này mà không ảnh hưởng page.
 
 const AuthLogo = () => {
   return (
-    <div className="text-center mb-4">
+    <MuiBox component="div" sx={{ textAlign: "center", marginBottom: "1.5rem" }} >
       <span
         style={{
           fontFamily: "var(--font-display)",
@@ -16,7 +18,7 @@ const AuthLogo = () => {
       >
         ResearchPulse
       </span>
-    </div>
+    </MuiBox>
   );
 };
 

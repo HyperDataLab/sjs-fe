@@ -7,6 +7,10 @@ import { useTranslation } from "react-i18next";
 import { useNavigate } from 'react-router-dom';
 import { EntityCard } from '../../../shared/components/Card';
 import AuthorAvatar from './AuthorAvatar';
+
+
+import MuiBox from '@mui/material/Box';
+
 export default function AuthorCard({
   author
 }) {
@@ -32,12 +36,12 @@ export default function AuthorCard({
   const handleCardClick = () => {
     if (id) navigate(`/authors/${id}`);
   };
-  return <EntityCard onClick={handleCardClick} className="h-100 author-card-animated" media={<AuthorAvatar name={name} url={avatarUrl} size="md" bgColor={avatarColor} className="flex-shrink-0" />} title={name}        subtitle={<>
-          <span className="text-truncate d-block">{institution1}</span>
-          {institution2 && <span className="text-truncate mt-1 d-block" style={{
+  return <EntityCard sx={{ height: "100%" }} onClick={handleCardClick} className="author-card-animated" media={<AuthorAvatar sx={{ flexShrink: 0 }} name={name} url={avatarUrl} size="md" bgColor={avatarColor}  />} title={name}        subtitle={<>
+          <MuiBox component="span" sx={{ overflow: "hidden", whiteSpace: "nowrap", textOverflow: "ellipsis", display: "block" }} >{institution1}</MuiBox>
+          {institution2 && <MuiBox component="span" sx={{ overflow: "hidden", whiteSpace: "nowrap", textOverflow: "ellipsis", marginTop: "0.25rem", display: "block" }}  style={{
       fontSize: '0.85em',
-    }}>{institution2}</span>}
-        </>} meta={<div className="author-card-metrics mt-3">
+    }}>{institution2}</MuiBox>}
+        </>} meta={<MuiBox component="div" sx={{ marginTop: "1rem" }} className="author-card-metrics">
           <div>
             <div className="author-metric-label">H-index</div>
             <div className="author-metric-value">{hIndex}</div>
@@ -50,12 +54,12 @@ export default function AuthorCard({
             <div className="author-metric-label">{t("articles")}</div>
             <div className="author-metric-value">{formatLocalNumber(articlesCount)}</div>
           </div>
-        </div>} footer={<div className="d-flex flex-wrap gap-1.5 pt-2">
+        </MuiBox>} footer={<MuiBox component="div" sx={{ display: "flex", flexWrap: "wrap", paddingTop: "0.5rem" }} className="gap-1.5">
           {tags.length === 0 ? <span className="author-tag-empty">{t("author.chuaCapNhatLinhVuc")}</span> : tags.map((tag, idx) => <span key={idx} className="author-tag" onClick={e => {
       e.stopPropagation();
       navigate(`/catalog?search=${encodeURIComponent(tag)}`);
     }}>
                 {tag}
               </span>)}
-        </div>} />;
+        </MuiBox>} />;
 }

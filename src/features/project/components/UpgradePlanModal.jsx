@@ -4,14 +4,16 @@ import { useTranslation } from "react-i18next";
  * Modal hiển thị so sánh gói Free vs VIP khi user bấm "Kích hoạt gói"
  */
 import { useState } from 'react';
-import { Modal, Spinner } from 'react-bootstrap';
-import { Icon } from '@iconify/react';
+import { Modal, Spinner } from '@/shared/components/ui/muiAdapters';
+import Icon from '../../../shared/components/Icon.jsx';
 import { useNavigate } from 'react-router-dom';
 import ROUTES from '../../../app/routes/routePaths';
 import { activateProjectApi } from '../api/project.api';
 import { toast } from '../../../shared/utils/toast';
 import { useWalletStore } from '../../../app/store/walletStore';
-import './UpgradePlanModal.css';
+
+
+import MuiBox from '@mui/material/Box';
 
 const UpgradePlanModal = ({
   show,
@@ -101,7 +103,7 @@ const UpgradePlanModal = ({
   };
   return <>
       <Modal show={show} onHide={onHide} centered className="upgrade-modal-wrapper" dialogClassName="upgrade-modal">
-        <Modal.Header closeButton className="border-bottom-0 pb-0" />
+        <Modal.Header sx={{ borderBottom: 0, paddingBottom: "0" }} closeButton  />
         <Modal.Body>
           <div className="upgrade-modal-content">
             <div className="upgrade-modal-left">
@@ -110,7 +112,7 @@ const UpgradePlanModal = ({
               <div className="upgrade-modal-intro">
                 <div className="upgrade-modal-intro__badge">
                   <Icon icon="lucide:shield-check" width="15" />{t("project.soSanhQuyenLoi")}</div>
-                <p className="upgrade-modal-intro__text mb-0">{t("project.goiFreePhuHopDeTheoDoiCoBanGoi")}</p>
+                <MuiBox component="p" sx={{ marginBottom: "0" }} className="upgrade-modal-intro__text">{t("project.goiFreePhuHopDeTheoDoiCoBanGoi")}</MuiBox>
               </div>
             </div>
 
@@ -188,11 +190,11 @@ const UpgradePlanModal = ({
         borderTop: 'none',
         paddingTop: 0
       }}>
-          <button className="btn btn-light" onClick={() => setShowConfirm(false)} disabled={loading} style={{
+          <MuiBox component="button" sx={{ display: "inline-flex", alignItems: "center", justifyContent: "center", px: "0.75rem", py: "0.375rem", border: "1px solid transparent", borderRadius: "0.375rem", fontSize: "1rem", fontWeight: 400, lineHeight: 1.5, cursor: "pointer", textDecoration: "none", bgcolor: "#f8f9fa", borderColor: "#f8f9fa", color: "#212529" }}  onClick={() => setShowConfirm(false)} disabled={loading} style={{
           borderRadius: '8px',
           fontWeight: 600
-        }}>{t("admin.huy")}</button>
-          <button className="btn btn-primary" onClick={handleActivate} disabled={loading} style={{
+        }}>{t("admin.huy")}</MuiBox>
+          <MuiBox component="button" sx={{ display: "inline-flex", alignItems: "center", justifyContent: "center", px: "0.75rem", py: "0.375rem", border: "1px solid transparent", borderRadius: "0.375rem", fontSize: "1rem", fontWeight: 400, lineHeight: 1.5, cursor: "pointer", textDecoration: "none", bgcolor: "primary.main", borderColor: "primary.main", color: "primary.contrastText", "&:hover": { bgcolor: "primary.dark" } }}  onClick={handleActivate} disabled={loading} style={{
           borderRadius: '8px',
           fontWeight: 600,
           background: 'linear-gradient(135deg, #ff702f, #f97316)',
@@ -200,7 +202,7 @@ const UpgradePlanModal = ({
           color: '#fff'
         }}>
             {loading ? <Spinner size="sm" /> : t("project.xacNhanKichHoat")}
-          </button>
+          </MuiBox>
         </Modal.Footer>
       </Modal>
     </>;

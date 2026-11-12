@@ -1,18 +1,22 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Icon } from '@iconify/react';
-import { Dropdown } from 'react-bootstrap';
+import Icon from '../../../shared/components/Icon.jsx';
+import { Dropdown } from '@/shared/components/ui/muiAdapters';
 import { useAuthStore } from '../../../app/store/authStore';
 import { useUserStore } from '../../../app/store/userStore';
 import PrimaryButton from '../../../shared/components/Button/PrimaryButton';
 
-const ProjectMembersList = ({ 
+
+import MuiBox from '@mui/material/Box';
+
+
+const ProjectMembersList = ({
   project,
-  members, 
-  loading, 
-  onInviteClick, 
-  onChangeRole, 
-  onRemoveMember, 
+  members,
+  loading,
+  onInviteClick,
+  onChangeRole,
+  onRemoveMember,
   actionLoading,
   currentUser
 }) => {
@@ -41,15 +45,15 @@ const ProjectMembersList = ({
   const getStatusBadge = (status) => {
     if (status?.toUpperCase() === 'INVITED') {
       return (
-        <span className="badge rounded-pill fw-medium px-2 py-1" style={{ backgroundColor: '#fef3c7', color: '#d97706', fontSize: '0.75rem' }}>
+        <MuiBox component="span" sx={{ display: "inline-block", px: "0.65em", py: "0.35em", fontSize: "0.75em", fontWeight: 500, lineHeight: 1, color: "#fff", textAlign: "center", whiteSpace: "nowrap", verticalAlign: "baseline", borderRadius: "50rem", paddingLeft: "0.5rem", paddingRight: "0.5rem", paddingTop: "0.25rem", paddingBottom: "0.25rem" }}  style={{ backgroundColor: '#fef3c7', color: '#d97706', fontSize: '0.75rem' }}>
           {t("project.daMoi", "Đã mời")}
-        </span>
+        </MuiBox>
       );
     }
     return (
-      <span className="badge rounded-pill fw-medium px-2 py-1" style={{ backgroundColor: '#dcfce7', color: '#16a34a', fontSize: '0.75rem' }}>
+      <MuiBox component="span" sx={{ display: "inline-block", px: "0.65em", py: "0.35em", fontSize: "0.75em", fontWeight: 500, lineHeight: 1, color: "#fff", textAlign: "center", whiteSpace: "nowrap", verticalAlign: "baseline", borderRadius: "50rem", paddingLeft: "0.5rem", paddingRight: "0.5rem", paddingTop: "0.25rem", paddingBottom: "0.25rem" }}  style={{ backgroundColor: '#dcfce7', color: '#16a34a', fontSize: '0.75rem' }}>
         {t("project.dangHoatDong", "Đang hoạt động")}
-      </span>
+      </MuiBox>
     );
   };
 
@@ -96,41 +100,41 @@ const ProjectMembersList = ({
   );
 
   return (
-    <div className="glass-card rounded-4 shadow-sm border p-4">
-      <div className="d-flex justify-content-between align-items-center mb-4">
+    <MuiBox component="div" sx={{ borderRadius: "0.75rem", boxShadow: "0 .125rem .25rem rgba(0,0,0,.075)", border: "1px solid #dee2e6", padding: "1.5rem" }} className="glass-card">
+      <MuiBox component="div" sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1.5rem" }} >
         <div>
-          <h5 className="fw-bold text-main mb-1">{t("project.thanhVienDuAn", "Project Members")}</h5>
-          <p className="text-muted-custom small mb-0">{t("project.quanLyNhungNguoiCoQuyen", "Manage people with access to this project.")}</p>
+          <MuiBox component="h5" sx={{ fontWeight: 700, marginBottom: "0.25rem" }} className="text-main">{t("project.thanhVienDuAn", "Project Members")}</MuiBox>
+          <MuiBox component="p" sx={{ fontSize: "0.875em", marginBottom: "0" }} className="text-muted-custom">{t("project.quanLyNhungNguoiCoQuyen", "Manage people with access to this project.")}</MuiBox>
         </div>
         {canManageOthers && (
-          <PrimaryButton 
+          <PrimaryButton sx={{ display: "flex", alignItems: "center", gap: "0.5rem", paddingLeft: "1rem", paddingRight: "1rem", paddingTop: "0.5rem", paddingBottom: "0.5rem" }}
             id="btn-invite-member"
-            className="d-flex align-items-center gap-2 px-3 py-2"
+
             onClick={onInviteClick}
           >
             <Icon icon="lucide:user-plus" width="18" /> {t("project.themThanhVien", "Add Member")}
           </PrimaryButton>
         )}
-      </div>
+      </MuiBox>
 
       {loading ? (
-        <div className="d-flex justify-content-center py-5">
-          <div className="spinner-border text-primary" role="status" />
-        </div>
+        <MuiBox component="div" sx={{ display: "flex", justifyContent: "center", paddingTop: "3rem", paddingBottom: "3rem" }} >
+          <MuiBox component="div" sx={{ display: "inline-block", width: "2rem", height: "2rem", verticalAlign: "-0.125em", border: "0.25em solid currentColor", borderRightColor: "transparent", borderRadius: "50%", animation: "spin .75s linear infinite", color: "primary.main" }}  role="status" />
+        </MuiBox>
       ) : members?.length === 0 ? (
-        <div className="text-center py-5 text-muted-custom">
-          <Icon icon="lucide:users" width="48" className="mb-3 opacity-50" />
-          <p className="mb-0">{t("project.duAnNayChuaCoThanhVien")}</p>
-        </div>
+        <MuiBox component="div" sx={{ textAlign: "center", paddingTop: "3rem", paddingBottom: "3rem" }} className="text-muted-custom">
+          <Icon sx={{ marginBottom: "1rem", opacity: 0.5 }} icon="lucide:users" width="48"  />
+          <MuiBox component="p" sx={{ marginBottom: "0" }} >{t("project.duAnNayChuaCoThanhVien")}</MuiBox>
+        </MuiBox>
       ) : (
-        <div className="list-group list-group-flush border-top pt-2">
+        <MuiBox component="div" sx={{ display: "flex", flexDirection: "column", paddingLeft: 0, marginBottom: 0, borderRadius: 0, borderTop: "1px solid #dee2e6", paddingTop: "0.5rem" }} >
           {members?.map((member) => {
             const roleStyle = getRoleBadgeColor(member.role);
-            
+
             return (
-              <div key={member.id || member.user_id} className="list-group-item bg-transparent px-0 py-3 border-bottom d-flex justify-content-between align-items-center">
-                <div className="d-flex align-items-center gap-3">
-                  <div className="rounded-circle d-flex align-items-center justify-content-center flex-shrink-0" style={{
+              <MuiBox component="div" sx={{ position: "relative", display: "flex", p: "0.5rem 1rem", color: "text.primary", textDecoration: "none", bgcolor: "transparent", border: "1px solid rgba(0,0,0,.125)", paddingLeft: "0", paddingRight: "0", paddingTop: "1rem", paddingBottom: "1rem", borderBottom: "1px solid #dee2e6", justifyContent: "space-between", alignItems: "center" }} key={member.id || member.user_id} >
+                <MuiBox component="div" sx={{ display: "flex", alignItems: "center", gap: "1rem" }} >
+                  <MuiBox component="div" sx={{ borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}  style={{
                     width: '42px',
                     height: '42px',
                     backgroundColor: 'var(--primary-light)',
@@ -139,57 +143,57 @@ const ProjectMembersList = ({
                     fontWeight: 'bold'
                   }}>
                     {((member.first_name?.[0] || member.last_name?.[0] || member.user?.full_name?.[0] || member.email?.[0] || 'U')).toUpperCase()}
-                  </div>
+                  </MuiBox>
                   <div>
-                    <h6 className="fw-bold text-main mb-0 d-flex align-items-center gap-2">
+                    <MuiBox component="h6" sx={{ fontWeight: 700, marginBottom: "0", display: "flex", alignItems: "center", gap: "0.5rem" }} className="text-main">
                       {(member.first_name || member.last_name)
                         ? `${member.first_name || ''} ${member.last_name || ''}`.trim()
-                        : (member.user?.full_name || member.name || member.email || t("project.nguoiDung"))} 
+                        : (member.user?.full_name || member.name || member.email || t("project.nguoiDung"))}
                       {getStatusBadge(member.status)}
-                    </h6>
-                    <div className="text-muted-custom small mt-1">
+                    </MuiBox>
+                    <MuiBox component="div" sx={{ fontSize: "0.875em", marginTop: "0.25rem" }} className="text-muted-custom">
                       {member.email || member.user?.email}
-                    </div>
+                    </MuiBox>
                   </div>
-                </div>
+                </MuiBox>
 
-                <div className="d-flex align-items-center gap-3">
-                  <span className="badge fw-medium px-2 py-1" style={{ 
-                    backgroundColor: roleStyle.bg, 
+                <MuiBox component="div" sx={{ display: "flex", alignItems: "center", gap: "1rem" }} >
+                  <MuiBox component="span" sx={{ display: "inline-block", px: "0.65em", py: "0.35em", fontSize: "0.75em", fontWeight: 500, lineHeight: 1, color: "#fff", textAlign: "center", whiteSpace: "nowrap", verticalAlign: "baseline", borderRadius: "0.375rem", paddingLeft: "0.5rem", paddingRight: "0.5rem", paddingTop: "0.25rem", paddingBottom: "0.25rem" }}  style={{
+                    backgroundColor: roleStyle.bg,
                     color: roleStyle.color,
                     border: 'none'
                   }}>
                     {translateRole(member.role)}
-                  </span>
+                  </MuiBox>
                   {(() => {
                     const memberUserId = member.user_id || member.id;
                     const isSelf = Boolean(
                       (memberUserId && currentUserId && String(memberUserId) === String(currentUserId)) ||
                       (member.email && currentUser?.email && member.email.toLowerCase() === currentUser.email.toLowerCase())
                     );
-                    
+
                     const isOwner = member.role?.toUpperCase() === 'OWNER';
-                    
+
                     if (isOwner) return null; // Owner cannot be kicked/leave via this list
-                    
+
                     if (isSelf) {
                       // Bản thân có thể tự rời đi
                       return (
                         <Dropdown>
-                          <Dropdown.Toggle 
-                            variant="light" 
-                            className="btn-sm border-0 bg-transparent text-muted-custom" 
+                          <Dropdown.Toggle sx={{ px: "0.5rem", py: "0.25rem", fontSize: "0.875rem", borderRadius: "0.25rem", border: 0, bgcolor: "transparent" }}
+                            variant="light"
+                            className="text-muted-custom"
                             id={`dropdown-${member.id || member.user_id}`}
                             disabled={actionLoading}
                           >
                             <Icon icon="lucide:more-vertical" width="18" />
                           </Dropdown.Toggle>
-                          <Dropdown.Menu align="end" className="shadow border-0 rounded-3">
-                            <Dropdown.Item 
+                          <Dropdown.Menu sx={{ boxShadow: "0 .5rem 1rem rgba(0,0,0,.15)", border: 0, borderRadius: "0.5rem" }} align="end" >
+                            <Dropdown.Item sx={{ fontSize: "0.875em", color: "error.main" }}
                               onClick={() => onRemoveMember(member.user_id)}
-                              className="small text-danger dropdown-item-custom-hover"
+                              className="dropdown-item-custom-hover"
                             >
-                              <Icon icon="lucide:log-out" width="16" className="me-2" /> 
+                              <Icon sx={{ marginInlineEnd: "0.5rem" }} icon="lucide:log-out" width="16"  />
                               {t("project.roiKhoiDuAn", "Rời khỏi dự án")}
                             </Dropdown.Item>
                           </Dropdown.Menu>
@@ -201,39 +205,39 @@ const ProjectMembersList = ({
                       // Có quyền quản lý người khác
                       return (
                         <Dropdown>
-                          <Dropdown.Toggle 
-                            variant="light" 
-                            className="btn-sm border-0 bg-transparent text-muted-custom" 
+                          <Dropdown.Toggle sx={{ px: "0.5rem", py: "0.25rem", fontSize: "0.875rem", borderRadius: "0.25rem", border: 0, bgcolor: "transparent" }}
+                            variant="light"
+                            className="text-muted-custom"
                             id={`dropdown-${member.id || member.user_id}`}
                             disabled={actionLoading}
                           >
                             <Icon icon="lucide:more-vertical" width="18" />
                           </Dropdown.Toggle>
-                          <Dropdown.Menu align="end" className="shadow border-0 rounded-3">
-                            <Dropdown.Item 
+                          <Dropdown.Menu sx={{ boxShadow: "0 .5rem 1rem rgba(0,0,0,.15)", border: 0, borderRadius: "0.5rem" }} align="end" >
+                            <Dropdown.Item sx={{ fontSize: "0.875em" }}
                               onClick={() => onChangeRole(member.user_id, 'ADMIN')}
-                              className="small dropdown-item-custom-hover"
+                              className="dropdown-item-custom-hover"
                             >
-                              <Icon icon="lucide:shield" width="16" className="me-2" /> {t("project.datLamAdmin")}
+                              <Icon sx={{ marginInlineEnd: "0.5rem" }} icon="lucide:shield" width="16"  /> {t("project.datLamAdmin")}
                             </Dropdown.Item>
-                            <Dropdown.Item 
+                            <Dropdown.Item sx={{ fontSize: "0.875em" }}
                               onClick={() => onChangeRole(member.user_id, 'MEMBER')}
-                              className="small dropdown-item-custom-hover"
+                              className="dropdown-item-custom-hover"
                             >
-                              <Icon icon="lucide:user" width="16" className="me-2" /> {t("project.datLamMember")}
+                              <Icon sx={{ marginInlineEnd: "0.5rem" }} icon="lucide:user" width="16"  /> {t("project.datLamMember")}
                             </Dropdown.Item>
-                            <Dropdown.Item 
+                            <Dropdown.Item sx={{ fontSize: "0.875em" }}
                               onClick={() => onChangeRole(member.user_id, 'VIEWER')}
-                              className="small dropdown-item-custom-hover"
+                              className="dropdown-item-custom-hover"
                             >
-                              <Icon icon="lucide:eye" width="16" className="me-2" /> {t("project.datLamViewer")}
+                              <Icon sx={{ marginInlineEnd: "0.5rem" }} icon="lucide:eye" width="16"  /> {t("project.datLamViewer")}
                             </Dropdown.Item>
                             <Dropdown.Divider />
-                            <Dropdown.Item 
+                            <Dropdown.Item sx={{ fontSize: "0.875em", color: "error.main" }}
                               onClick={() => onRemoveMember(member.user_id)}
-                              className="small text-danger dropdown-item-custom-hover"
+                              className="dropdown-item-custom-hover"
                             >
-                              <Icon icon="lucide:user-x" width="16" className="me-2" /> 
+                              <Icon sx={{ marginInlineEnd: "0.5rem" }} icon="lucide:user-x" width="16"  />
                               {member.status?.toUpperCase() === 'INVITED' ? t("project.huyLoiMoi") : t("project.xoaThanhVien")}
                             </Dropdown.Item>
                           </Dropdown.Menu>
@@ -243,13 +247,13 @@ const ProjectMembersList = ({
 
                     return null;
                   })()}
-                </div>
-              </div>
+                </MuiBox>
+              </MuiBox>
             );
           })}
-        </div>
+        </MuiBox>
       )}
-    </div>
+    </MuiBox>
   );
 };
 

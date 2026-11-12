@@ -1,11 +1,15 @@
 import { useState } from 'react';
-import { Form, Badge } from 'react-bootstrap';
+import { Form, Badge } from '@/shared/components/ui/muiAdapters';
 import Icon from '../../../../shared/components/Icon';
+
+
+import MuiBox from '@mui/material/Box';
+
 
 /**
  * KeywordInput Component
  * Allows users to add and manage keywords as a tag-list/chip-list.
- * 
+ *
  * @param {Object} props - Props
  * @param {Array} props.keywords - Array of string keywords
  * @param {function} props.onChange - Callback triggered on tags list changes
@@ -65,20 +69,20 @@ export default function KeywordInput({
   };
 
   return (
-    <div 
-      className="d-flex flex-wrap gap-2 align-items-center p-2 rounded-3" 
-      style={{ 
-        backgroundColor: '#f1f5f9', 
-        border: 'none', 
+    <MuiBox component="div" sx={{ display: "flex", flexWrap: "wrap", gap: "0.5rem", alignItems: "center", padding: "0.5rem", borderRadius: "0.5rem" }}
+
+      style={{
+        backgroundColor: '#f1f5f9',
+        border: 'none',
         minHeight: '46px',
-        padding: '0.45rem 1rem' 
+        padding: '0.45rem 1rem'
       }}
     >
       {/* Render tags */}
       {keywords.map((kw, index) => (
-        <Badge 
-          key={index} 
-          className="rounded-pill d-flex align-items-center gap-1.5 px-2.5 py-1.5 fw-normal text-xs"
+        <Badge sx={{ borderRadius: "50rem", display: "flex", alignItems: "center", fontWeight: 400 }}
+          key={index}
+          className="gap-1.5 px-2.5 py-1.5 text-xs"
           style={{
             backgroundColor: '#ffffff',
             color: 'var(--text-main)',
@@ -86,25 +90,25 @@ export default function KeywordInput({
           }}
         >
           <span>{kw}</span>
-          <Icon 
-            icon="lucide:x" 
-            width="13" 
-            style={{ cursor: 'pointer' }} 
-            className="text-muted hover-danger"
-            onClick={() => removeKeyword(index)} 
+          <Icon sx={{ color: "text.secondary" }}
+            icon="lucide:x"
+            width="13"
+            style={{ cursor: 'pointer' }}
+            className="hover-danger"
+            onClick={() => removeKeyword(index)}
           />
         </Badge>
       ))}
 
       {/* Text Input */}
-      <input 
-        type="text" 
+      <MuiBox component="input" sx={{ border: 0, bgcolor: "transparent", flexGrow: 1 }}
+        type="text"
         placeholder={keywords.length === 0 ? placeholder : ''}
         value={inputValue}
         onChange={handleInputChange}
         onKeyDown={handleKeyDown}
         onBlur={() => addKeyword(inputValue)}
-        className="border-0 bg-transparent flex-grow-1"
+
         style={{
           outline: 'none',
           fontSize: '0.88rem',
@@ -113,6 +117,6 @@ export default function KeywordInput({
           padding: '4px'
         }}
       />
-    </div>
+    </MuiBox>
   );
 }

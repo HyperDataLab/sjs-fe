@@ -1,5 +1,9 @@
 ﻿import { useState, useMemo } from "react";
 import Icon from "../../../shared/components/Icon";
+import { getClassNameSx, stripMappedClassNames } from '../../../shared/theme/classNameSx';
+
+import MuiBox from '@mui/material/Box';
+
 
 /**
  * @file AuthorPublications.jsx
@@ -128,36 +132,36 @@ export default function AuthorPublications({ publications = [] }) {
           {/* Sort Buttons */}
           <div className="ap-pubs-sort-group">
             <span className="ap-pubs-sort-label">Sort:</span>
-            <button
+            <MuiBox component="button" sx={getClassNameSx(`ap-pubs-sort-pill ${sortBy === "recent" ? "active" : ""}`)}
               type="button"
-              className={`ap-pubs-sort-pill ${sortBy === "recent" ? "active" : ""}`}
+              className={stripMappedClassNames(`ap-pubs-sort-pill ${sortBy === "recent" ? "active" : ""}`)}
               onClick={() => {
                 setSortBy("recent");
                 setCurrentPage(1);
               }}
             >
               Most Recent
-            </button>
-            <button
+            </MuiBox>
+            <MuiBox component="button" sx={getClassNameSx(`ap-pubs-sort-pill ${sortBy === "cited" ? "active" : ""}`)}
               type="button"
-              className={`ap-pubs-sort-pill ${sortBy === "cited" ? "active" : ""}`}
+              className={stripMappedClassNames(`ap-pubs-sort-pill ${sortBy === "cited" ? "active" : ""}`)}
               onClick={() => {
                 setSortBy("cited");
                 setCurrentPage(1);
               }}
             >
               Most Cited
-            </button>
-            <button
+            </MuiBox>
+            <MuiBox component="button" sx={getClassNameSx(`ap-pubs-sort-pill ${sortBy === "title" ? "active" : ""}`)}
               type="button"
-              className={`ap-pubs-sort-pill ${sortBy === "title" ? "active" : ""}`}
+              className={stripMappedClassNames(`ap-pubs-sort-pill ${sortBy === "title" ? "active" : ""}`)}
               onClick={() => {
                 setSortBy("title");
                 setCurrentPage(1);
               }}
             >
               Title A-Z
-            </button>
+            </MuiBox>
           </div>
         </div>
       </div>
@@ -166,9 +170,9 @@ export default function AuthorPublications({ publications = [] }) {
       <div className="ap-pubs-list">
         {paginated.length === 0 ? (
           <div className="ap-pubs-empty">
-            <Icon icon="lucide:file-question" width="32" className="text-muted mb-2" />
-            <div className="fw-semibold">No publications match your filter.</div>
-            <div className="text-muted small mt-1">Try changing the keywords or resetting the journal filter.</div>
+            <Icon sx={{ color: "text.secondary", marginBottom: "0.5rem" }} icon="lucide:file-question" width="32"  />
+            <MuiBox component="div" sx={{ fontWeight: 600 }} >No publications match your filter.</MuiBox>
+            <MuiBox component="div" sx={{ color: "text.secondary", fontSize: "0.875em", marginTop: "0.25rem" }} >Try changing the keywords or resetting the journal filter.</MuiBox>
           </div>
         ) : (
           paginated.map((pub) => (
@@ -182,7 +186,7 @@ export default function AuthorPublications({ publications = [] }) {
               <h3 className="ap-pub-title">{pub.title}</h3>
 
               <div className="ap-pub-authors">
-                <Icon icon="lucide:users" width="12" className="me-1" />
+                <Icon sx={{ marginInlineEnd: "0.25rem" }} icon="lucide:users" width="12"  />
                 <span>{pub.authors?.join(" · ")}</span>
               </div>
 
@@ -239,14 +243,14 @@ export default function AuthorPublications({ publications = [] }) {
 
           <div className="ap-pubs-page-numbers">
             {Array.from({ length: totalPages }, (_, i) => i + 1).map((pg) => (
-              <button
+              <MuiBox component="button" sx={getClassNameSx(`ap-pubs-page-number ${pg === currentPage ? "active" : ""}`)}
                 key={pg}
                 type="button"
-                className={`ap-pubs-page-number ${pg === currentPage ? "active" : ""}`}
+                className={stripMappedClassNames(`ap-pubs-page-number ${pg === currentPage ? "active" : ""}`)}
                 onClick={() => setCurrentPage(pg)}
               >
                 {pg}
-              </button>
+              </MuiBox>
             ))}
           </div>
 

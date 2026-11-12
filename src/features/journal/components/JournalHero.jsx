@@ -4,10 +4,14 @@ import { useTranslation } from "react-i18next";
  *
  * File: features\journal\components\JournalHero.jsx
  */
-import { Row, Col, Button, Spinner } from 'react-bootstrap';
-import { Icon } from '@iconify/react';
+import { Row, Col, Button, Spinner } from '@/shared/components/ui/muiAdapters';
+import Icon from '../../../shared/components/Icon.jsx';
 import { useNavigate } from 'react-router-dom';
 import PrimaryButton from '../../../shared/components/Button/PrimaryButton';
+import { getClassNameSx, stripMappedClassNames } from '../../../shared/theme/classNameSx';
+
+import MuiBox from '@mui/material/Box';
+
 export default function JournalHero({
   journal,
   isFollowing,
@@ -21,10 +25,10 @@ export default function JournalHero({
   } = useTranslation();
   const navigate = useNavigate();
   if (loading || !journal) {
-    return <section className="journal-surface journal-hero-card mb-4" aria-label="Đang tải thông tin tạp chí">
-        <Row className="gy-4 journal-hero-content">
+    return <MuiBox component="section" sx={{ marginBottom: "1.5rem" }} className="journal-surface journal-hero-card" aria-label="Đang tải thông tin tạp chí">
+        <Row sx={{ rowGap: "1.5rem" }} className="journal-hero-content">
           <Col lg={8}>
-            <div className="d-flex gap-2 mb-3">
+            <MuiBox component="div" sx={{ display: "flex", gap: "0.5rem", marginBottom: "1rem" }} >
               <div className="skeleton-shimmer" style={{
               width: '60px',
               height: '24px',
@@ -35,33 +39,33 @@ export default function JournalHero({
               height: '24px',
               borderRadius: '6px'
             }} />
-            </div>
-            <div className="skeleton-shimmer mb-3" style={{
+            </MuiBox>
+            <MuiBox component="div" sx={{ marginBottom: "1rem" }} className="skeleton-shimmer" style={{
             width: '80%',
             height: '44px'
           }} />
-            <div className="skeleton-shimmer mb-4" style={{
+            <MuiBox component="div" sx={{ marginBottom: "1.5rem" }} className="skeleton-shimmer" style={{
             width: '95%',
             height: '64px'
           }} />
-            <div className="d-flex gap-2 flex-wrap">
+            <MuiBox component="div" sx={{ display: "flex", gap: "0.5rem", flexWrap: "wrap" }} >
               {[1, 2, 3].map(i => <div key={i} className="skeleton-shimmer" style={{
               width: '92px',
               height: '32px',
               borderRadius: '999px'
             }} />)}
-            </div>
+            </MuiBox>
           </Col>
-          <Col lg={4} className="text-lg-end">
-            <div className="skeleton-shimmer mb-2 ms-lg-auto" style={{
+          <Col sx={{ "@media (min-width:992px)": { textAlign: "right" } }} lg={4} >
+            <MuiBox component="div" sx={{ marginBottom: "0.5rem", "@media (min-width:992px)": { ml: "auto" } }} className="skeleton-shimmer" style={{
             width: '150px',
             height: '72px'
           }} />
-            <div className="skeleton-shimmer mb-3 ms-lg-auto" style={{
+            <MuiBox component="div" sx={{ marginBottom: "1rem", "@media (min-width:992px)": { ml: "auto" } }} className="skeleton-shimmer" style={{
             width: '160px',
             height: '20px'
           }} />
-            <div className="d-flex gap-2 justify-content-lg-end flex-wrap">
+            <MuiBox component="div" sx={{ display: "flex", gap: "0.5rem", "@media (min-width:992px)": { justifyContent: "flex-end" }, flexWrap: "wrap" }} >
               <div className="skeleton-shimmer" style={{
               width: '110px',
               height: '38px',
@@ -72,10 +76,10 @@ export default function JournalHero({
               height: '38px',
               borderRadius: '6px'
             }} />
-            </div>
+            </MuiBox>
           </Col>
         </Row>
-      </section>;
+      </MuiBox>;
   }
   const {
     display_name,
@@ -103,8 +107,8 @@ export default function JournalHero({
     if (!categoryName) return;
     navigate(`/keywords?keyword=${encodeURIComponent(categoryName)}`);
   };
-  return <section className="journal-surface journal-hero-card mb-4" aria-labelledby="journal-detail-title">
-      <Row className="gy-4 align-items-start journal-hero-content">
+  return <MuiBox component="section" sx={{ marginBottom: "1.5rem" }} className="journal-surface journal-hero-card" aria-labelledby="journal-detail-title">
+      <Row sx={{ rowGap: "1.5rem", alignItems: "flex-start" }} className="journal-hero-content">
         <Col lg={8} md={7}>
           <div className="journal-meta-line">
             {displayQuartile && <span>{displayQuartile}</span>}
@@ -127,31 +131,31 @@ export default function JournalHero({
             </div>}
         </Col>
 
-        <Col lg={4} md={5} className="text-md-end text-start mt-lg-2">
-          {displayMetricValue !== null && displayMetricValue !== undefined ? <div className="journal-metric-panel ms-md-auto mb-3">
+        <Col sx={{ "@media (min-width:768px)": { textAlign: "right" }, textAlign: "left", "@media (min-width:992px)": { marginTop: "0.5rem" } }} lg={4} md={5} >
+          {displayMetricValue !== null && displayMetricValue !== undefined ? <MuiBox component="div" sx={{ "@media (min-width:768px)": { ml: "auto" }, marginBottom: "1rem" }} className="journal-metric-panel">
               <div className="journal-metric-value">
                 {displayMetricValue}
               </div>
               <div className="journal-metric-label">
                 {displayMetricName} {displayMetricYear}
               </div>
-            </div> : <div className="journal-metric-panel ms-md-auto mb-3">
+            </MuiBox> : <MuiBox component="div" sx={{ "@media (min-width:768px)": { ml: "auto" }, marginBottom: "1rem" }} className="journal-metric-panel">
               <span className="text-muted-custom">{t("journal.chuaCoDuLieuRanking")}</span>
-            </div>}
+            </MuiBox>}
 
           <div className="journal-action-row">
-            <Button onClick={onFollow} disabled={isFollowing} className={`journal-outline-btn px-3 py-2 ${is_following ? 'is-active' : ''}`}>
+            <Button sx={getClassNameSx(`journal-outline-btn px-3 py-2 ${is_following ? 'is-active' : ''}`)} onClick={onFollow} disabled={isFollowing} className={stripMappedClassNames(`journal-outline-btn px-3 py-2 ${is_following ? 'is-active' : ''}`)}>
               {isFollowing ? <Spinner animation="border" size="sm" /> : is_following ? <>
                   <Icon icon="lucide:check" width="16" />{t("journal.dangTheoDoi")}</> : <>
                   <Icon icon="lucide:plus" width="16" />{t("catalog.theoDoi")}</>}
             </Button>
 
-            <PrimaryButton onClick={onAddToProject} disabled={isAddingToProject} className="gap-2 px-3 py-2">
+            <PrimaryButton sx={{ gap: "0.5rem", paddingLeft: "1rem", paddingRight: "1rem", paddingTop: "0.5rem", paddingBottom: "0.5rem" }} onClick={onAddToProject} disabled={isAddingToProject} >
               {isAddingToProject ? <Spinner animation="border" size="sm" variant="light" /> : <>
                   <Icon icon="lucide:folder-plus" width="16" />{t("journal.themVaoProject")}</>}
             </PrimaryButton>
           </div>
         </Col>
       </Row>
-    </section>;
+    </MuiBox>;
 }

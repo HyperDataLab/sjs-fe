@@ -8,6 +8,10 @@ import AuthorAvatar from "./AuthorAvatar";
 import Icon from "../../../shared/components/Icon";
 import LoadingSkeleton from "../../../shared/components/LoadingSkeleton";
 
+
+import MuiBox from '@mui/material/Box';
+
+
 export default function AuthorProfileHeader({ author, loading = false }) {
   const { t } = useTranslation();
   const [orcidCopied, setOrcidCopied] = useState(false);
@@ -15,16 +19,16 @@ export default function AuthorProfileHeader({ author, loading = false }) {
   if (loading) {
     return (
       <div className="adp-identity-card adp-identity-skeleton">
-        <div className="d-flex justify-content-center mb-3">
-          <div className="skeleton-shimmer rounded-circle" style={{ width: 88, height: 88 }} />
-        </div>
-        <LoadingSkeleton width="65%" height="18px" className="mx-auto mb-2" />
-        <LoadingSkeleton width="50%" height="12px" className="mx-auto mb-1" />
-        <LoadingSkeleton width="40%" height="11px" className="mx-auto mb-3" />
-        <LoadingSkeleton width="100%" height="36px" className="mb-2" />
-        <LoadingSkeleton width="100%" height="36px" className="mb-2" />
-        <LoadingSkeleton width="100%" height="60px" className="mb-3" />
-        <LoadingSkeleton width="100%" height="36px" className="mb-1" />
+        <MuiBox component="div" sx={{ display: "flex", justifyContent: "center", marginBottom: "1rem" }} >
+          <MuiBox component="div" sx={{ borderRadius: "50%" }} className="skeleton-shimmer" style={{ width: 88, height: 88 }} />
+        </MuiBox>
+        <LoadingSkeleton sx={{ mx: "auto", marginBottom: "0.5rem" }} width="65%" height="18px"  />
+        <LoadingSkeleton sx={{ mx: "auto", marginBottom: "0.25rem" }} width="50%" height="12px"  />
+        <LoadingSkeleton sx={{ mx: "auto", marginBottom: "1rem" }} width="40%" height="11px"  />
+        <LoadingSkeleton sx={{ marginBottom: "0.5rem" }} width="100%" height="36px"  />
+        <LoadingSkeleton sx={{ marginBottom: "0.5rem" }} width="100%" height="36px"  />
+        <LoadingSkeleton sx={{ marginBottom: "1rem" }} width="100%" height="60px"  />
+        <LoadingSkeleton sx={{ marginBottom: "0.25rem" }} width="100%" height="36px"  />
         <LoadingSkeleton width="100%" height="36px" />
       </div>
     );

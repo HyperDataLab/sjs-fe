@@ -10,6 +10,10 @@ import { useNavigate } from 'react-router-dom';
 import Icon from '../../../shared/components/Icon';
 import { useWalletStore } from '../../../app/store/walletStore';
 import ROUTES from '../../../app/routes/routePaths';
+import { getClassNameSx, stripMappedClassNames } from '../../../shared/theme/classNameSx';
+
+import MuiBox from '@mui/material/Box';
+
 
 export default function CoinBalanceBadge({ className = '' }) {
   const navigate = useNavigate();
@@ -30,8 +34,8 @@ export default function CoinBalanceBadge({ className = '' }) {
   }).format(balance);
 
   return (
-    <div
-      className={`d-inline-flex align-items-center gap-2 px-3 py-1 user-select-none ${className}`}
+    <MuiBox component="div" sx={getClassNameSx(`d-inline-flex align-items-center gap-2 px-3 py-1 user-select-none ${className}`)}
+      className={stripMappedClassNames(`d-inline-flex align-items-center gap-2 px-3 py-1 user-select-none ${className}`)}
       onClick={() => navigate(ROUTES.WALLET)}
       style={{
         background: 'rgba(0, 0, 0, 0.04)',
@@ -47,8 +51,8 @@ export default function CoinBalanceBadge({ className = '' }) {
         e.currentTarget.style.background = 'rgba(0, 0, 0, 0.04)';
       }}
     >
-      <div
-        className="d-flex align-items-center justify-content-center"
+      <MuiBox component="div" sx={{ display: "flex", alignItems: "center", justifyContent: "center" }}
+
         style={{
           width: '20px',
           height: '20px',
@@ -56,12 +60,12 @@ export default function CoinBalanceBadge({ className = '' }) {
           background: 'rgba(255, 122, 51, 0.1)',
         }}
       >
-        <Icon 
-          icon="solar:wallet-bold" 
-          width="12" 
-          style={{ color: '#ff7a33' }} 
+        <Icon
+          icon="solar:wallet-bold"
+          width="12"
+          style={{ color: '#ff7a33' }}
         />
-      </div>
+      </MuiBox>
       <span
         className="text-main"
         style={{
@@ -73,6 +77,6 @@ export default function CoinBalanceBadge({ className = '' }) {
       >
         {isLoading && !isFetched ? '...' : formattedBalance}
       </span>
-    </div>
+    </MuiBox>
   );
 }

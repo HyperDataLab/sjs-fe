@@ -4,19 +4,23 @@
  * File: features\landing\components\HowToUse.jsx
  */
 import { useTranslation } from 'react-i18next';
-import Container from 'react-bootstrap/Container';
-import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
+import { Container } from '@/shared/components/ui/muiAdapters';
+import { Row } from '@/shared/components/ui/muiAdapters';
+import { Col } from '@/shared/components/ui/muiAdapters';
+
+
+import MuiBox from '@mui/material/Box';
+
 
 /**
  * Reusable StepItem component
  */
 function StepItem({ number, title, description }) {
   return (
-    <div className="d-flex flex-column align-items-center text-center px-3 position-relative z-3 group">
+    <MuiBox component="div" sx={{ display: "flex", flexDirection: "column", alignItems: "center", textAlign: "center", paddingLeft: "1rem", paddingRight: "1rem", position: "relative", zIndex: 3 }} className="group">
       {/* Circle Number Badge */}
-      <div 
-        className="d-flex align-items-center justify-content-center text-white font-display mb-4"
+      <MuiBox component="div" sx={{ display: "flex", alignItems: "center", justifyContent: "center", color: "#fff", marginBottom: "1.5rem" }}
+        className="font-display"
         style={{
           width: '56px',
           height: '56px',
@@ -28,22 +32,22 @@ function StepItem({ number, title, description }) {
         }}
       >
         {number}
-      </div>
+      </MuiBox>
 
       {/* Step Content */}
-      <h3 
-        className="font-display text-main mb-2" 
+      <MuiBox component="h3" sx={{ marginBottom: "0.5rem" }}
+        className="font-display text-main"
         style={{ fontWeight: 700, fontSize: '1.05rem', letterSpacing: '0.02em' }}
       >
         {title}
-      </h3>
-      <p 
-        className="text-muted-custom leading-relaxed mx-auto" 
+      </MuiBox>
+      <MuiBox component="p" sx={{ mx: "auto" }}
+        className="text-muted-custom leading-relaxed"
         style={{ fontSize: '0.85rem', maxWidth: '240px', lineHeight: 1.6 }}
       >
         {description}
-      </p>
-    </div>
+      </MuiBox>
+    </MuiBox>
   );
 }
 
@@ -58,41 +62,41 @@ export default function HowToUse() {
   ];
 
   return (
-    <section 
-      id="how-to-use" 
-      className="py-5"
+    <MuiBox component="section" sx={{ paddingTop: "3rem", paddingBottom: "3rem" }}
+      id="how-to-use"
+
       style={{ backgroundColor: 'var(--bg-section)', borderTop: '1px solid var(--border)' }}
     >
-      <Container className="py-5 position-relative">
-        
+      <Container sx={{ paddingTop: "3rem", paddingBottom: "3rem", position: "relative" }} >
+
         {/* Section Header */}
-        <div className="text-center mb-5 reveal-on-scroll">
-          <div 
-            className="d-inline-flex align-items-center gap-2 mb-2 text-uppercase font-bold tracking-wider" 
+        <MuiBox component="div" sx={{ textAlign: "center", marginBottom: "3rem" }} className="reveal-on-scroll">
+          <MuiBox component="div" sx={{ display: "inline-flex", alignItems: "center", gap: "0.5rem", marginBottom: "0.5rem", textTransform: "uppercase" }}
+            className="font-bold tracking-wider"
             style={{ fontSize: '0.75rem', color: 'var(--primary)', fontWeight: 700, letterSpacing: '0.1em' }}
           >
             <span style={{ width: '24px', height: '1px', backgroundColor: 'var(--primary)' }} />
             <span>{t('howToUseSubtitle')}</span>
-          </div>
-          <h2 
-            className="font-display text-main mb-3" 
+          </MuiBox>
+          <MuiBox component="h2" sx={{ marginBottom: "1rem" }}
+            className="font-display text-main"
             style={{ fontWeight: 800, fontSize: 'calc(1.5rem + 1.2vw)', letterSpacing: '-0.01em' }}
           >
             {t('howToUseTitle')}
-          </h2>
-          <p 
-            className="text-muted-custom mx-auto" 
+          </MuiBox>
+          <MuiBox component="p" sx={{ mx: "auto" }}
+            className="text-muted-custom"
             style={{ fontSize: '0.9rem', maxWidth: '420px', lineHeight: 1.5 }}
           >
             {t('howToUseDesc')}
-          </p>
-        </div>
+          </MuiBox>
+        </MuiBox>
 
         {/* Steps container */}
-        <div className="position-relative">
+        <MuiBox component="div" sx={{ position: "relative" }} >
           {/* Horizontal dotted connector line (hidden on mobile, visible on desktop) */}
-          <div 
-            className="position-absolute d-none d-lg-block w-75 pointer-events-none"
+          <MuiBox component="div" sx={{ position: "absolute", display: "none", "@media (min-width:992px)": { display: "block" }, width: "75%", pointerEvents: "none" }}
+
             style={{
               top: '28px',
               left: '12.5%',
@@ -101,9 +105,9 @@ export default function HowToUse() {
               zIndex: 1
             }}
           />
-          
+
           {/* Steps layout grid */}
-          <Row className="gy-5 gy-lg-0 justify-content-center">
+          <Row sx={{ rowGap: "3rem", "@media (min-width:992px)": { rowGap: "0" }, justifyContent: "center" }} >
             {steps.map((step, idx) => (
               <Col xs={12} sm={6} lg={3} key={step.number} className={`reveal-scale delay-${(idx + 1) * 100}`}>
                 <StepItem
@@ -114,9 +118,9 @@ export default function HowToUse() {
               </Col>
             ))}
           </Row>
-        </div>
+        </MuiBox>
 
       </Container>
-    </section>
+    </MuiBox>
   );
 }

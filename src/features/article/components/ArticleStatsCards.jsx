@@ -4,8 +4,12 @@ import { useTranslation } from "react-i18next";
  *
  * File: features\article\components\ArticleStatsCards.jsx
  */
-import { Row, Col, Card } from 'react-bootstrap';
-import { Icon } from '@iconify/react';
+import { Row, Col, Card } from '@/shared/components/ui/muiAdapters';
+import Icon from '../../../shared/components/Icon.jsx';
+
+
+import MuiBox from '@mui/material/Box';
+
 export default function ArticleStatsCards({
   stats,
   isLoading
@@ -34,24 +38,24 @@ export default function ArticleStatsCards({
     icon: 'lucide:layers'
   }];
   if (isLoading) {
-    return <Row className="g-3 mb-4">
+    return <Row sx={{ gap: "1rem", marginBottom: "1.5rem" }} >
         {[1, 2, 3, 4].map(i => <Col key={i} xs={12} sm={6} md={3}>
             <Card className="article-stats-card" style={{
           height: '100px'
         }}>
-              <div className="skeleton-shimmer position-absolute w-100 h-100" />
-              <Card.Body className="d-flex align-items-center justify-content-between">
+              <MuiBox component="div" sx={{ position: "absolute", width: "100%", height: "100%" }} className="skeleton-shimmer" />
+              <Card.Body sx={{ display: "flex", alignItems: "center", justifyContent: "space-between" }} >
                 <div>
-                  <div className="skeleton-shimmer rounded mb-2" style={{
+                  <MuiBox component="div" sx={{ borderRadius: "0.375rem", marginBottom: "0.5rem" }} className="skeleton-shimmer" style={{
                 width: '80px',
                 height: '14px'
               }} />
-                  <div className="skeleton-shimmer rounded" style={{
+                  <MuiBox component="div" sx={{ borderRadius: "0.375rem" }} className="skeleton-shimmer" style={{
                 width: '120px',
                 height: '24px'
               }} />
                 </div>
-                <div className="skeleton-shimmer rounded-circle" style={{
+                <MuiBox component="div" sx={{ borderRadius: "50%" }} className="skeleton-shimmer" style={{
               width: '40px',
               height: '40px'
             }} />
@@ -60,23 +64,23 @@ export default function ArticleStatsCards({
           </Col>)}
       </Row>;
   }
-  return <Row className="g-3 mb-4">
+  return <Row sx={{ gap: "1rem", marginBottom: "1.5rem" }} >
       {statItems.map((item, index) => <Col key={index} xs={12} sm={6} md={3}>
           <Card className="article-stats-card">
-            <Card.Body className="d-flex align-items-center justify-content-between p-3">
+            <Card.Body sx={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "1rem" }} >
               <div>
-                <div className="text-muted-custom font-weight-bold mb-1" style={{
+                <MuiBox component="div" sx={{ marginBottom: "0.25rem" }} className="text-muted-custom font-weight-bold" style={{
               fontSize: '0.75rem',
               letterSpacing: '0.05em',
               textTransform: 'uppercase'
             }}>
                   {item.label}
-                </div>
-                <h3 className="text-main mb-0 font-display font-weight-bold" style={{
+                </MuiBox>
+                <MuiBox component="h3" sx={{ marginBottom: "0" }} className="text-main font-display font-weight-bold" style={{
               fontSize: '1.75rem'
             }}>
                   {formatNumber(item.value)}
-                </h3>
+                </MuiBox>
               </div>
               <div className="article-stats-icon">
                 <Icon icon={item.icon} width="22" height="22" />

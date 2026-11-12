@@ -6,10 +6,14 @@ import { useTranslation } from "react-i18next";
 *
 * File: features/article/components/KeywordTopicCard.jsx
 */
-import { Card, Badge } from 'react-bootstrap';
-import { Icon } from '@iconify/react';
+import { Card, Badge } from '@/shared/components/ui/muiAdapters';
+import Icon from '../../../shared/components/Icon.jsx';
 import { useNavigate } from 'react-router-dom';
 import { normalizeKeywords } from '../utils/articleFormatters';
+
+
+import MuiBox from '@mui/material/Box';
+
 export default function KeywordTopicCard({
   primaryTopic,
   keywords,
@@ -46,74 +50,74 @@ export default function KeywordTopicCard({
   const hasKeywords = keywordList.length > 0;
   const hasTopics = displayTopics.length > 0;
   const hasContent = hasKeywords || hasTopics;
-  return <Card className="journal-dark-card border-0 p-4 mb-4" style={{
+  return <Card sx={{ border: 0, padding: "1.5rem", marginBottom: "1.5rem" }} className="journal-dark-card" style={{
     backgroundColor: 'var(--bg-card)',
     border: '1px solid var(--border)',
     borderRadius: '16px',
     boxShadow: '0 10px 30px rgba(0, 0, 0, 0.02)'
   }}>
-      <h5 className="font-display font-weight-bold text-main mb-3 d-flex align-items-center gap-2">
+      <MuiBox component="h5" sx={{ marginBottom: "1rem", display: "flex", alignItems: "center", gap: "0.5rem" }} className="font-display font-weight-bold text-main">
         <Icon icon="lucide:tags" style={{
         color: 'var(--primary)'
-      }} width="20" />{t("article.tuKhoaChuDeKeywordsTopics")}</h5>
+      }} width="20" />{t("article.tuKhoaChuDeKeywordsTopics")}</MuiBox>
 
-      {!hasContent ? <span className="text-muted-custom text-sm">{t("article.chuaCoThongTinTuKhoaHoacChuDe")}</span> : <div className="d-flex flex-column gap-3">
+      {!hasContent ? <span className="text-muted-custom text-sm">{t("article.chuaCoThongTinTuKhoaHoacChuDe")}</span> : <MuiBox component="div" sx={{ display: "flex", flexDirection: "column", gap: "1rem" }} >
 
           {/* ── Keywords ── click được, route /keywords/:id/articles */}
           <section>
-            <div className="d-flex align-items-center gap-2 mb-2">
+            <MuiBox component="div" sx={{ display: "flex", alignItems: "center", gap: "0.5rem", marginBottom: "0.5rem" }} >
               <Icon icon="lucide:key-round" width="14" style={{
             color: 'var(--primary)'
           }} />
-              <span className="text-uppercase fw-semibold" style={{
+              <MuiBox component="span" sx={{ textTransform: "uppercase", fontWeight: 600 }}  style={{
             fontSize: '0.7rem',
             color: 'var(--text-muted)',
             letterSpacing: '0.5px'
           }}>
                 Keywords
-              </span>
-            </div>
+              </MuiBox>
+            </MuiBox>
 
-            {hasKeywords ? <div className="d-flex flex-wrap gap-2">
-                {keywordList.map(keyword => <span key={`keyword-${keyword.keyword_id || keyword.display_name}`} onClick={() => handleKeywordClick(keyword)} className="px-3 py-1 rounded-pill font-display text-main fw-semibold" title={t("article.xemCacBaiBaoTheoKeywordNay")} style={{
+            {hasKeywords ? <MuiBox component="div" sx={{ display: "flex", flexWrap: "wrap", gap: "0.5rem" }} >
+                {keywordList.map(keyword => <MuiBox component="span" sx={{ paddingLeft: "1rem", paddingRight: "1rem", paddingTop: "0.25rem", paddingBottom: "0.25rem", borderRadius: "50rem", fontWeight: 600 }} key={`keyword-${keyword.keyword_id || keyword.display_name}`} onClick={() => handleKeywordClick(keyword)} className="font-display text-main" title={t("article.xemCacBaiBaoTheoKeywordNay")} style={{
             cursor: 'pointer',
             backgroundColor: 'rgba(0,0,0,0.07)',
             border: '1px solid rgba(0,0,0,0.10)'
           }}>
                     {keyword.display_name}
-                  </span>)}
-              </div> : <div className="text-xs px-3 py-2 rounded-3" style={{
+                  </MuiBox>)}
+              </MuiBox> : <MuiBox component="div" sx={{ paddingLeft: "1rem", paddingRight: "1rem", paddingTop: "0.5rem", paddingBottom: "0.5rem", borderRadius: "0.5rem" }} className="text-xs" style={{
           color: 'var(--text-muted)',
           backgroundColor: 'rgba(0,0,0,0.03)',
           border: '1px dashed var(--border)'
-        }}>{t("article.baiBaoNayChuaCoKeywordTuDuLieu")}</div>}
+        }}>{t("article.baiBaoNayChuaCoKeywordTuDuLieu")}</MuiBox>}
           </section>
 
           {/* ── Topics ── chỉ hiển thị, KHÔNG click (route chưa hoàn thiện) */}
           {hasTopics && <section>
-              <div className="d-flex align-items-center gap-2 mb-2">
+              <MuiBox component="div" sx={{ display: "flex", alignItems: "center", gap: "0.5rem", marginBottom: "0.5rem" }} >
               <Icon icon="lucide:network" width="14" style={{
             color: 'var(--primary)'
           }} />
-              <span className="text-uppercase fw-semibold" style={{
+              <MuiBox component="span" sx={{ textTransform: "uppercase", fontWeight: 600 }}  style={{
             fontSize: '0.7rem',
             color: 'var(--text-muted)',
             letterSpacing: '0.5px'
-          }}>{t("article.topicsDangPhatTrien")}</span>
-            </div>
+          }}>{t("article.topicsDangPhatTrien")}</MuiBox>
+            </MuiBox>
 
-              <div className="d-flex flex-wrap gap-2">
-                {displayTopics.map(topic => <span key={`topic-${topic.topic_id || topic.display_name}`} className="px-3 py-1 rounded-pill font-display text-main fw-semibold" title={t("article.topicRouteChuaHoanThien")} style={{
+              <MuiBox component="div" sx={{ display: "flex", flexWrap: "wrap", gap: "0.5rem" }} >
+                {displayTopics.map(topic => <MuiBox component="span" sx={{ paddingLeft: "1rem", paddingRight: "1rem", paddingTop: "0.25rem", paddingBottom: "0.25rem", borderRadius: "50rem", fontWeight: 600 }} key={`topic-${topic.topic_id || topic.display_name}`} className="font-display text-main" title={t("article.topicRouteChuaHoanThien")} style={{
             cursor: 'pointer',
             backgroundColor: 'rgba(0,0,0,0.07)',
             border: '1px solid rgba(0,0,0,0.10)'
           }}>
                     {topic.is_primary && <Icon icon="lucide:star" width="12" />}
                     {topic.display_name}
-                  </span>)}
-              </div>
+                  </MuiBox>)}
+              </MuiBox>
             </section>}
 
-        </div>}
+        </MuiBox>}
     </Card>;
 }

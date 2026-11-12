@@ -1,10 +1,14 @@
 import { useTranslation } from "react-i18next";
-import { Row, Col, Form } from 'react-bootstrap';
+import { Row, Col, Form } from '@/shared/components/ui/muiAdapters';
+
+
+import MuiBox from '@mui/material/Box';
+
 
 /**
  * PasswordFields Component
  * Renders current password, new password, and confirmation password input boxes.
- * 
+ *
  * @param {Object} props - Props
  * @param {string} props.currentPassword - Current password state value
  * @param {function} props.onCurrentPasswordChange - Setter for current password
@@ -27,7 +31,7 @@ export default function PasswordFields({
     t
   } = useTranslation();
   return <div>
-      <Row className="g-3">
+      <Row sx={{ gap: "1rem" }} >
         {/* Current Password - Only required for updating existing profile */}
         {isEdit && <Col xs={12} md={4}>
             <Form.Group controlId="currentPassword">
@@ -60,8 +64,8 @@ export default function PasswordFields({
       </Row>
 
       {/* Password complexity helper note */}
-      <div className="form-text text-muted-custom mt-2 small">
+      <MuiBox component="div" sx={{ display: "block", marginTop: "0.5rem", fontSize: "0.875em", color: "text.secondary" }} className="text-muted-custom">
         Password must be at least 8 characters long, and contain uppercase, lowercase letters, and digits.
-      </div>
+      </MuiBox>
     </div>;
 }

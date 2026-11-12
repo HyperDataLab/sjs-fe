@@ -12,11 +12,15 @@ import FooterCTA from '../components/FooterCTA';
 import Footer from '../components/Footer';
 import useScrollReveal from '../../../shared/hooks/useScrollReveal';
 
+
+import MuiBox from '@mui/material/Box';
+
+
 export default function LandingPage() {
   useScrollReveal('.reveal-on-scroll, .reveal-left, .reveal-right, .reveal-scale');
 
   return (
-    <div className="min-vh-100 overflow-x-hidden" style={{ backgroundColor: 'var(--bg-main)', color: 'var(--text-main)' }}>
+    <MuiBox component="div" sx={{ minHeight: "100vh", overflowX: "hidden" }}  style={{ backgroundColor: 'var(--bg-main)', color: 'var(--text-main)' }}>
       {/* Sticky Header */}
       <Header />
 
@@ -40,6 +44,6 @@ export default function LandingPage() {
 
       {/* Footer */}
       <Footer />
-    </div>
+    </MuiBox>
   );
 }

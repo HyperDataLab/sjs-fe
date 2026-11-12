@@ -4,8 +4,10 @@ import { useTranslation } from "react-i18next";
  *
  * File: features\journal\components\JournalSearchBar.jsx
  */
-import { Form, Row, Col, Button, InputGroup } from 'react-bootstrap';
-import { Icon } from '@iconify/react';
+import { Form, Row, Col, Button, InputGroup } from '@/shared/components/ui/muiAdapters';
+import Icon from '../../../shared/components/Icon.jsx';
+
+
 export default function JournalSearchBar({
   searchInput,
   setSearchInput,
@@ -20,7 +22,7 @@ export default function JournalSearchBar({
     t
   } = useTranslation();
   return <Form onSubmit={onSubmit} className="journal-search-panel">
-      <Row className="g-3 align-items-center">
+      <Row sx={{ gap: "1rem", alignItems: "center" }} >
         {/* Search Input Box */}
         <Col lg={6} md={12}>
           <InputGroup className="journal-search-group">
@@ -28,10 +30,10 @@ export default function JournalSearchBar({
               <Icon icon="lucide:search" width="18" />
             </InputGroup.Text>
             <Form.Control type="text" placeholder={t("journal.timJournal")} value={searchInput} onChange={e => setSearchInput(e.target.value)} className="journal-search-input" />
-            {searchInput && <Button variant="link" className="journal-search-clear p-2" onClick={() => setSearchInput('')}>
+            {searchInput && <Button sx={{ padding: "0.5rem" }} variant="link" className="journal-search-clear" onClick={() => setSearchInput('')}>
                 <Icon icon="lucide:x" width="16" />
               </Button>}
-            <Button type="submit" className="journal-search-submit px-4 border-0">{t("search")}</Button>
+            <Button sx={{ paddingLeft: "1.5rem", paddingRight: "1.5rem", border: 0 }} type="submit" className="journal-search-submit">{t("search")}</Button>
           </InputGroup>
         </Col>
 
@@ -56,9 +58,9 @@ export default function JournalSearchBar({
         </Col>
 
         {/* Clear Button */}
-        <Col lg={1} md={4} sm={12} xs={12} className="text-md-end text-center">
-          <Button variant="link" className="journal-reset-btn py-2" onClick={onClear}>
-            <Icon icon="lucide:refresh-cw" className="me-1" />
+        <Col sx={{ "@media (min-width:768px)": { textAlign: "right" }, textAlign: "center" }} lg={1} md={4} sm={12} xs={12} >
+          <Button sx={{ paddingTop: "0.5rem", paddingBottom: "0.5rem" }} variant="link" className="journal-reset-btn" onClick={onClear}>
+            <Icon sx={{ marginInlineEnd: "0.25rem" }} icon="lucide:refresh-cw"  />
             Reset
           </Button>
         </Col>

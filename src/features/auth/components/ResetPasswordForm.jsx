@@ -1,10 +1,14 @@
 import { useTranslation } from "react-i18next";
 import { t } from "i18next";
 import { useState } from 'react';
-import { Form } from 'react-bootstrap';
+import { Form } from '@/shared/components/ui/muiAdapters';
 import PasswordInput from './PasswordInput';
 import SubmitButton from './SubmitButton';
 import FormErrorMessage from './FormErrorMessage';
+
+
+import MuiBox from '@mui/material/Box';
+
 export default function ResetPasswordForm({
   onSubmit,
   isLoading,
@@ -79,8 +83,8 @@ export default function ResetPasswordForm({
       <PasswordInput label={t("auth.xacNhanMatKhauMoi")} name="confirm_password" value={formData.confirm_password} onChange={handleChange} onBlur={handleBlur} placeholder={t("auth.nhapLaiMatKhau")} error={errors.confirm_password} required disabled={isLoading} />
 
       {/* Submit Button */}
-      <div className="mt-4">
+      <MuiBox component="div" sx={{ marginTop: "1.5rem" }} >
         <SubmitButton isLoading={isLoading} loadingText={t("auth.dangCapNhat")} label={t("auth.capNhatMatKhau")} />
-      </div>
+      </MuiBox>
     </Form>;
 }

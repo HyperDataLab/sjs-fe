@@ -5,11 +5,15 @@ import { useTranslation } from "react-i18next";
  * File: features\journal\components\VolumesTabContent.jsx
  */
 import { useState } from 'react';
-import { Spinner, Button } from 'react-bootstrap';
-import { Icon } from '@iconify/react';
+import { Spinner, Button } from '@/shared/components/ui/muiAdapters';
+import Icon from '../../../shared/components/Icon.jsx';
 import { useNavigate } from 'react-router-dom';
 import LoadingSkeleton from '../../../shared/components/LoadingSkeleton';
 import AdminPagination from '../../../shared/components/Pagination';
+
+
+import MuiBox from '@mui/material/Box';
+
 export default function VolumesTabContent({
   volumes = [],
   issuesByVolume = {},
@@ -61,23 +65,23 @@ export default function VolumesTabContent({
     return <AdminPagination totalItems={totalItems} currentPage={currentPage} limit={limit} onPageChange={onPageChange} entityName={entityName} />;
   };
   if (loading) {
-    return <section className="journal-surface p-4">
-        {[1, 2, 3].map(i => <div key={i} className="mb-3 p-3 border-bottom">
-            <LoadingSkeleton width="200px" height="24px" className="mb-2" />
+    return <MuiBox component="section" sx={{ padding: "1.5rem" }} className="journal-surface">
+        {[1, 2, 3].map(i => <MuiBox component="div" sx={{ marginBottom: "1rem", padding: "1rem", borderBottom: "1px solid #dee2e6" }} key={i} >
+            <LoadingSkeleton sx={{ marginBottom: "0.5rem" }} width="200px" height="24px"  />
             <LoadingSkeleton width="120px" height="16px" />
-          </div>)}
-      </section>;
+          </MuiBox>)}
+      </MuiBox>;
   }
   if (error) {
     return <section className="journal-surface journal-empty-state">
-        <Icon icon="lucide:alert-triangle" width="36" className="text-danger" />
-        <p className="mb-0">{t("journal.khongTheTaiDanhSachVolumesVuiL")}</p>
+        <Icon sx={{ color: "error.main" }} icon="lucide:alert-triangle" width="36"  />
+        <MuiBox component="p" sx={{ marginBottom: "0" }} >{t("journal.khongTheTaiDanhSachVolumesVuiL")}</MuiBox>
       </section>;
   }
   if (!volumes || volumes.length === 0) {
     return <section className="journal-surface journal-empty-state">
         <Icon icon="lucide:folder-x" width="36" />
-        <p className="mb-0">{t("journal.journalNayChuaCoDuLieuVolume")}</p>
+        <MuiBox component="p" sx={{ marginBottom: "0" }} >{t("journal.journalNayChuaCoDuLieuVolume")}</MuiBox>
       </section>;
   }
   return <div className="journal-volume-list">
@@ -91,52 +95,52 @@ export default function VolumesTabContent({
       const issuePagination = issuePaginationByVolume[volumeId];
       return <article key={volumeId} className={`journal-volume-card ${isExpanded ? 'is-expanded' : ''}`}>
             <div className="journal-volume-header" onClick={() => toggleVolume(volumeId)}>
-              <div className="d-flex align-items-center gap-3 flex-wrap">
+              <MuiBox component="div" sx={{ display: "flex", alignItems: "center", gap: "1rem", flexWrap: "wrap" }} >
                 <Icon icon={isExpanded ? 'lucide:folder-open' : 'lucide:folder'} style={{
               color: 'var(--text-muted)'
             }} width="20" />
                 <div>
                   <span className="journal-volume-title">Volume {vol.volume_number || 'N/A'}</span>
                   <span className="journal-volume-meta">{volumeYear || t("author.chuaCapNhat")}</span>
-                  {vol.issue_count !== undefined && vol.issue_count > 0 && <span className="text-muted-custom small ms-2">
+                  {vol.issue_count !== undefined && vol.issue_count > 0 && <MuiBox component="span" sx={{ fontSize: "0.875em", marginInlineStart: "0.5rem" }} className="text-muted-custom">
                       {vol.issue_count} issue
-                    </span>}
+                    </MuiBox>}
                 </div>
-              </div>
-              <span className="text-muted-custom d-flex align-items-center">
+              </MuiBox>
+              <MuiBox component="span" sx={{ display: "flex", alignItems: "center" }} className="text-muted-custom">
                 <Icon icon={isExpanded ? 'lucide:chevron-up' : 'lucide:chevron-down'} width="18" />
-              </span>
+              </MuiBox>
             </div>
 
             {isExpanded && <div className="journal-issue-panel">
-                {issues === undefined && !issueError ? <div className="d-flex align-items-center gap-2 py-3 text-muted-custom">
-                    <Spinner animation="border" size="sm" />{t("journal.dangTaiDanhSachIssue")}</div> : issueError ? <div className="d-flex align-items-center gap-2 py-3 text-danger">
-                    <Icon icon="lucide:alert-triangle" width="16" />{t("journal.khongTheTaiDanhSachIssuesVuiLo")}</div> : !issues || issues.length === 0 ? <div className="text-muted-custom py-3 text-start">
-                    <Icon icon="lucide:inbox" width="14" className="me-1" />{t("journal.volumeNayChuaCoIssue")}</div> : <div className="d-flex flex-column gap-2 py-2">
+                {issues === undefined && !issueError ? <MuiBox component="div" sx={{ display: "flex", alignItems: "center", gap: "0.5rem", paddingTop: "1rem", paddingBottom: "1rem" }} className="text-muted-custom">
+                    <Spinner animation="border" size="sm" />{t("journal.dangTaiDanhSachIssue")}</MuiBox> : issueError ? <MuiBox component="div" sx={{ display: "flex", alignItems: "center", gap: "0.5rem", paddingTop: "1rem", paddingBottom: "1rem", color: "error.main" }} >
+                    <Icon icon="lucide:alert-triangle" width="16" />{t("journal.khongTheTaiDanhSachIssuesVuiLo")}</MuiBox> : !issues || issues.length === 0 ? <MuiBox component="div" sx={{ paddingTop: "1rem", paddingBottom: "1rem", textAlign: "left" }} className="text-muted-custom">
+                    <Icon sx={{ marginInlineEnd: "0.25rem" }} icon="lucide:inbox" width="14"  />{t("journal.volumeNayChuaCoIssue")}</MuiBox> : <MuiBox component="div" sx={{ display: "flex", flexDirection: "column", gap: "0.5rem", paddingTop: "0.5rem", paddingBottom: "0.5rem" }} >
                     {issues.map(issue => {
 
               const issueId = issue.issue_id || issue.id;
               const issueYear = issue.publication_year || issue.year;
               const issueMonth = issue.month ? MONTH_NAMES[issue.month] || `Tháng ${issue.month}` : null;
               return <div key={issueId} className="journal-issue-row">
-                          <div className="d-flex align-items-center gap-2 flex-wrap">
+                          <MuiBox component="div" sx={{ display: "flex", alignItems: "center", gap: "0.5rem", flexWrap: "wrap" }} >
                             <Icon icon="lucide:file-stack" style={{
                     color: 'var(--text-muted)'
                   }} width="15" />
                             <span className="journal-issue-title">Issue {issue.issue_number || 'N/A'}</span>
-                            {(issueMonth || issueYear) && <span className="text-muted-custom small">
+                            {(issueMonth || issueYear) && <MuiBox component="span" sx={{ fontSize: "0.875em" }} className="text-muted-custom">
                                 {[issueMonth, issueYear].filter(Boolean).join(' ')}
-                              </span>}
-                            {issue.article_count !== undefined && <span className="text-muted-custom small">
-                                {issue.article_count}{" "}{t("author.baiBao")}</span>}
-                          </div>
+                              </MuiBox>}
+                            {issue.article_count !== undefined && <MuiBox component="span" sx={{ fontSize: "0.875em" }} className="text-muted-custom">
+                                {issue.article_count}{" "}{t("author.baiBao")}</MuiBox>}
+                          </MuiBox>
 
-                          <Button onClick={e => handleViewArticles(e, issueId)} className="journal-text-btn px-3 py-1">{t("journal.xemBaiBao")}<Icon icon="lucide:arrow-right" width="14" />
+                          <Button sx={{ paddingLeft: "1rem", paddingRight: "1rem", paddingTop: "0.25rem", paddingBottom: "0.25rem" }} onClick={e => handleViewArticles(e, issueId)} className="journal-text-btn">{t("journal.xemBaiBao")}<Icon icon="lucide:arrow-right" width="14" />
                           </Button>
                         </div>;
             })}
                     {renderPagination(issuePagination, nextPage => onIssuePageChange && onIssuePageChange(volumeId, nextPage), 'issue')}
-                  </div>}
+                  </MuiBox>}
               </div>}
           </article>;
     })}

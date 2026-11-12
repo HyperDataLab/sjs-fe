@@ -1,8 +1,8 @@
 import { useTranslation } from "react-i18next";
 import { useEffect, useState } from "react";
-import { Container, Row, Col, Card, Button, Breadcrumb } from "react-bootstrap";
+import { Container, Row, Col, Card, Button, Breadcrumb } from '@/shared/components/ui/muiAdapters';
 import { useNavigate } from "react-router-dom";
-import { Icon } from "@iconify/react";
+import Icon from '../../../shared/components/Icon.jsx';
 import { useJournalManagement } from "../hooks/useJournalManagement";
 import VolumeList from "../components/VolumeList";
 import IssueTable from "../components/IssueTable";
@@ -10,6 +10,10 @@ import SwitchJournalModal from "../components/modals/SwitchJournalModal";
 import CreateVolumeModal from "../components/modals/CreateVolumeModal";
 import CreateIssueModal from "../components/modals/CreateIssueModal";
 import PrimaryButton from "../../../shared/components/Button/PrimaryButton";
+
+
+import MuiBox from '@mui/material/Box';
+
 
 /**
  * Page RepositoryManagementPage - Màn hình điều phối quản lý Tập (Volume) và Số (Issue) tập trung của Admin.
@@ -55,90 +59,90 @@ export default function RepositoryManagementPage() {
 
   // 2. Lọc ra toàn bộ Issue thuộc về Volume đang được Admin click chọn ở cột bên trái (đảm bảo bảo vệ nếu issues undefined)
   const currentIssues = (issues || []).filter(i => i.volumeId === selectedVolume);
-  return <Container fluid className="py-4 grid-bg">
+  return <Container sx={{ paddingTop: "1.5rem", paddingBottom: "1.5rem" }} fluid className="grid-bg">
       {/* THANH ĐIỀU HƯỚNG BREADCRUMB CHUẨN UX */}
-      <Breadcrumb className="mb-3 small">
+      <Breadcrumb sx={{ marginBottom: "1rem", fontSize: "0.875em" }} >
         <Breadcrumb.Item onClick={() => navigate("/admin/journals")}>{t("journal.quanLyTapChi")}</Breadcrumb.Item>
         <Breadcrumb.Item active>{t("journal.khoDuLieuTapSoRepository")}</Breadcrumb.Item>
       </Breadcrumb>
 
       {/* KHỐI TIÊU ĐỀ TRANG VÀ THÔNG TIN TẠP CHÍ ĐANG CHỌN */}
-      <div className="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4">
+      <MuiBox component="div" sx={{ display: "flex", flexDirection: "column", "@media (min-width:768px)": { flexDirection: "row", alignItems: "center" }, justifyContent: "space-between", gap: "1rem", marginBottom: "1.5rem" }} >
         <div>
-          <span className="text-muted-custom small text-uppercase fw-bold tracking-wider">
+          <MuiBox component="span" sx={{ fontSize: "0.875em", textTransform: "uppercase", fontWeight: 700 }} className="text-muted-custom tracking-wider">
             Repository Management
-          </span>
-          <h1 className="font-display fw-bold text-main mb-1 d-flex align-items-center gap-2 mt-0.5">
-            <Icon icon="lucide:database" className="text-warning" />
+          </MuiBox>
+          <MuiBox component="h1" sx={{ fontWeight: 700, marginBottom: "0.25rem", display: "flex", alignItems: "center", gap: "0.5rem" }} className="font-display text-main mt-0.5">
+            <Icon sx={{ color: "warning.main" }} icon="lucide:database"  />
             {currentJournal ? currentJournal.title : t("journal.dangTaiThongTin")}
-          </h1>
-          <p className="text-muted-custom small mb-0">{t("journal.maSoIssn")}{" "}
-            <span className="font-monospace fw-medium">
+          </MuiBox>
+          <MuiBox component="p" sx={{ fontSize: "0.875em", marginBottom: "0" }} className="text-muted-custom">{t("journal.maSoIssn")}{" "}
+            <MuiBox component="span" sx={{ fontFamily: "monospace", fontWeight: 500 }} >
               {currentJournal?.issn}
-            </span>{" "}{t("journal.nguoiPhuTrach")}{" "}
-            <span className="fw-medium">{currentJournal?.publisher}</span>
-          </p>
+            </MuiBox>{" "}{t("journal.nguoiPhuTrach")}{" "}
+            <MuiBox component="span" sx={{ fontWeight: 500 }} >{currentJournal?.publisher}</MuiBox>
+          </MuiBox>
         </div>
 
         {/* Nút bấm mở Switch Journal Modal để đổi nhanh tạp chí cần cấu hình */}
-        <Button variant="outline-dark" className="btn-custom-sm d-flex align-items-center gap-1.5" onClick={() => setShowSwitchModal(true)}>
+        <Button sx={{ display: "flex", alignItems: "center" }} variant="outline-dark" className="btn-custom-sm gap-1.5" onClick={() => setShowSwitchModal(true)}>
           <Icon icon="lucide:refresh-cw" width="14" />
           <span>{t("journal.doiTapChi")}</span>
         </Button>
-      </div>
+      </MuiBox>
 
       {/* THẺ TỔNG QUAN THỐNG KÊ NHANH (SUMMARY CARD) */}
-      <Row className="g-3 mb-4 text-start">
+      <Row sx={{ gap: "1rem", marginBottom: "1.5rem", textAlign: "left" }} >
         <Col xs={12} sm={4}>
-          <Card className="border p-3 shadow-none bg-white">
-            <div className="text-muted-custom small mb-1">{t("journal.tongSoVolumeTap")}</div>
-            <h3 className="fw-bold text-main m-0 font-monospace">
+          <Card sx={{ border: "1px solid #dee2e6", padding: "1rem", boxShadow: "none", bgcolor: "background.paper" }} >
+            <MuiBox component="div" sx={{ fontSize: "0.875em", marginBottom: "0.25rem" }} className="text-muted-custom">{t("journal.tongSoVolumeTap")}</MuiBox>
+            <MuiBox component="h3" sx={{ fontWeight: 700, margin: "0", fontFamily: "monospace" }} className="text-main">
               {currentVolumes.length}
-            </h3>
+            </MuiBox>
           </Card>
         </Col>
         <Col xs={12} sm={4}>
-          <Card className="border p-3 shadow-none bg-white">
-            <div className="text-muted-custom small mb-1">{t("journal.tongSoIssuePhatHanh")}</div>
-            <h3 className="fw-bold text-main m-0 font-monospace">
+          <Card sx={{ border: "1px solid #dee2e6", padding: "1rem", boxShadow: "none", bgcolor: "background.paper" }} >
+            <MuiBox component="div" sx={{ fontSize: "0.875em", marginBottom: "0.25rem" }} className="text-muted-custom">{t("journal.tongSoIssuePhatHanh")}</MuiBox>
+            <MuiBox component="h3" sx={{ fontWeight: 700, margin: "0", fontFamily: "monospace" }} className="text-main">
               {issues.filter(i => currentVolumes.map(v => v.id).includes(i.volumeId)).length}
-            </h3>
+            </MuiBox>
           </Card>
         </Col>
         <Col xs={12} sm={4}>
-          <Card className="border p-3 shadow-none bg-white">
-            <div className="text-muted-custom small mb-1">{t("journal.trangThaiCauTruc")}</div>
-            <div className="d-flex align-items-center gap-1 mt-1">
-              <span className="badge bg-success-subtle text-success rounded">{t("journal.dongBoMockState")}</span>
-            </div>
+          <Card sx={{ border: "1px solid #dee2e6", padding: "1rem", boxShadow: "none", bgcolor: "background.paper" }} >
+            <MuiBox component="div" sx={{ fontSize: "0.875em", marginBottom: "0.25rem" }} className="text-muted-custom">{t("journal.trangThaiCauTruc")}</MuiBox>
+            <MuiBox component="div" sx={{ display: "flex", alignItems: "center", gap: "0.25rem", marginTop: "0.25rem" }} >
+              <MuiBox component="span" sx={{ display: "inline-block", px: "0.65em", py: "0.35em", fontSize: "0.75em", fontWeight: 700, lineHeight: 1, color: "success.main", textAlign: "center", whiteSpace: "nowrap", verticalAlign: "baseline", borderRadius: "0.375rem", bgcolor: "rgba(25,135,84,.12)" }} >{t("journal.dongBoMockState")}</MuiBox>
+            </MuiBox>
           </Card>
         </Col>
       </Row>
 
       {/* KHU VỰC CHIA ĐÔI GIAO DIỆN CHÍNH (VOLUME BÊN TRÁI - ISSUE BÊN PHẢI) */}
-      <Row className="g-4 text-start">
+      <Row sx={{ gap: "1.5rem", textAlign: "left" }} >
         {/* CỘT BÊN TRÁI: QUẢN LÝ VOLUME */}
         <Col xs={12} lg={4}>
-          <div className="d-flex justify-content-between align-items-center mb-3">
-            <h5 className="font-display fw-bold text-main mb-0">{t("journal.danhSachCacTapVolumes")}</h5>
-            <Button variant="dark" size="sm" className="btn-custom-sm d-flex align-items-center gap-1 px-2.5 py-1.5" onClick={() => setShowVolumeModal(true)}>
+          <MuiBox component="div" sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1rem" }} >
+            <MuiBox component="h5" sx={{ fontWeight: 700, marginBottom: "0" }} className="font-display text-main">{t("journal.danhSachCacTapVolumes")}</MuiBox>
+            <Button sx={{ display: "flex", alignItems: "center", gap: "0.25rem" }} variant="dark" size="sm" className="btn-custom-sm px-2.5 py-1.5" onClick={() => setShowVolumeModal(true)}>
               <Icon icon="lucide:plus" width="14" />
               <span>{t("journal.tapMoi")}</span>
             </Button>
-          </div>
+          </MuiBox>
           <VolumeList volumes={currentVolumes} selectedVolumeId={selectedVolume} onSelectVolume={setSelectedVolume} />
         </Col>
 
         {/* CỘT BÊN PHẢI: QUẢN LÝ CÁC ISSUE THUỘC VOLUME ĐƯỢC CHỌN */}
         <Col xs={12} lg={8}>
-          <div className="d-flex justify-content-between align-items-center mb-3">
-            <h5 className="font-display fw-bold text-main mb-0">{t("journal.soPhatHanhIssuesThuocTapDaChon")}</h5>
-            <PrimaryButton className="gap-1 px-2.5 py-1.5" disabled={!selectedVolume} // Khóa nút lại nếu chưa có Volume nào được chọn
+          <MuiBox component="div" sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1rem" }} >
+            <MuiBox component="h5" sx={{ fontWeight: 700, marginBottom: "0" }} className="font-display text-main">{t("journal.soPhatHanhIssuesThuocTapDaChon")}</MuiBox>
+            <PrimaryButton sx={{ gap: "0.25rem" }} className="px-2.5 py-1.5" disabled={!selectedVolume} // Khóa nút lại nếu chưa có Volume nào được chọn
           onClick={() => setShowIssueModal(true)}>
               <Icon icon="lucide:plus-circle" width="14" />
               <span>{t("journal.soPhatHanhMoi")}</span>
             </PrimaryButton>
-          </div>
+          </MuiBox>
           <IssueTable issues={currentIssues} />
         </Col>
       </Row>

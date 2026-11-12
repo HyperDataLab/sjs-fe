@@ -1,12 +1,16 @@
 import { useTranslation } from "react-i18next";
 import { useState, useEffect } from "react";
-import { Container, Row } from "react-bootstrap";
+import { Container, Row } from '@/shared/components/ui/muiAdapters';
 import { useJournalManagement } from "../hooks/useJournalManagement";
 import JournalFilterBar from "../components/JournalFilterBar";
 import JournalTableAdmin from "../components/JournalTableAdmin";
 import JournalCardAdmin from "../components/JournalCardAdmin";
 import AddJournalModal from "../components/modals/AddJournalModal";
 import { StateCard } from "../../../shared/components/Card";
+
+
+import MuiBox from '@mui/material/Box';
+
 
 /**
  * Page JournalDirectoryPage - Màn hình chính quản lý thư mục các Tạp chí dành cho Admin.
@@ -48,28 +52,28 @@ export default function JournalDirectoryPage() {
     const matchesStatus = statusFilter === "All" || journalStatus === statusFilter;
     return matchesSearch && matchesStatus;
   });
-  return <Container fluid className="py-4 grid-bg">
+  return <Container sx={{ paddingTop: "1.5rem", paddingBottom: "1.5rem" }} fluid className="grid-bg">
       {/* KHỐI TIÊU ĐỀ TRANG QUẢN TRỊ */}
-      <div className="d-flex justify-content-between align-items-center mb-4">
+      <MuiBox component="div" sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1.5rem" }} >
         <div>
-          <h1 className="font-display fw-bold text-main mb-1">{t("journal.quanLyTapChi")}</h1>
-          <p className="text-muted-custom mb-0">{t("journal.heThongPhanCapVaLuuTruCauTrucJ")}</p>
+          <MuiBox component="h1" sx={{ fontWeight: 700, marginBottom: "0.25rem" }} className="font-display text-main">{t("journal.quanLyTapChi")}</MuiBox>
+          <MuiBox component="p" sx={{ marginBottom: "0" }} className="text-muted-custom">{t("journal.heThongPhanCapVaLuuTruCauTrucJ")}</MuiBox>
         </div>
-      </div>
+      </MuiBox>
 
       {/* THANH BỘ LỌC ĐA NĂNG (TÌM KIẾM, TOGGLE VIEW, NÚT THÊM MỚI) */}
       <JournalFilterBar search={search} onSearchChange={setSearch} statusFilter={statusFilter} onStatusChange={setStatusFilter} viewMode={viewMode} onViewModeChange={setViewMode} onOpenAddModal={() => setShowAddModal(true)} />
 
       {/* KHU VỰC RENDER DANH SÁCH THEO TRẠNG THÁI HỆ THỐNG */}
-      {loading ? <div className="text-center py-5">
-          <div className="spinner-border text-warning skeleton-shimmer" role="status">
-            <span className="visually-hidden">{t("journal.dangTaiDuLieu")}</span>
-          </div>
-        </div> : filteredJournals.length === 0 ? <StateCard variant="neutral" icon="lucide:search-x" title={t("journal.khongTimThayDuLieu")} description={t("journal.khongTimThayTapChiNaoPhuHopVoi")} className="my-4 border-dashed" /> : viewMode === "table" ? (/* CHẾ ĐỘ XEM BẢNG DÀNH CHO ADMIN */
-    <div className="glass-card p-0 border-0 shadow-none">
+      {loading ? <MuiBox component="div" sx={{ textAlign: "center", paddingTop: "3rem", paddingBottom: "3rem" }} >
+          <MuiBox component="div" sx={{ display: "inline-block", width: "2rem", height: "2rem", verticalAlign: "-0.125em", border: "0.25em solid currentColor", borderRightColor: "transparent", borderRadius: "50%", animation: "spin .75s linear infinite", color: "warning.main" }} className="skeleton-shimmer" role="status">
+            <MuiBox component="span" sx={{ position: "absolute", width: 1, height: 1, padding: 0, margin: -1, overflow: "hidden", clip: "rect(0,0,0,0)", whiteSpace: "nowrap", border: 0 }} >{t("journal.dangTaiDuLieu")}</MuiBox>
+          </MuiBox>
+        </MuiBox> : filteredJournals.length === 0 ? <StateCard sx={{ marginTop: "1.5rem", marginBottom: "1.5rem" }} variant="neutral" icon="lucide:search-x" title={t("journal.khongTimThayDuLieu")} description={t("journal.khongTimThayTapChiNaoPhuHopVoi")} className="border-dashed" /> : viewMode === "table" ? (/* CHẾ ĐỘ XEM BẢNG DÀNH CHO ADMIN */
+    <MuiBox component="div" sx={{ padding: "0", border: 0, boxShadow: "none" }} className="glass-card">
           <JournalTableAdmin journals={filteredJournals} page={page} limit={limit} />
-        </div>) : (/* CHẾ ĐỘ XEM LƯỚI THẺ DÀNH CHO ADMIN */
-    <Row className="g-3">
+        </MuiBox>) : (/* CHẾ ĐỘ XEM LƯỚI THẺ DÀNH CHO ADMIN */
+    <Row sx={{ gap: "1rem" }} >
           {filteredJournals.map(j => <JournalCardAdmin key={j.id || j.journal_id} journal={j} />)}
         </Row>)}
 

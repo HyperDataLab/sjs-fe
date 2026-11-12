@@ -4,10 +4,14 @@ import { useTranslation } from "react-i18next";
 *
 * File: features\article\components\AuthorsCard.jsx
 */
-import { Card } from 'react-bootstrap';
-import { Icon } from '@iconify/react';
+import { Card } from '@/shared/components/ui/muiAdapters';
+import Icon from '../../../shared/components/Icon.jsx';
 import { useNavigate } from 'react-router-dom';
 import { getInitials, normalizeAuthors } from '../utils/articleFormatters';
+
+
+import MuiBox from '@mui/material/Box';
+
 export default function AuthorsCard({
   authors
 }) {
@@ -23,31 +27,31 @@ export default function AuthorsCard({
     }
     navigate(`/catalog?search=${encodeURIComponent(author.display_name)}`);
   };
-  return <Card className="journal-dark-card border-0 p-4 mb-4" style={{
+  return <Card sx={{ border: 0, padding: "1.5rem", marginBottom: "1.5rem" }} className="journal-dark-card" style={{
     backgroundColor: 'var(--bg-card)',
     border: '1px solid var(--border)',
     borderRadius: '16px',
     boxShadow: '0 10px 30px rgba(0, 0, 0, 0.02)'
   }}>
-      <h5 className="font-display font-weight-bold text-main mb-3 d-flex align-items-center gap-2 border-bottom border-light pb-2">
+      <MuiBox component="h5" sx={{ marginBottom: "1rem", display: "flex", alignItems: "center", gap: "0.5rem", borderBottom: "1px solid #dee2e6", borderColor: "#dee2e6", paddingBottom: "0.5rem" }} className="font-display font-weight-bold text-main">
         <Icon icon="lucide:users" style={{
         color: 'var(--primary)'
-      }} width="20" />{t("article.nhomTacGiaAuthors")}</h5>
+      }} width="20" />{t("article.nhomTacGiaAuthors")}</MuiBox>
 
-      {parsedAuthors.length === 0 ? <span className="text-muted-custom text-sm">{t("article.chuaCapNhatThongTinTacGia")}</span> : <div className="d-flex flex-column gap-3">
-          {parsedAuthors.map((author, index) => <div key={author.author_id || `${author.display_name}-${index}`} className="d-flex align-items-start gap-3 p-2 rounded-3 hover:bg-light transition-all" style={{
+      {parsedAuthors.length === 0 ? <span className="text-muted-custom text-sm">{t("article.chuaCapNhatThongTinTacGia")}</span> : <MuiBox component="div" sx={{ display: "flex", flexDirection: "column", gap: "1rem" }} >
+          {parsedAuthors.map((author, index) => <MuiBox component="div" sx={{ display: "flex", alignItems: "flex-start", gap: "1rem", padding: "0.5rem", borderRadius: "0.5rem" }} key={author.author_id || `${author.display_name}-${index}`} className="hover:bg-light transition-all" style={{
         transition: 'all 0.2s'
       }}>
-              <div className="d-flex align-items-center justify-content-center text-white text-xs font-bold rounded-circle font-display" style={{
+              <MuiBox component="div" sx={{ display: "flex", alignItems: "center", justifyContent: "center", color: "#fff", borderRadius: "50%" }} className="text-xs font-bold font-display" style={{
           width: '36px',
           height: '36px',
           background: 'linear-gradient(135deg, var(--btn-dark) 0%, var(--primary) 100%)',
           flexShrink: 0
         }}>
                 {getInitials(author.display_name)}
-              </div>
+              </MuiBox>
 
-              <div className="flex-grow-1">
+              <MuiBox component="div" sx={{ flexGrow: 1 }} >
                 <div onClick={() => handleAuthorClick(author)} className="text-sm text-main font-weight-semibold hover:text-primary transition-colors" style={{
             cursor: 'pointer',
             fontWeight: 700,
@@ -55,19 +59,19 @@ export default function AuthorsCard({
           }}>
                   {author.display_name}
                 </div>
-                {author.last_known_institution && <div className="text-muted-custom text-xs mt-1" style={{
+                {author.last_known_institution && <MuiBox component="div" sx={{ marginTop: "0.25rem" }} className="text-muted-custom text-xs" style={{
             fontSize: '0.75rem'
           }}>
-                    <Icon icon="lucide:building" width="12" className="me-1 opacity-75" />
+                    <Icon sx={{ marginInlineEnd: "0.25rem", opacity: 0.75 }} icon="lucide:building" width="12"  />
                     {author.last_known_institution}
-                  </div>}
-                {author.works_count !== null && author.works_count !== undefined && <div className="text-muted-custom text-xs mt-1" style={{
+                  </MuiBox>}
+                {author.works_count !== null && author.works_count !== undefined && <MuiBox component="div" sx={{ marginTop: "0.25rem" }} className="text-muted-custom text-xs" style={{
             fontSize: '0.72rem'
           }}>
-                    <Icon icon="lucide:file-text" width="12" className="me-1 opacity-75" />
-                    {Number(author.works_count).toLocaleString('vi-VN')}{t("article.congTrinh")}</div>}
-              </div>
-            </div>)}
-        </div>}
+                    <Icon sx={{ marginInlineEnd: "0.25rem", opacity: 0.75 }} icon="lucide:file-text" width="12"  />
+                    {Number(author.works_count).toLocaleString('vi-VN')}{t("article.congTrinh")}</MuiBox>}
+              </MuiBox>
+            </MuiBox>)}
+        </MuiBox>}
     </Card>;
 }

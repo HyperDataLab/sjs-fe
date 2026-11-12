@@ -1,8 +1,10 @@
 
+import MuiBox from '@mui/material/Box';
+
 /**
  * RoleBadge Component
  * Renders user role badges using the design system's color schemes.
- * 
+ *
  * @param {Object} props - Props
  * @param {string} props.role - User role
  */
@@ -41,8 +43,8 @@ export default function RoleBadge({ role }) {
   const currentStyle = styles[role] || styles.RESEARCHER;
 
   return (
-    <span 
-      className="badge rounded-3 px-2.5 py-1 fw-semibold text-xs" 
+    <MuiBox component="span" sx={{ display: "inline-block", px: "0.65em", py: "0.35em", fontSize: "0.75em", fontWeight: 600, lineHeight: 1, color: "#fff", textAlign: "center", whiteSpace: "nowrap", verticalAlign: "baseline", borderRadius: "0.5rem", paddingTop: "0.25rem", paddingBottom: "0.25rem" }}
+      className="px-2.5 text-xs"
       style={{
         fontSize: '0.75rem',
         textTransform: 'capitalize',
@@ -50,6 +52,6 @@ export default function RoleBadge({ role }) {
       }}
     >
       {labels[role] || role}
-    </span>
+    </MuiBox>
   );
 }

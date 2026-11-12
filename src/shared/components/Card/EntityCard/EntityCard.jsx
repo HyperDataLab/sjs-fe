@@ -1,25 +1,7 @@
-/**
- * File source thuộc hệ thống FE ResearchPulse.
- *
- * File: shared\components\Card\EntityCard.jsx
- */
-import './EntityCard.css';
+import Box from '@mui/material/Box';
+import Card from '@mui/material/Card';
+import Typography from '@mui/material/Typography';
 
-/**
- * Shared card for entity summaries such as authors, journals, articles, or projects.
- *
- * @param {Object} props - Component props
- * @param {React.ReactNode} props.title - Main entity title
- * @param {React.ReactNode} [props.subtitle] - Secondary line below title
- * @param {React.ReactNode} [props.description] - Description/body text
- * @param {React.ReactNode} [props.media] - Leading media/avatar/icon slot
- * @param {React.ReactNode} [props.meta] - Metadata row or badges
- * @param {React.ReactNode} [props.actions] - Top-right action controls
- * @param {React.ReactNode} [props.footer] - Footer content
- * @param {function} [props.onClick] - Optional click handler
- * @param {string} [props.className] - Additional wrapper classes
- * @returns {JSX.Element}
- */
 export default function EntityCard({
   title,
   subtitle,
@@ -32,33 +14,69 @@ export default function EntityCard({
   className = '',
   bodyClassName = '',
   contentClassName = '',
+  sx,
+  ...props
 }) {
-  const Tag = onClick ? 'button' : 'article';
-
   return (
-    <Tag
+    <Card
+      component={onClick ? 'button' : 'article'}
       type={onClick ? 'button' : undefined}
       onClick={onClick}
-      className={`shared-entity-card ${onClick ? 'shared-entity-card--interactive' : ''} ${className}`.trim()}
+      className={className}
+      sx={[
+        {
+          width: '100%',
+          p: 2,
+          color: 'text.primary',
+          textAlign: 'left',
+          fontFamily: 'inherit',
+          cursor: onClick ? 'pointer' : 'default',
+          '&:focus-visible': onClick ? {
+            outline: '3px solid',
+            outlineColor: 'primary.light',
+            outlineOffset: 2,
+          } : undefined,
+        },
+        sx,
+      ]}
+      {...props}
     >
-      <div className={`shared-entity-card__body ${bodyClassName}`.trim()}>
-        {media && <div className="shared-entity-card__media">{media}</div>}
+      <Box
+        className={bodyClassName}
+        sx={{ display: 'flex', alignItems: 'flex-start', gap: 2, '@media (max-width:575.98px)': { flexDirection: 'column' } }}
+      >
+        {media && <Box sx={{ flexShrink: 0 }}>{media}</Box>}
 
-        <div className={`shared-entity-card__content ${contentClassName}`.trim()}>
-          <div className="shared-entity-card__header">
-            <div className="shared-entity-card__title-group">
-              <h3 className="shared-entity-card__title" title={typeof title === 'string' ? title : undefined}>{title}</h3>
-              {subtitle && <p className="shared-entity-card__subtitle">{subtitle}</p>}
-            </div>
-            {actions && <div className="shared-entity-card__actions">{actions}</div>}
-          </div>
+        <Box className={contentClassName} sx={{ minWidth: 0, flex: 1 }}>
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', gap: 2, '@media (max-width:575.98px)': { flexDirection: 'column' } }}>
+            <Box sx={{ minWidth: 0, flex: 1, overflow: 'hidden' }}>
+              <Typography
+                component="h3"
+                variant="subtitle1"
+                title={typeof title === 'string' ? title : undefined}
+                sx={{ color: 'text.primary', fontWeight: 700, lineHeight: 1.3, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}
+              >
+                {title}
+              </Typography>
+              {subtitle && (
+                <Typography component="p" variant="body2" color="text.secondary" sx={{ mt: 0.5, mb: 0, lineHeight: 1.4 }}>
+                  {subtitle}
+                </Typography>
+              )}
+            </Box>
+            {actions && <Box sx={{ display: 'inline-flex', alignItems: 'center', gap: 1, flexShrink: 0 }}>{actions}</Box>}
+          </Box>
 
-          {description && <div className="shared-entity-card__description">{description}</div>}
-          {meta && <div className="shared-entity-card__meta">{meta}</div>}
-        </div>
-      </div>
+          {description && (
+            <Typography component="div" variant="body2" color="text.secondary" sx={{ mt: 1.5, lineHeight: 1.55 }}>
+              {description}
+            </Typography>
+          )}
+          {meta && <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1, mt: 1.5 }}>{meta}</Box>}
+        </Box>
+      </Box>
 
-      {footer && <div className="shared-entity-card__footer">{footer}</div>}
-    </Tag>
+      {footer && <Box sx={{ mt: 2, pt: 1.75, borderTop: 1, borderColor: 'divider' }}>{footer}</Box>}
+    </Card>
   );
 }

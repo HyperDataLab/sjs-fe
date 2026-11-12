@@ -4,8 +4,10 @@ import { useTranslation } from "react-i18next";
 *
 * File: features\auth\components\SocialAuthButton.jsx
 */
-import { Button } from 'react-bootstrap';
+import { Button } from '@/shared/components/ui/muiAdapters';
 import Icon from '../../../shared/components/Icon';
+
+
 export default function SocialAuthButton({
   onClick,
   disabled = false,
@@ -15,7 +17,7 @@ export default function SocialAuthButton({
     t
   } = useTranslation();
   const resolvedLabel = label || t("auth.tiepTucVoiGoogle");
-  return <Button variant="light" onClick={onClick} disabled={disabled} className="w-100 d-flex align-items-center justify-content-center gap-2 py-2.5 rounded-3 border transition-all text-sm font-semibold" style={{
+  return <Button sx={{ width: "100%", display: "flex", alignItems: "center", justifyContent: "center", gap: "0.5rem", borderRadius: "0.5rem", border: "1px solid #dee2e6" }} variant="light" onClick={onClick} disabled={disabled} className="py-2.5 transition-all text-sm font-semibold" style={{
     background: 'var(--bg-chip)',
     borderColor: 'var(--border)',
     color: 'var(--text-main)',

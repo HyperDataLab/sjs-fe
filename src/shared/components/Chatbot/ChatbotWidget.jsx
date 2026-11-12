@@ -7,7 +7,6 @@ import { useTranslation } from "react-i18next";
 import { useMemo, useRef, useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import chatbotApi from '../../services/chatbotApi';
-import './ChatbotWidget.css';
 const numberLikeColumns = new Set(['publication_year', 'citation_count', 'value_float', 'year']);
 function getProjectIdFromUrl() {
   const match = window.location.pathname.match(/\/projects\/(\d+)/);

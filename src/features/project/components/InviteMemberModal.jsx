@@ -1,8 +1,10 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Modal, Form, Spinner } from 'react-bootstrap';
+import { Modal, Form, Spinner } from '@/shared/components/ui/muiAdapters';
 import PrimaryButton from '../../../shared/components/Button/PrimaryButton';
-import { Icon } from '@iconify/react';
+import Icon from '../../../shared/components/Icon.jsx';
+
+
 
 const InviteMemberModal = ({ show, onHide, onInvite, actionLoading }) => {
   const { t } = useTranslation();
@@ -19,31 +21,31 @@ const InviteMemberModal = ({ show, onHide, onInvite, actionLoading }) => {
 
   return (
     <Modal show={show} onHide={onHide} centered>
-      <Modal.Header closeButton className="border-0 pb-0">
-        <Modal.Title className="fw-bold text-main">
-          <Icon icon="lucide:user-plus" width="24" className="me-2 text-primary" />
+      <Modal.Header sx={{ border: 0, paddingBottom: "0" }} closeButton >
+        <Modal.Title sx={{ fontWeight: 700 }} className="text-main">
+          <Icon sx={{ marginInlineEnd: "0.5rem", color: "primary.main" }} icon="lucide:user-plus" width="24"  />
           {t("project.moiThanhVienMoi", "Mời thành viên mới")}
         </Modal.Title>
       </Modal.Header>
       <Form onSubmit={handleSubmit}>
         <Modal.Body>
-          <Form.Group className="mb-3" controlId="inviteEmail">
-            <Form.Label className="small fw-medium text-muted-custom">{t("project.diaChiEmail", "Địa chỉ Email")}</Form.Label>
-            <Form.Control 
-              type="email" 
-              placeholder={t("project.nhapEmailNguoiMuonMoi", "Nhập email người dùng...")} 
+          <Form.Group sx={{ marginBottom: "1rem" }}  controlId="inviteEmail">
+            <Form.Label sx={{ fontSize: "0.875em", fontWeight: 500 }} className="text-muted-custom">{t("project.diaChiEmail", "Địa chỉ Email")}</Form.Label>
+            <Form.Control sx={{ paddingTop: "0.5rem", paddingBottom: "0.5rem" }}
+              type="email"
+              placeholder={t("project.nhapEmailNguoiMuonMoi", "Nhập email người dùng...")}
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
-              className="py-2"
+
             />
           </Form.Group>
-          <Form.Group className="mb-3" controlId="inviteRole">
-            <Form.Label className="small fw-medium text-muted-custom">{t("project.vaiTro", "Quyền hạn")}</Form.Label>
-            <Form.Select 
-              value={role} 
+          <Form.Group sx={{ marginBottom: "1rem" }}  controlId="inviteRole">
+            <Form.Label sx={{ fontSize: "0.875em", fontWeight: 500 }} className="text-muted-custom">{t("project.vaiTro", "Quyền hạn")}</Form.Label>
+            <Form.Select sx={{ paddingTop: "0.5rem", paddingBottom: "0.5rem" }}
+              value={role}
               onChange={(e) => setRole(e.target.value)}
-              className="py-2"
+
             >
               <option value="VIEWER">Viewer ({t("project.nguoiXem", "Người xem")})</option>
               <option value="MEMBER">Member ({t("project.thanhVien", "Thành viên")})</option>
@@ -52,11 +54,11 @@ const InviteMemberModal = ({ show, onHide, onInvite, actionLoading }) => {
             </Form.Select>
           </Form.Group>
         </Modal.Body>
-        <Modal.Footer className="border-0 pt-0">
-          <PrimaryButton variant="outline" className="px-4" onClick={onHide} disabled={actionLoading}>
+        <Modal.Footer sx={{ border: 0, paddingTop: "0" }} >
+          <PrimaryButton sx={{ paddingLeft: "1.5rem", paddingRight: "1.5rem" }} variant="outline"  onClick={onHide} disabled={actionLoading}>
             {t("admin.huy", "Hủy")}
           </PrimaryButton>
-          <PrimaryButton type="submit" className="px-4" disabled={!email || actionLoading}>
+          <PrimaryButton sx={{ paddingLeft: "1.5rem", paddingRight: "1.5rem" }} type="submit"  disabled={!email || actionLoading}>
             {actionLoading ? <Spinner size="sm" /> : t("project.guiLoiMoi", "Gửi lời mời")}
           </PrimaryButton>
         </Modal.Footer>

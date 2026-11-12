@@ -1,10 +1,12 @@
+
+import MuiBox from '@mui/material/Box';
 // ErrorIcon.jsx
 // Icon cảnh báo màu cam — hiển thị khi kích hoạt thất bại.
 // Tách riêng để dễ thay icon sau này.
 
 const ErrorIcon = () => {
   return (
-    <div className="d-flex justify-content-center mb-4">
+    <MuiBox component="div" sx={{ display: "flex", justifyContent: "center", marginBottom: "1.5rem" }} >
       <div
         style={{
           width: '80px',
@@ -34,7 +36,7 @@ const ErrorIcon = () => {
           <circle cx="12" cy="16.5" r="1.2" fill="#FF7A33" />
         </svg>
       </div>
-    </div>
+    </MuiBox>
   );
 };
 

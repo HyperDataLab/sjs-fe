@@ -4,6 +4,10 @@ import { useTranslation } from "react-i18next";
 // Đặt trong shared/ để tái sử dụng ở nhiều flow auth.
 
 import ProgressBar from './ProgressBar';
+
+
+import MuiBox from '@mui/material/Box';
+
 const CountdownRedirect = ({
   countdown,
   total
@@ -11,8 +15,8 @@ const CountdownRedirect = ({
   const {
     t
   } = useTranslation();
-  return <div className="mb-4">
-      <p className="text-center mb-2" style={{
+  return <MuiBox component="div" sx={{ marginBottom: "1.5rem" }} >
+      <MuiBox component="p" sx={{ textAlign: "center", marginBottom: "0.5rem" }}  style={{
       fontSize: '0.875rem',
       color: 'var(--text-muted, #6B6B6B)'
     }}>
@@ -23,8 +27,8 @@ const CountdownRedirect = ({
       }}>
           {countdown}{t("common.giay")}</span>
         {'...'}
-      </p>
+      </MuiBox>
       <ProgressBar current={countdown} total={total} />
-    </div>;
+    </MuiBox>;
 };
 export default CountdownRedirect;

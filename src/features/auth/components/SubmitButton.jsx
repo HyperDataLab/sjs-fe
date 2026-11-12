@@ -4,7 +4,9 @@ import { useTranslation } from "react-i18next";
 *
 * File: features\auth\components\SubmitButton.jsx
 */
-import { Button, Spinner } from 'react-bootstrap';
+import { Button, Spinner } from '@/shared/components/ui/muiAdapters';
+
+
 export default function SubmitButton({
   type = 'submit',
   disabled = false,
@@ -18,7 +20,7 @@ export default function SubmitButton({
   } = useTranslation();
   const resolvedLabel = label || t("auth.xacNhan");
   const resolvedLoadingText = loadingText || t("admin.dangXuLy");
-  return <Button type={type} disabled={disabled || isLoading} onClick={onClick} className="w-100 py-2.5 rounded-3 border-0 text-sm font-semibold transition-all d-flex align-items-center justify-content-center gap-2" style={{
+  return <Button sx={{ width: "100%", borderRadius: "0.5rem", border: 0, display: "flex", alignItems: "center", justifyContent: "center", gap: "0.5rem" }} type={type} disabled={disabled || isLoading} onClick={onClick} className="py-2.5 text-sm font-semibold transition-all" style={{
     background: 'var(--primary)',
     // #FF7A33
     color: '#ffffff',
@@ -36,7 +38,7 @@ export default function SubmitButton({
     e.currentTarget.style.boxShadow = '0 4px 14px rgba(255, 122, 51, 0.2)';
   }}>
       {isLoading ? <>
-          <Spinner as="span" animation="border" size="sm" role="status" aria-hidden="true" className="me-1" />
+          <Spinner sx={{ marginInlineEnd: "0.25rem" }} as="span" animation="border" size="sm" role="status" aria-hidden="true"  />
           <span>{resolvedLoadingText}</span>
         </> : <span>{resolvedLabel}</span>}
     </Button>;

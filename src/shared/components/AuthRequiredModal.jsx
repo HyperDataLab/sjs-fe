@@ -4,10 +4,14 @@ import { useTranslation } from "react-i18next";
  *
  * File: shared\components\AuthRequiredModal.jsx
  */
-import { Modal } from 'react-bootstrap';
+import { Modal } from '@/shared/components/ui/muiAdapters';
 import { useNavigate } from 'react-router-dom';
-import { Icon } from '@iconify/react';
+import Icon from './Icon.jsx';
 import PrimaryButton from './Button/PrimaryButton';
+
+
+import MuiBox from '@mui/material/Box';
+
 export default function AuthRequiredModal({
   show,
   onHide
@@ -27,26 +31,26 @@ export default function AuthRequiredModal({
   return <Modal show={show} onHide={onHide} centered contentClassName="border-0 text-start bg-white rounded-3 shadow" style={{
     backdropFilter: 'blur(4px)'
   }}>
-      <Modal.Header closeButton className="border-0 pb-0" style={{
+      <Modal.Header sx={{ border: 0, paddingBottom: "0" }} closeButton  style={{
       backgroundColor: 'var(--bg-card)'
     }}>
-        <Modal.Title className="font-display fw-bold text-main d-flex align-items-center gap-2" style={{
+        <Modal.Title sx={{ fontWeight: 700, display: "flex", alignItems: "center", gap: "0.5rem" }} className="font-display text-main" style={{
         fontSize: '1.25rem'
       }}>
-          <Icon icon="lucide:shield-alert" className="text-warning" width="22" />{t("common.yeuCauDangNhap")}</Modal.Title>
+          <Icon sx={{ color: "warning.main" }} icon="lucide:shield-alert"  width="22" />{t("common.yeuCauDangNhap")}</Modal.Title>
       </Modal.Header>
 
-      <Modal.Body className="py-4" style={{
+      <Modal.Body sx={{ paddingTop: "1.5rem", paddingBottom: "1.5rem" }}  style={{
       backgroundColor: 'var(--bg-card)',
       color: 'var(--text-main)'
     }}>
-        <p className="mb-0" style={{
+        <MuiBox component="p" sx={{ marginBottom: "0" }}  style={{
         fontSize: '1rem',
         lineHeight: '1.5'
-      }}>{t("common.banCanDangNhapDeSuDungTinhNang")}</p>
+      }}>{t("common.banCanDangNhapDeSuDungTinhNang")}</MuiBox>
       </Modal.Body>
 
-      <Modal.Footer className="border-0 pt-0" style={{
+      <Modal.Footer sx={{ border: 0, paddingTop: "0" }}  style={{
       backgroundColor: 'var(--bg-card)',
       gap: '8px'
     }}>

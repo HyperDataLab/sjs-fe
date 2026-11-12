@@ -2,6 +2,10 @@
 import Icon from "../../../shared/components/Icon";
 import AuthorAvatar from "./AuthorAvatar";
 
+
+import MuiBox from '@mui/material/Box';
+
+
 /**
  * @file AuthorProfileHero.jsx
  * @description Academic Researcher Profile Hero banner.
@@ -97,7 +101,7 @@ export default function AuthorProfileHero({ author, metrics }) {
               >
                 <Icon icon="simple-icons:orcid" width="13" style={{ color: "#a6ce39" }} />
                 <span>ORCID: <strong>{author.orcid}</strong></span>
-                <Icon icon={copied ? "lucide:check" : "lucide:copy"} width="11" className="ms-1" />
+                <Icon sx={{ marginInlineStart: "0.25rem" }} icon={copied ? "lucide:check" : "lucide:copy"} width="11"  />
               </button>
             )}
 
@@ -156,25 +160,25 @@ export default function AuthorProfileHero({ author, metrics }) {
             </div>
 
             <div className="ap-hero-actions">
-              <button
+              <MuiBox component="button" sx={{ width: "100%" }}
                 type="button"
-                className="ap-btn ap-btn-primary w-100"
+                className="ap-btn ap-btn-primary"
                 onClick={() => document.getElementById("publications")?.scrollIntoView({ behavior: "smooth" })}
               >
                 <Icon icon="lucide:book-open" width="13" />
                 <span>View Publications</span>
-              </button>
+              </MuiBox>
 
               {author.orcid && (
-                <a
+                <MuiBox component="a" sx={{ width: "100%" }}
                   href={`https://orcid.org/${author.orcid}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="ap-btn ap-btn-outline w-100"
+                  className="ap-btn ap-btn-outline"
                 >
                   <Icon icon="lucide:external-link" width="12" />
                   <span>External ORCID Record</span>
-                </a>
+                </MuiBox>
               )}
             </div>
           </div>

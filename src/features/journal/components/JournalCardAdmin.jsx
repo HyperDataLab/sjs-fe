@@ -1,8 +1,12 @@
 import { useTranslation } from "react-i18next";
-import { Col, Button } from 'react-bootstrap';
+import { Col, Button } from '@/shared/components/ui/muiAdapters';
 import { useNavigate } from 'react-router-dom';
-import { Icon } from '@iconify/react';
+import Icon from '../../../shared/components/Icon.jsx';
 import { EntityCard } from '../../../shared/components/Card';
+import { getClassNameSx, stripMappedClassNames } from '../../../shared/theme/classNameSx';
+
+import MuiBox from '@mui/material/Box';
+
 
 /**
  * Component JournalCardAdmin - Hiển thị thông tin tạp chí dưới dạng thẻ khối độc lập dành cho Admin.
@@ -18,42 +22,42 @@ export default function JournalCardAdmin({
   const id = journal.id || journal.journal_id;
   const title = journal.title || journal.display_name;
   return <Col xs={12} sm={6} lg={4}>
-      <EntityCard className="h-100" title={title} subtitle={<div className="text-muted-custom small d-flex align-items-center gap-1">
+      <EntityCard sx={{ height: "100%" }}  title={title} subtitle={<MuiBox component="div" sx={{ fontSize: "0.875em", display: "flex", alignItems: "center", gap: "0.25rem" }} className="text-muted-custom">
             <Icon icon="lucide:building" width="14" />
-            <span className="text-truncate">{journal.publisher || t("journal.chuaCoNhaXuatBan")}</span>
-          </div>} actions={<div className="d-flex gap-2">
-            <span className="badge bg-dark text-white px-2 py-1 text-uppercase small">
+            <MuiBox component="span" sx={{ overflow: "hidden", whiteSpace: "nowrap", textOverflow: "ellipsis" }} >{journal.publisher || t("journal.chuaCoNhaXuatBan")}</MuiBox>
+          </MuiBox>} actions={<MuiBox component="div" sx={{ display: "flex", gap: "0.5rem" }} >
+            <MuiBox component="span" sx={{ display: "inline-block", px: "0.65em", py: "0.35em", fontSize: "0.875em", fontWeight: 700, lineHeight: 1, color: "#fff", textAlign: "center", whiteSpace: "nowrap", verticalAlign: "baseline", borderRadius: "0.375rem", bgcolor: "#212529", paddingLeft: "0.5rem", paddingRight: "0.5rem", paddingTop: "0.25rem", paddingBottom: "0.25rem", textTransform: "uppercase" }} >
               {journal.subjectCategory || 'General'}
-            </span>
-            <span className={`badge px-2 py-1 ${journal.status === 'Active' ? 'bg-success-subtle text-success' : 'bg-warning-subtle text-warning'}`}>
+            </MuiBox>
+            <MuiBox component="span" sx={getClassNameSx(`badge px-2 py-1 ${journal.status === 'Active' ? 'bg-success-subtle text-success' : 'bg-warning-subtle text-warning'}`)} className={stripMappedClassNames(`badge px-2 py-1 ${journal.status === 'Active' ? 'bg-success-subtle text-success' : 'bg-warning-subtle text-warning'}`)}>
               {journal.status || 'Draft'}
-            </span>
-          </div>} meta={<div className="bg-light p-3 rounded-3 mt-4" style={{
+            </MuiBox>
+          </MuiBox>} meta={<MuiBox component="div" sx={{ bgcolor: "#f8f9fa", padding: "1rem", borderRadius: "0.5rem", marginTop: "1.5rem" }}  style={{
       backgroundColor: 'var(--bg-chip)'
     }}>
-            <div className="d-flex justify-content-between mb-2 small">
+            <MuiBox component="div" sx={{ display: "flex", justifyContent: "space-between", marginBottom: "0.5rem", fontSize: "0.875em" }} >
               <span className="text-muted-custom">{t("journal.maSoIssn")}</span>
-              <span className="fw-medium text-main font-monospace">{journal.issn || '—'}</span>
-            </div>
-            <div className="d-flex justify-content-between small">
+              <MuiBox component="span" sx={{ fontWeight: 500, fontFamily: "monospace" }} className="text-main">{journal.issn || '—'}</MuiBox>
+            </MuiBox>
+            <MuiBox component="div" sx={{ display: "flex", justifyContent: "space-between", fontSize: "0.875em" }} >
               <span className="text-muted-custom">{t("journal.tongBienTap")}</span>
-              <span className="fw-medium text-main text-truncate" style={{
+              <MuiBox component="span" sx={{ fontWeight: 500, overflow: "hidden", whiteSpace: "nowrap", textOverflow: "ellipsis" }} className="text-main" style={{
           maxWidth: '150px'
         }}>
                 {journal.editorInChief || t("admin.chuaChiDinh")}
-              </span>
-            </div>
-          </div>} footer={<div className="d-flex gap-2 w-100 pt-3 border-top mt-auto" style={{
+              </MuiBox>
+            </MuiBox>
+          </MuiBox>} footer={<MuiBox component="div" sx={{ display: "flex", gap: "0.5rem", width: "100%", paddingTop: "1rem", borderTop: "1px solid #dee2e6", mt: "auto" }}  style={{
       borderColor: 'var(--border)'
     }}>
-            <Button variant="light" className="w-50 text-main btn-custom-sm d-flex align-items-center justify-content-center gap-1" onClick={() => navigate('/admin/journals/repository')}>
+            <Button sx={{ width: "50%", display: "flex", alignItems: "center", justifyContent: "center", gap: "0.25rem" }} variant="light" className="text-main btn-custom-sm" onClick={() => navigate('/admin/journals/repository')}>
               <Icon icon="lucide:layers" width="14" />
               <span>{t("journal.khoDuLieu")}</span>
             </Button>
-            <Button variant="outline-dark" className="w-50 text-main btn-custom-sm d-flex align-items-center justify-content-center gap-1" onClick={() => navigate(`/admin/journals/${id}/edit`)}>
+            <Button sx={{ width: "50%", display: "flex", alignItems: "center", justifyContent: "center", gap: "0.25rem" }} variant="outline-dark" className="text-main btn-custom-sm" onClick={() => navigate(`/admin/journals/${id}/edit`)}>
               <Icon icon="lucide:edit-3" width="14" />
               <span>{t("journal.suaDoi")}</span>
             </Button>
-          </div>} />
+          </MuiBox>} />
     </Col>;
 }

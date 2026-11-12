@@ -1,7 +1,11 @@
 import { useTranslation } from "react-i18next";
-import { Card, Col, Row, Button } from 'react-bootstrap';
+import { Card, Col, Row, Button } from '@/shared/components/ui/muiAdapters';
 import { useNavigate } from 'react-router-dom';
-import { Icon } from '@iconify/react';
+import Icon from '../../../../shared/components/Icon.jsx';
+
+
+import MuiBox from '@mui/material/Box';
+
 
 /**
  * Component JournalCardAdmin - Hiển thị thông tin tạp chí dưới dạng thẻ khối độc lập dành cho Admin.
@@ -25,78 +29,78 @@ export default function JournalCardAdmin({
   const isReview = journal.status === 'Under Review' || journal.status === 'Draft';
   const statusClass = isPublished ? 'admin-status-dot admin-status-dot--accent' : isReview ? 'admin-status-dot admin-status-dot--warning' : 'admin-status-dot admin-status-dot--muted';
   return <Col xs={12} sm={6} lg={4}>
-      <Card className="journal-dark-card h-100 shadow-sm border-1 transition-hover admin-clickable-card" onClick={() => navigate(`${basePath}/journals/repository`)} tabIndex={0} onKeyDown={event => {
+      <Card sx={{ height: "100%", boxShadow: "0 .125rem .25rem rgba(0,0,0,.075)", borderWidth: 1, borderStyle: "solid" }} className="journal-dark-card transition-hover admin-clickable-card" onClick={() => navigate(`${basePath}/journals/repository`)} tabIndex={0} onKeyDown={event => {
       if (event.key === 'Enter' || event.key === ' ') {
         event.preventDefault();
         navigate(`${basePath}/journals/repository`);
       }
     }}>
-        <Card.Body className="d-flex flex-column p-4 text-start">
-          <div className="d-flex justify-content-between align-items-center mb-3">
-            <span className="text-muted-custom small fw-semibold font-monospace">{displayId}</span>
-            <span className="badge bg-dark text-white px-2.5 py-1 text-uppercase text-xs fw-bold">
+        <Card.Body sx={{ display: "flex", flexDirection: "column", padding: "1.5rem", textAlign: "left" }} >
+          <MuiBox component="div" sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1rem" }} >
+            <MuiBox component="span" sx={{ fontSize: "0.875em", fontWeight: 600, fontFamily: "monospace" }} className="text-muted-custom">{displayId}</MuiBox>
+            <MuiBox component="span" sx={{ display: "inline-block", px: "0.65em", py: "0.35em", fontSize: "0.75em", fontWeight: 700, lineHeight: 1, color: "#fff", textAlign: "center", whiteSpace: "nowrap", verticalAlign: "baseline", borderRadius: "0.375rem", bgcolor: "#212529", paddingTop: "0.25rem", paddingBottom: "0.25rem", textTransform: "uppercase" }} className="px-2.5 text-xs">
               {journal.subjectCategory || 'General'}
-            </span>
-          </div>
+            </MuiBox>
+          </MuiBox>
 
-          <Card.Title className="font-display fw-bold text-main mb-1 line-clamp-2 h5">
+          <Card.Title sx={{ fontWeight: 500, marginBottom: "0.25rem", fontSize: "1.25rem", lineHeight: 1.2 }} className="font-display text-main line-clamp-2">
             {title}
           </Card.Title>
-          <div className="text-muted-custom font-monospace small mb-3">
+          <MuiBox component="div" sx={{ fontFamily: "monospace", fontSize: "0.875em", marginBottom: "1rem" }} className="text-muted-custom">
             ISSN: {journal.issn || '—'}
-          </div>
+          </MuiBox>
 
-          <div className="bg-light p-3 rounded-3 mb-3" style={{
+          <MuiBox component="div" sx={{ bgcolor: "#f8f9fa", padding: "1rem", borderRadius: "0.5rem", marginBottom: "1rem" }}  style={{
           backgroundColor: 'var(--bg-chip)',
           fontSize: '0.8rem'
         }}>
-            <Row className="g-2">
-              <Col xs={6} className="border-end border-bottom pb-1.5" style={{
+            <Row sx={{ gap: "0.5rem" }} >
+              <Col sx={{ borderInlineEnd: "1px solid #dee2e6", borderBottom: "1px solid #dee2e6" }} xs={6} className="pb-1.5" style={{
               borderColor: 'var(--border)'
             }}>
-                <span className="text-muted-custom text-xs d-block text-uppercase fw-semibold" style={{
+                <MuiBox component="span" sx={{ display: "block", textTransform: "uppercase", fontWeight: 600 }} className="text-muted-custom text-xs" style={{
                 fontSize: '0.65rem'
-              }}>Publisher</span>
-                <span className="text-main fw-bold text-truncate d-block">{journal.publisher || 'ResearchPulse'}</span>
+              }}>Publisher</MuiBox>
+                <MuiBox component="span" sx={{ fontWeight: 700, overflow: "hidden", whiteSpace: "nowrap", textOverflow: "ellipsis", display: "block" }} className="text-main">{journal.publisher || 'ResearchPulse'}</MuiBox>
               </Col>
-              <Col xs={6} className="ps-3 border-bottom pb-1.5" style={{
+              <Col sx={{ paddingInlineStart: "1rem", borderBottom: "1px solid #dee2e6" }} xs={6} className="pb-1.5" style={{
               borderColor: 'var(--border)'
             }}>
-                <span className="text-muted-custom text-xs d-block text-uppercase fw-semibold" style={{
+                <MuiBox component="span" sx={{ display: "block", textTransform: "uppercase", fontWeight: 600 }} className="text-muted-custom text-xs" style={{
                 fontSize: '0.65rem'
-              }}>Type</span>
-                <span className="text-main fw-bold d-block">{journal.type || 'Journal'}</span>
+              }}>Type</MuiBox>
+                <MuiBox component="span" sx={{ fontWeight: 700, display: "block" }} className="text-main">{journal.type || 'Journal'}</MuiBox>
               </Col>
-              <Col xs={6} className="border-end pt-1.5" style={{
+              <Col sx={{ borderInlineEnd: "1px solid #dee2e6" }} xs={6} className="pt-1.5" style={{
               borderColor: 'var(--border)'
             }}>
-                <span className="text-muted-custom text-xs d-block text-uppercase fw-semibold" style={{
+                <MuiBox component="span" sx={{ display: "block", textTransform: "uppercase", fontWeight: 600 }} className="text-muted-custom text-xs" style={{
                 fontSize: '0.65rem'
-              }}>Coverage</span>
-                <span className="text-main fw-bold d-block">{journal.coverage || '1980-2026'}</span>
+              }}>Coverage</MuiBox>
+                <MuiBox component="span" sx={{ fontWeight: 700, display: "block" }} className="text-main">{journal.coverage || '1980-2026'}</MuiBox>
               </Col>
-              <Col xs={6} className="ps-3 pt-1.5">
-                <span className="text-muted-custom text-xs d-block text-uppercase fw-semibold" style={{
+              <Col sx={{ paddingInlineStart: "1rem" }} xs={6} className="pt-1.5">
+                <MuiBox component="span" sx={{ display: "block", textTransform: "uppercase", fontWeight: 600 }} className="text-muted-custom text-xs" style={{
                 fontSize: '0.65rem'
-              }}>Region</span>
-                <span className="text-main fw-bold text-truncate d-block">{journal.country || 'Vietnam'}</span>
+              }}>Region</MuiBox>
+                <MuiBox component="span" sx={{ fontWeight: 700, overflow: "hidden", whiteSpace: "nowrap", textOverflow: "ellipsis", display: "block" }} className="text-main">{journal.country || 'Vietnam'}</MuiBox>
               </Col>
             </Row>
-          </div>
+          </MuiBox>
 
-          <div className="d-flex gap-1.5 mb-3 flex-wrap">
-            <span className="badge admin-status-badge admin-status-badge--accent text-xs py-1 px-2.5 rounded-pill">
+          <MuiBox component="div" sx={{ display: "flex", marginBottom: "1rem", flexWrap: "wrap" }} className="gap-1.5">
+            <MuiBox component="span" sx={{ display: "inline-block", px: "0.65em", py: "0.35em", fontSize: "0.75em", fontWeight: 700, lineHeight: 1, color: "#fff", textAlign: "center", whiteSpace: "nowrap", verticalAlign: "baseline", borderRadius: "50rem", paddingTop: "0.25rem", paddingBottom: "0.25rem" }} className="admin-status-badge admin-status-badge--accent text-xs px-2.5">
               OPEN ACCESS
-            </span>
-            <span className="badge bg-warning-subtle text-warning border border-warning-subtle text-xs py-1 px-2.5 rounded-pill">
+            </MuiBox>
+            <MuiBox component="span" sx={{ display: "inline-block", px: "0.65em", py: "0.35em", fontSize: "0.75em", fontWeight: 700, lineHeight: 1, color: "warning.main", textAlign: "center", whiteSpace: "nowrap", verticalAlign: "baseline", borderRadius: "50rem", bgcolor: "rgba(255,193,7,.18)", border: "1px solid #dee2e6", borderColor: "#ffecb5", paddingTop: "0.25rem", paddingBottom: "0.25rem" }} className="text-xs px-2.5">
               DIAMOND OA
-            </span>
-          </div>
+            </MuiBox>
+          </MuiBox>
 
-          <div className="d-flex align-items-center gap-2.5 bg-light p-2.5 rounded-3 mb-4 mt-auto" style={{
+          <MuiBox component="div" sx={{ display: "flex", alignItems: "center", bgcolor: "#f8f9fa", borderRadius: "0.5rem", marginBottom: "1.5rem", mt: "auto" }} className="gap-2.5 p-2.5" style={{
           backgroundColor: 'var(--bg-chip)'
         }}>
-            <div className="rounded-circle d-inline-flex align-items-center justify-content-center text-muted-custom" style={{
+            <MuiBox component="div" sx={{ borderRadius: "50%", display: "inline-flex", alignItems: "center", justifyContent: "center" }} className="text-muted-custom" style={{
             width: '36px',
             height: '36px',
             backgroundColor: 'var(--bg-card)',
@@ -104,49 +108,49 @@ export default function JournalCardAdmin({
             flexShrink: 0
           }} aria-hidden="true">
               <Icon icon="lucide:building-2" width="16" />
-            </div>
-            <div className="text-truncate">
-              <span className="fw-bold text-main d-block text-truncate" style={{
+            </MuiBox>
+            <MuiBox component="div" sx={{ overflow: "hidden", whiteSpace: "nowrap", textOverflow: "ellipsis" }} >
+              <MuiBox component="span" sx={{ fontWeight: 700, display: "block", overflow: "hidden", whiteSpace: "nowrap", textOverflow: "ellipsis" }} className="text-main" style={{
               fontSize: '0.85rem'
             }}>
                 {journal.publisher || t("admin.chuaChiDinh")}
-              </span>
-              <span className="text-muted-custom text-xs text-uppercase fw-semibold" style={{
+              </MuiBox>
+              <MuiBox component="span" sx={{ textTransform: "uppercase", fontWeight: 600 }} className="text-muted-custom text-xs" style={{
               fontSize: '0.65rem',
               letterSpacing: '0.02em'
             }}>
                 Publisher
-              </span>
-            </div>
-          </div>
+              </MuiBox>
+            </MuiBox>
+          </MuiBox>
 
-          <div className="d-flex justify-content-between align-items-center pt-3 border-top w-100" style={{
+          <MuiBox component="div" sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", paddingTop: "1rem", borderTop: "1px solid #dee2e6", width: "100%" }}  style={{
           borderColor: 'var(--border)'
         }}>
-            <div className="d-flex align-items-center gap-1.5">
+            <MuiBox component="div" sx={{ display: "flex", alignItems: "center" }} className="gap-1.5">
               <span className={statusClass} />
-              <span className="fw-bold text-uppercase text-main" style={{
+              <MuiBox component="span" sx={{ fontWeight: 700, textTransform: "uppercase" }} className="text-main" style={{
               fontSize: '0.75rem'
             }}>
                 {journal.status || 'Draft'}
-              </span>
-            </div>
+              </MuiBox>
+            </MuiBox>
 
-            <div className="d-flex gap-1.5">
-              <Button variant="light" size="sm" className="btn-custom-sm d-inline-flex align-items-center justify-content-center p-2 rounded-2 border" onClick={event => {
+            <MuiBox component="div" sx={{ display: "flex" }} className="gap-1.5">
+              <Button sx={{ display: "inline-flex", alignItems: "center", justifyContent: "center", padding: "0.5rem", borderRadius: "0.375rem", border: "1px solid #dee2e6" }} variant="light" size="sm" className="btn-custom-sm" onClick={event => {
               event.stopPropagation();
               navigate(`${basePath}/journals/repository`);
             }} title="View repository log">
                 <Icon icon="lucide:eye" width="14" />
               </Button>
-              <Button variant="outline-dark" size="sm" className="btn-custom-sm d-inline-flex align-items-center justify-content-center p-2 rounded-2" onClick={event => {
+              <Button sx={{ display: "inline-flex", alignItems: "center", justifyContent: "center", padding: "0.5rem", borderRadius: "0.375rem" }} variant="outline-dark" size="sm" className="btn-custom-sm" onClick={event => {
               event.stopPropagation();
               navigate(`${basePath}/journals/${id}/edit`);
             }} title="Edit configurations">
                 <Icon icon="lucide:edit-2" width="14" />
               </Button>
-            </div>
-          </div>
+            </MuiBox>
+          </MuiBox>
         </Card.Body>
       </Card>
     </Col>;

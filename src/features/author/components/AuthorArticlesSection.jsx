@@ -10,6 +10,10 @@ import EmptyState from "../../../shared/components/EmptyState";
 import ErrorState from "../../../shared/components/ErrorState";
 import AdminPagination from "../../../shared/components/Pagination";
 
+
+import MuiBox from '@mui/material/Box';
+
+
 const SORT_OPTIONS = [
   { key: "year-desc", labelKey: "author.namXuatBanMoiNhat" },
   { key: "year-asc",  labelKey: "author.namXuatBanCuNhat"  },
@@ -78,18 +82,18 @@ export default function AuthorArticlesSection({ articles = [], loading = false, 
         <div style={{ display: "flex", flexDirection: "column", gap: "0" }}>
           {[0, 1, 2].map((i) => (
             <div key={i} className="adp-article-row">
-              <LoadingSkeleton width="45%" height="10px" className="mb-2" />
-              <LoadingSkeleton width="80%" height="14px" className="mb-2" />
+              <LoadingSkeleton sx={{ marginBottom: "0.5rem" }} width="45%" height="10px"  />
+              <LoadingSkeleton sx={{ marginBottom: "0.5rem" }} width="80%" height="14px"  />
               <LoadingSkeleton width="30%" height="10px" />
             </div>
           ))}
         </div>
       ) : articles.length === 0 ? (
-        <EmptyState
+        <EmptyState sx={{ border: 0, paddingTop: "1rem", paddingBottom: "1rem" }}
           title={t("author.chuaCoCongTrinhCongBo")}
           description={t("author.tacGiaNayChuaCoBaiBaoKhoaHocNa")}
           icon="lucide:file-question"
-          className="border-0 py-3"
+
         />
       ) : (
         <div>
@@ -101,7 +105,7 @@ export default function AuthorArticlesSection({ articles = [], loading = false, 
             />
           ))}
           {totalPages > 1 && (
-            <div className="mt-3">
+            <MuiBox component="div" sx={{ marginTop: "1rem" }} >
               <AdminPagination
                 totalItems={sorted.length}
                 currentPage={currentPage}
@@ -109,7 +113,7 @@ export default function AuthorArticlesSection({ articles = [], loading = false, 
                 onPageChange={setCurrentPage}
                 entityName="bài báo"
               />
-            </div>
+            </MuiBox>
           )}
         </div>
       )}

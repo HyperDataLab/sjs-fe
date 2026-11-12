@@ -1,70 +1,55 @@
 import { useTranslation } from "react-i18next";
 import { useState } from 'react';
-import { useNavigate, useLocation, Link } from 'react-router-dom';
-import useAuth from '../hooks/useAuth';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import MuiBox from '@mui/material/Box';
 import AuthLayout from '../../../app/layouts/AuthLayout';
+import ROUTES from '../../../app/routes/routePaths';
 import AuthBanner from '../components/AuthBanner';
 import LoginForm from '../components/LoginForm';
 import SocialAuthButton from '../components/SocialAuthButton';
+import useAuth from '../hooks/useAuth';
 import { toast } from '../../../shared/utils/toast';
-import ROUTES from '../../../app/routes/routePaths';
+
 const DASHBOARD_PAGE = ROUTES.DASHBOARD;
+
 export default function LoginPage() {
   const { t } = useTranslation();
-
   const navigate = useNavigate();
   const location = useLocation();
-  const {
-    login,
-    loginWithGoogle,
-    loginAsDevUser,
-  } = useAuth();
-
-  // State riêng của màn hình login để điều khiển loading và lỗi form.
+  const { login, loginWithGoogle, loginAsDevUser } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  // Nếu người dùng bị redirect tới login từ một trang khác, đăng nhập xong quay lại trang đó.
-  const from = location.state?.from 
-    ? `${location.state.from.pathname}${location.state.from.search || ''}` 
+  const from = location.state?.from
+    ? `${location.state.from.pathname}${location.state.from.search || ''}`
     : DASHBOARD_PAGE;
 
-  /**
-   * Xử lý submit form đăng nhập bằng email/password.
-   * Thành công thì điều hướng tới trang trước đó hoặc dashboard.
-   */
-  const handleLoginSubmit = async payload => {
+  const handleLoginSubmit = async (payload) => {
     setIsLoading(true);
     setError(null);
     try {
       await login(payload.email, payload.password, payload.remember_login);
-      navigate(from, {
-        replace: true
-      });
-    } catch (err) {
-      console.error('Login failed:', err.response?.data?.message || err.message);
-      setError(err.response?.data?.message || err.message || t("auth.dangNhapKhongThanhCongVuiLongK"));
+      navigate(from, { replace: true });
+    } catch (authError) {
+      setError(authError.response?.data?.message || authError.message || t('auth.dangNhapKhongThanhCongVuiLongK'));
     } finally {
       setIsLoading(false);
     }
   };
 
-  /**
-   * Khởi chạy luồng đăng nhập Google OAuth.
-   * Sau khi thành công, hook `useAuth` sẽ tự điều hướng về dashboard.
-   */
   const handleLoginWithGoogle = async () => {
     setIsLoading(true);
     setError(null);
     try {
       await loginWithGoogle(from);
     } catch (authError) {
-      setError(authError.message || t("auth.dangNhapThatBai"));
-      toast.error(t("auth.dangNhapThatBai"));
+      setError(authError.message || t('auth.dangNhapThatBai'));
+      toast.error(t('auth.dangNhapThatBai'));
     } finally {
       setIsLoading(false);
     }
   };
+
   const handleDevLogin = async () => {
     setIsLoading(true);
     setError(null);
@@ -72,61 +57,69 @@ export default function LoginPage() {
       await loginAsDevUser();
       navigate(from, { replace: true });
     } catch (authError) {
-      setError(authError.message || t("auth.dangNhapThatBai"));
+      setError(authError.message || t('auth.dangNhapThatBai'));
     } finally {
       setIsLoading(false);
     }
   };
-  return <AuthLayout banner={<AuthBanner />}>
-      <div className="mb-4">
-        <h2 className="font-display fw-bold mb-1" style={{
-        fontSize: '1.85rem',
-        color: 'var(--text-main)'
-      }}>{t("signIn")}</h2>
-        <p className="text-muted-custom text-sm mb-0" style={{
-        color: 'var(--text-muted) !important'
-      }}>{t("auth.chaoMungTroLaiVuiLongNhapThong")}</p>
-      </div>
 
-      {/* Nút đăng nhập bằng Google OAuth. */}
-      <div className="mb-4">
+  return (
+    <AuthLayout banner={<AuthBanner />}>
+      <MuiBox component="div" sx={{ marginBottom: '1.5rem' }}>
+        <MuiBox
+          component="h2"
+          className="font-display"
+          sx={{ fontWeight: 700, marginBottom: '0.25rem' }}
+          style={{ fontSize: '1.85rem', color: 'var(--text-main)' }}
+        >
+          {t('signIn')}
+        </MuiBox>
+        <MuiBox
+          component="p"
+          className="text-muted-custom text-sm"
+          sx={{ marginBottom: 0 }}
+          style={{ color: 'var(--text-muted) !important' }}
+        >
+          {t('auth.chaoMungTroLaiVuiLongNhapThong')}
+        </MuiBox>
+      </MuiBox>
+
+      <MuiBox sx={{ marginBottom: '1.5rem' }}>
         <SocialAuthButton onClick={handleLoginWithGoogle} disabled={isLoading} />
-      </div>
+      </MuiBox>
 
       {import.meta.env.DEV && import.meta.env.VITE_USE_FIREBASE_EMULATOR !== 'false' && (
-        <button type="button" className="btn btn-outline-secondary w-100 mb-4" onClick={handleDevLogin} disabled={isLoading}>
+        <MuiBox
+          component="button"
+          type="button"
+          onClick={handleDevLogin}
+          disabled={isLoading}
+          sx={{ width: '100%', marginBottom: '1.5rem' }}
+        >
           Dev login (Firebase Auth Emulator)
-        </button>
+        </MuiBox>
       )}
 
-      {/* Đường phân cách giữa Google OAuth và form email/password. */}
-      <div className="d-flex align-items-center justify-content-center mb-4 text-xs font-semibold select-none text-muted-custom" style={{
-      color: 'var(--text-muted) !important'
-    }}>
-        <div className="w-100" style={{
-        height: '1px',
-        background: 'var(--border)'
-      }} />
-        <span className="px-3 text-nowrap" style={{
-        letterSpacing: '0.05em'
-      }}>{t("auth.hoac")}</span>
-        <div className="w-100" style={{
-        height: '1px',
-        background: 'var(--border)'
-      }} />
-      </div>
+      <MuiBox
+        sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', mb: 2, color: 'text.secondary' }}
+      >
+        <MuiBox sx={{ width: '100%', height: '1px', background: 'var(--border)' }} />
+        <MuiBox component="span" sx={{ px: 2, whiteSpace: 'nowrap', fontSize: '0.75rem' }}>
+          {t('auth.hoac')}
+        </MuiBox>
+        <MuiBox sx={{ width: '100%', height: '1px', background: 'var(--border)' }} />
+      </MuiBox>
 
       <LoginForm onSubmit={handleLoginSubmit} isLoading={isLoading} apiError={error} />
 
-      {/* Điều hướng sang trang đăng ký nếu người dùng chưa có tài khoản. */}
-      <div className="text-center mt-4 text-sm font-medium">
-        <span className="text-muted-custom" style={{
-        color: '#94a3b8 !important'
-      }}>{t("auth.chuaCoTaiKhoan")}</span>{' '}
-        <Link to={ROUTES.REGISTER} className="text-decoration-none transition-all" style={{
-        color: 'var(--primary)',
-        fontWeight: 600
-      }}>{t("signUp")}</Link>
-      </div>
-    </AuthLayout>;
+      <MuiBox sx={{ textAlign: 'center', mt: 4, fontSize: '0.875rem', fontWeight: 500 }}>
+        <MuiBox component="span" sx={{ color: 'text.secondary' }}>
+          {t('auth.chuaCoTaiKhoan')}{' '}
+        </MuiBox>
+        <Link to={ROUTES.REGISTER} className="text-decoration-none" style={{ color: 'var(--primary)', fontWeight: 600 }}>
+          {t('signUp')}
+        </Link>
+      </MuiBox>
+    </AuthLayout>
+  );
 }

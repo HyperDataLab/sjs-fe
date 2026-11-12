@@ -2,10 +2,9 @@ import { t } from "i18next";
 import { useTranslation } from "react-i18next";
 import { useCallback } from 'react';
 import { Outlet, useLocation, NavLink } from 'react-router-dom';
-import { Icon } from '@iconify/react';
+import Icon from '../../../shared/components/Icon.jsx';
 import Header from '../../landing/components/Header';
 import ROUTES from '../../../app/routes/routePaths';
-import './WalletLayout.css';
 const NAV_ITEMS = [{
   label: t("landing.viCuaToi"),
   icon: 'lucide:wallet',

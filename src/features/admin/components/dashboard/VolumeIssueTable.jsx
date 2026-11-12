@@ -12,6 +12,10 @@ import StatusBadge from '../shared/StatusBadge';
 import AdminProgressBar from '../layout/AdminProgressBar';
 import Pagination from '../../../../shared/components/Pagination';
 import { exportAdminVolumeIssueStatusCsv } from '../../api/adminDashboard.api';
+
+
+import MuiBox from '@mui/material/Box';
+
 export default function VolumeIssueTable({
   items = [],
   loading = false,
@@ -61,7 +65,7 @@ export default function VolumeIssueTable({
         </button>
       </div>
 
-      {loading ? <p className="admin-muted-text mb-0">{t("admin.dangTaiVolumeIssueOverview")}</p> : error ? <p className="admin-error-text mb-0">{error}</p> : safeItems.length === 0 ? <p className="admin-muted-text mb-0">{t("admin.chuaCoDuLieuVolumeIssueOvervie")}</p> : <>
+      {loading ? <MuiBox component="p" sx={{ marginBottom: "0" }} className="admin-muted-text">{t("admin.dangTaiVolumeIssueOverview")}</MuiBox> : error ? <MuiBox component="p" sx={{ marginBottom: "0" }} className="admin-error-text">{error}</MuiBox> : safeItems.length === 0 ? <MuiBox component="p" sx={{ marginBottom: "0" }} className="admin-muted-text">{t("admin.chuaCoDuLieuVolumeIssueOvervie")}</MuiBox> : <>
           <div className="admin-table-wrapper">
             <table className="admin-table">
               <thead>

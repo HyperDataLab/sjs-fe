@@ -5,8 +5,13 @@ import { useTranslation } from "react-i18next";
  * File: features\article\components\ArticleActionCard.jsx
  */
 import { useState } from 'react';
-import { Card, Button, Spinner } from 'react-bootstrap';
-import { Icon } from '@iconify/react';
+import { Card, Button, Spinner } from '@/shared/components/ui/muiAdapters';
+import Icon from '../../../shared/components/Icon.jsx';
+import { getClassNameSx, stripMappedClassNames } from '../../../shared/theme/classNameSx';
+import { MotionBox } from '../../../shared/components/ui/MotionBox';
+
+import MuiBox from '@mui/material/Box';
+
 export default function ArticleActionCard({
   article,
   isBookmarked,
@@ -30,40 +35,26 @@ export default function ArticleActionCard({
     if (!url) return;
     window.open(url, '_blank', 'noopener,noreferrer');
   };
-  return <Card className="journal-dark-card border-0 p-4 mb-4 position-relative" style={{
+  return <Card sx={{ border: 0, padding: "1.5rem", marginBottom: "1.5rem", position: "relative" }} className="journal-dark-card" style={{
     backgroundColor: 'var(--bg-card)',
     border: '1px solid var(--border)',
     borderRadius: '16px',
     boxShadow: '0 10px 30px rgba(0, 0, 0, 0.02)'
   }}>
-      <h5 className="font-display font-weight-bold text-main mb-3 d-flex align-items-center gap-2 border-bottom border-light pb-2">
+      <MuiBox component="h5" sx={{ marginBottom: "1rem", display: "flex", alignItems: "center", gap: "0.5rem", borderBottom: "1px solid #dee2e6", borderColor: "#dee2e6", paddingBottom: "0.5rem" }} className="font-display font-weight-bold text-main">
         <Icon icon="lucide:sliders" style={{
         color: 'var(--primary)'
-      }} width="20" />{t("article.hanhDongActions")}</h5>
+      }} width="20" />{t("article.hanhDongActions")}</MuiBox>
 
       {/* Floating Copied Message */}
-      {showCopiedToast && <div className="position-absolute start-50 translate-middle-x d-flex align-items-center gap-2 px-3 py-2 shadow" style={{
-      top: '-24px',
-      zIndex: 100,
-      whiteSpace: 'nowrap',
-      animation: 'fadeInUp 0.2s ease-out',
-      background: '#f0fdf4',
-      borderLeft: '4px solid #22c55e',
-      borderRadius: '14px',
-      color: '#166534'
-    }}>
-          <Icon icon="solar:check-circle-bold" width="18" style={{
-        color: '#22c55e',
-        flexShrink: 0
-      }} />
-          <span style={{
-        fontWeight: 500
-      }}>{t("article.daSaoChepMaDoi")}</span>
-        </div>}
+      {showCopiedToast && <MotionBox initial={{ opacity: 0, y: 10, x: '-50%' }} animate={{ opacity: 1, y: 0, x: '-50%' }} transition={{ duration: 0.2, ease: 'easeOut' }} sx={{ position: "absolute", left: "50%", top: -24, zIndex: 100, whiteSpace: 'nowrap', display: "flex", alignItems: "center", gap: "0.5rem", padding: "0.5rem 1rem", boxShadow: "0 .5rem 1rem rgba(0,0,0,.15)", background: '#f0fdf4', borderLeft: '4px solid #22c55e', borderRadius: '14px', color: '#166534' }}>
+          <Icon sx={{ color: '#22c55e', flexShrink: 0 }} icon="solar:check-circle-bold" width="18" />
+          <MuiBox component="span" sx={{ fontWeight: 500 }}>{t("article.daSaoChepMaDoi")}</MuiBox>
+        </MotionBox>}
 
-      <div className="d-flex flex-column gap-3">
+      <MuiBox component="div" sx={{ display: "flex", flexDirection: "column", gap: "1rem" }} >
         {/* Bookmark Button */}
-        <Button onClick={onBookmarkToggle} disabled={isBookmarkLoading} className="w-full d-flex align-items-center justify-content-center gap-2 py-2.5 font-semibold text-sm transition-all" style={{
+        <Button sx={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "0.5rem" }} onClick={onBookmarkToggle} disabled={isBookmarkLoading} className="w-full py-2.5 font-semibold text-sm transition-all" style={{
         borderRadius: '8px',
         backgroundColor: isBookmarked ? 'var(--primary-light)' : 'transparent',
         color: isBookmarked ? 'var(--primary)' : 'var(--text-main)',
@@ -79,12 +70,12 @@ export default function ArticleActionCard({
           e.currentTarget.style.color = 'var(--text-main)';
         }
       }}>
-          {isBookmarkLoading ? <Spinner animation="border" size="sm" className="text-primary" /> : <Icon icon={isBookmarked ? "lucide:bookmark-check" : "lucide:bookmark"} width="18" className={isBookmarked ? "text-primary" : ""} />}
+          {isBookmarkLoading ? <Spinner sx={{ color: "primary.main" }} animation="border" size="sm"  /> : <Icon sx={getClassNameSx(isBookmarked ? "text-primary" : "")} icon={isBookmarked ? "lucide:bookmark-check" : "lucide:bookmark"} width="18" className={stripMappedClassNames(isBookmarked ? "text-primary" : "")} />}
           <span>{isBookmarked ? t("article.daBookmarkBaiBao") : t("article.bookmarkBaiBao")}</span>
         </Button>
 
         {/* Copy DOI Button */}
-        {article?.doi && <Button onClick={handleCopyDoi} className="w-full d-flex align-items-center justify-content-center gap-2 py-2.5 font-semibold text-sm transition-all bg-transparent text-main" style={{
+        {article?.doi && <Button sx={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "0.5rem", bgcolor: "transparent" }} onClick={handleCopyDoi} className="w-full py-2.5 font-semibold text-sm transition-all text-main" style={{
         borderRadius: '8px',
         border: '1px solid var(--border)'
       }} onMouseEnter={e => {
@@ -99,25 +90,13 @@ export default function ArticleActionCard({
           </Button>}
 
         {/* View Source Button */}
-        {article?.doi && <Button onClick={handleOpenSource} className="w-full d-flex align-items-center justify-content-center gap-2 py-2.5 font-semibold text-sm btn-dark-solid" style={{
+        {article?.doi && <Button sx={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "0.5rem" }} onClick={handleOpenSource} className="w-full py-2.5 font-semibold text-sm btn-dark-solid" style={{
         borderRadius: '8px'
       }}>
             <Icon icon="lucide:external-link" width="18" />
             <span>{t("article.xemNguonBaiBao")}</span>
           </Button>}
-      </div>
+      </MuiBox>
 
-      <style>{`
-        @keyframes fadeInUp {
-          from {
-            opacity: 0;
-            transform: translate(-50%, 10px);
-          }
-          to {
-            opacity: 1;
-            transform: translate(-50%, 0);
-          }
-        }
-      `}</style>
     </Card>;
 }

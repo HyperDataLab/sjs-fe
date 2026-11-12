@@ -1,11 +1,15 @@
 import { useTranslation } from "react-i18next";
 import { useState, useEffect } from 'react';
-import { Row, Col, Form, Button } from 'react-bootstrap';
-import { Icon } from '@iconify/react';
+import { Row, Col, Form, Button } from '@/shared/components/ui/muiAdapters';
+import Icon from '../../../../shared/components/Icon.jsx';
 import { getSubjectAreasApi } from '../../../journal/api/journalApi';
 import PrimaryButton from '../../../../shared/components/Button/PrimaryButton';
 import { HeaderFilterCard } from '../../../../shared/components/Card';
 import { FilterSearch, FilterSelect } from '../../../../shared/components/Input';
+import { getClassNameSx, stripMappedClassNames } from '../../../../shared/theme/classNameSx';
+
+import MuiBox from '@mui/material/Box';
+
 
 /**
  * Component JournalFilterBar - Thanh công cụ lọc, tìm kiếm và chuyển đổi giao diện hiển thị.
@@ -59,12 +63,12 @@ export default function JournalFilterBar({
       ignore = true;
     };
   }, []);
-  return <HeaderFilterCard className="mb-4">
-      <Row className="align-items-end g-3">
+  return <HeaderFilterCard sx={{ marginBottom: "1.5rem" }} >
+      <Row sx={{ alignItems: "flex-end", gap: "1rem" }} >
         {/* Search Input */}
         <Col xs={12} md={4}>
           <Form.Group>
-            <Form.Label className="fw-medium small text-main text-uppercase mb-2" style={{
+            <Form.Label sx={{ fontWeight: 500, fontSize: "0.875em", textTransform: "uppercase", marginBottom: "0.5rem" }} className="text-main" style={{
             letterSpacing: '0.05em'
           }}>
               Search Journals
@@ -76,7 +80,7 @@ export default function JournalFilterBar({
         {/* Status Filter */}
         <Col xs={12} sm={6} md={2.5}>
           <Form.Group>
-            <Form.Label className="fw-medium small text-main text-uppercase mb-2" style={{
+            <Form.Label sx={{ fontWeight: 500, fontSize: "0.875em", textTransform: "uppercase", marginBottom: "0.5rem" }} className="text-main" style={{
             letterSpacing: '0.05em'
           }}>
               Status
@@ -97,7 +101,7 @@ export default function JournalFilterBar({
         {/* Subject Area Filter */}
         <Col xs={12} sm={6} md={2.5}>
           <Form.Group>
-            <Form.Label className="fw-medium small text-main text-uppercase mb-2" style={{
+            <Form.Label sx={{ fontWeight: 500, fontSize: "0.875em", textTransform: "uppercase", marginBottom: "0.5rem" }} className="text-main" style={{
             letterSpacing: '0.05em'
           }}>
               Subject Area
@@ -113,28 +117,28 @@ export default function JournalFilterBar({
         </Col>
 
         {/* View Mode & Add Button */}
-        <Col xs={12} md={3} className="d-flex justify-content-md-end align-items-end gap-3">
+        <Col sx={{ display: "flex", "@media (min-width:768px)": { justifyContent: "flex-end" }, alignItems: "flex-end", gap: "1rem" }} xs={12} md={3} >
           {/* View Toggle */}
-          <div className="btn-group" role="group">
-            <Button variant="light" onClick={() => onViewModeChange('table')} className={`d-flex align-items-center p-2 rounded-start ${viewMode === 'table' ? 'bg-dark text-white' : 'bg-light text-dark border'}`} style={{
+          <MuiBox component="div" sx={{ display: "inline-flex", verticalAlign: "middle", "& > :not(:first-of-type)": { ml: "-1px" } }}  role="group">
+            <Button sx={getClassNameSx(`d-flex align-items-center p-2 rounded-start ${viewMode === 'table' ? 'bg-dark text-white' : 'bg-light text-dark border'}`)} variant="light" onClick={() => onViewModeChange('table')} className={stripMappedClassNames(`d-flex align-items-center p-2 rounded-start ${viewMode === 'table' ? 'bg-dark text-white' : 'bg-light text-dark border'}`)} style={{
             borderRight: 'none',
             height: '40px'
           }} title="Table view">
               <Icon icon="lucide:layout-list" width="16" />
             </Button>
-            <Button variant="light" onClick={() => onViewModeChange('card')} className={`d-flex align-items-center p-2 rounded-end ${viewMode === 'card' ? 'bg-dark text-white' : 'bg-light text-dark border'}`} style={{
+            <Button sx={getClassNameSx(`d-flex align-items-center p-2 rounded-end ${viewMode === 'card' ? 'bg-dark text-white' : 'bg-light text-dark border'}`)} variant="light" onClick={() => onViewModeChange('card')} className={stripMappedClassNames(`d-flex align-items-center p-2 rounded-end ${viewMode === 'card' ? 'bg-dark text-white' : 'bg-light text-dark border'}`)} style={{
             borderLeft: 'none',
             height: '40px'
           }} title="Card view">
               <Icon icon="lucide:grid" width="16" />
             </Button>
-          </div>
+          </MuiBox>
 
           {/* Add Journal Button */}
-          <PrimaryButton className="text-nowrap" onClick={onOpenAddModal} style={{
+          <PrimaryButton sx={{ whiteSpace: "nowrap" }}  onClick={onOpenAddModal} style={{
           height: '40px'
         }}>
-            <Icon icon="lucide:plus" width="16" className="me-2" />
+            <Icon sx={{ marginInlineEnd: "0.5rem" }} icon="lucide:plus" width="16"  />
             <span>Create Journal</span>
           </PrimaryButton>
         </Col>

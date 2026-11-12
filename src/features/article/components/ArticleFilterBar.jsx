@@ -5,13 +5,17 @@ import { useTranslation } from "react-i18next";
  * File: features\article\components\ArticleFilterBar.jsx
  */
 import { useState, useEffect } from 'react';
-import { Dropdown, Form } from 'react-bootstrap';
-import { Icon } from '@iconify/react';
+import { Dropdown, Form } from '@/shared/components/ui/muiAdapters';
+import Icon from '../../../shared/components/Icon.jsx';
 import { FilterSearch } from '../../../shared/components/Input';
 import { FilterCard } from '../../../shared/components/Card';
 import { getArticleFilterOptionsApi } from '../api/articleApi';
 import { searchJournalsApi, getJournalByIdApi } from '../../journal/api/journalApi';
 import { getTopicsApi, getTopicByIdApi } from '../../topic/api/topic.api';
+
+
+import MuiBox from '@mui/material/Box';
+
 
 export default function ArticleFilterBar({
   filters,
@@ -353,10 +357,10 @@ export default function ArticleFilterBar({
 
   const renderDropdown = (config) => {
     const filteredOptions = getFilteredOptions(config);
-    const activeValue = config.id === 'year' 
-      ? filters.selectedYear 
-      : config.id === 'journal' 
-        ? filters.selectedJournal 
+    const activeValue = config.id === 'year'
+      ? filters.selectedYear
+      : config.id === 'journal'
+        ? filters.selectedJournal
         : filters.selectedTopic;
 
     const buttonDisplayLabel = config.selectedLabel || config.label;
@@ -396,7 +400,7 @@ export default function ArticleFilterBar({
           {config.searchable && (
             <div className="article-menu-search">
               {config.searching ? (
-                <Icon icon="lucide:loader-2" className="spinner-border-sm animate-spin" width="15" />
+                <Icon sx={{ width: "1rem", height: "1rem", borderWidth: "0.2em" }} icon="lucide:loader-2" className="animate-spin" width="15" />
               ) : (
                 <Icon icon="lucide:search" width="15" />
               )}
@@ -434,7 +438,7 @@ export default function ArticleFilterBar({
                     <span className="article-option-check" aria-hidden="true">
                       {isSelected && <Icon icon="lucide:check" width="13" />}
                     </span>
-                    <span className="text-truncate">{option.label}</span>
+                    <MuiBox component="span" sx={{ overflow: "hidden", whiteSpace: "nowrap", textOverflow: "ellipsis" }} >{option.label}</MuiBox>
                   </button>
                 );
               })
@@ -452,7 +456,7 @@ export default function ArticleFilterBar({
   const isMoreFiltersActive = filters.selectedAccess && filters.selectedAccess !== 'all';
 
   return (
-    <FilterCard className="article-filter-card text-start mb-4">
+    <FilterCard sx={{ textAlign: "left", marginBottom: "1.5rem" }} className="article-filter-card">
       <div className="article-filter-layout">
         <div className="article-filter-toolbar" aria-label="Article filters">
           {filterConfigs.map(renderDropdown)}

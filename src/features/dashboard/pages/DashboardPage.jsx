@@ -6,8 +6,8 @@ import { useTranslation } from "react-i18next";
  */
 import { useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
-import { Container, Row, Col } from "react-bootstrap";
-import { Icon } from "@iconify/react";
+import { Container, Row, Col } from '@/shared/components/ui/muiAdapters';
+import Icon from '../../../shared/components/Icon.jsx';
 import Header from "../../landing/components/Header";
 import { useUserStore } from "../../../app/store/userStore";
 import useDashboard from "../hooks/useDashboard";
@@ -19,6 +19,10 @@ import QuickAccessGrid from "../components/QuickAccessGrid";
 import TopAuthorsTable from "../components/TopAuthorsTable";
 import AuthRequiredModal from "../../../shared/components/AuthRequiredModal";
 import PrimaryButton from "../../../shared/components/Button/PrimaryButton";
+
+
+import MuiBox from '@mui/material/Box';
+
 
 /**
  * DashboardPage — Trang Tổng quan / Dashboard
@@ -86,7 +90,7 @@ export default function DashboardPage() {
   const handleKeywordClick = keyword => {
     navigate(`/catalog?search=${encodeURIComponent(keyword)}`);
   };
-  return <div className="min-vh-100" style={{
+  return <MuiBox component="div" sx={{ minHeight: "100vh" }}  style={{
     backgroundColor: "var(--bg-main)",
     color: "var(--text-main)",
     paddingTop: "80px"
@@ -94,10 +98,10 @@ export default function DashboardPage() {
       {/* Sticky Navbar */}
       <Header />
 
-      <Container className="py-4">
+      <Container sx={{ paddingTop: "1.5rem", paddingBottom: "1.5rem" }} >
         {/* ── Welcome Hero Banner ─────────────────────────────────── */}
-        <div
-          className="p-4 p-md-5 mb-4 position-relative overflow-hidden"
+        <MuiBox component="div" sx={{ padding: "1.5rem", "@media (min-width:768px)": { padding: "3rem" }, marginBottom: "1.5rem", position: "relative", overflow: "hidden" }}
+
           style={{
             backgroundColor: "var(--bg-card)",
             border: "1px solid var(--border)",
@@ -105,10 +109,10 @@ export default function DashboardPage() {
             boxShadow: "0 4px 20px rgba(0, 0, 0, 0.03)"
           }}
         >
-          <div className="d-flex flex-column flex-md-row align-items-start align-items-md-center justify-content-between gap-4 position-relative" style={{ zIndex: 1 }}>
+          <MuiBox component="div" sx={{ display: "flex", flexDirection: "column", "@media (min-width:768px)": { flexDirection: "row", alignItems: "center" }, alignItems: "flex-start", justifyContent: "space-between", gap: "1.5rem", position: "relative" }}  style={{ zIndex: 1 }}>
             <div>
-              <div
-                className="d-inline-flex align-items-center gap-2 px-3 py-1 mb-3 rounded-pill"
+              <MuiBox component="div" sx={{ display: "inline-flex", alignItems: "center", gap: "0.5rem", paddingLeft: "1rem", paddingRight: "1rem", paddingTop: "0.25rem", paddingBottom: "0.25rem", marginBottom: "1rem", borderRadius: "50rem" }}
+
                 style={{
                   backgroundColor: "var(--primary-light)",
                   color: "var(--primary)",
@@ -118,43 +122,43 @@ export default function DashboardPage() {
               >
                 <Icon icon="lucide:sparkles" width={14} />
                 <span>ResearchPulse Analytics</span>
-              </div>
-              <h1
-                className="font-display fw-bold text-main mb-2"
+              </MuiBox>
+              <MuiBox component="h1" sx={{ fontWeight: 700, marginBottom: "0.5rem" }}
+                className="font-display text-main"
                 style={{
                   fontSize: "calc(1.5rem + 0.8vw)",
                   letterSpacing: "-0.02em"
                 }}
               >
                 {t("dashboard.chaoMungBanDenVoiResearchpulse")}
-              </h1>
-              <p
-                className="text-muted-custom mb-0 font-display"
+              </MuiBox>
+              <MuiBox component="p" sx={{ marginBottom: "0" }}
+                className="text-muted-custom font-display"
                 style={{
                   fontSize: "0.95rem",
                   maxWidth: "640px"
                 }}
               >
                 {t("dashboard.khamPhaXuHuongXepHangTapChiVaC")}
-              </p>
+              </MuiBox>
             </div>
-            <div className="d-flex align-items-center gap-3 flex-shrink-0">
-              <PrimaryButton
-                className="px-4 py-2.5 d-inline-flex align-items-center gap-2"
+            <MuiBox component="div" sx={{ display: "flex", alignItems: "center", gap: "1rem", flexShrink: 0 }} >
+              <PrimaryButton sx={{ paddingLeft: "1.5rem", paddingRight: "1.5rem", display: "inline-flex", alignItems: "center", gap: "0.5rem" }}
+                className="py-2.5"
                 onClick={handleCreateProject}
               >
                 <Icon icon="lucide:plus" width={18} />
                 <span>{t("dashboard.taoProject")}</span>
               </PrimaryButton>
-            </div>
-          </div>
-        </div>
+            </MuiBox>
+          </MuiBox>
+        </MuiBox>
 
         {/* ── Stat Cards ──────────────────────────────────────────── */}
         <DashboardStatCards stats={summaryStats} loading={loadingProjects} />
 
         {/* ── Chart + Recent Projects ─────────────────────────────── */}
-        <Row className="g-3 mb-3">
+        <Row sx={{ gap: "1rem", marginBottom: "1rem" }} >
           <Col xs={12} lg={8}>
             <PublicationTrendChart
               analytics={analytics}
@@ -172,7 +176,7 @@ export default function DashboardPage() {
         </Row>
 
         {/* ── Trending Keywords + Quick Access ────────────────────── */}
-        <Row className="g-3 mb-4">
+        <Row sx={{ gap: "1rem", marginBottom: "1.5rem" }} >
           <Col xs={12} md={6}>
             <TrendingKeywordsCard
               keywords={trendingKeywords}
@@ -194,5 +198,5 @@ export default function DashboardPage() {
 
       {/* Auth modal for guests clicking "Tạo Project mới" */}
       <AuthRequiredModal show={showAuthModal} onHide={() => setShowAuthModal(false)} />
-    </div>;
+    </MuiBox>;
 }

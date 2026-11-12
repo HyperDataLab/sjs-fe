@@ -4,9 +4,11 @@ import { useTranslation } from "react-i18next";
  *
  * File: features\keywords\components\KeywordArticleItem.jsx
  */
-import { Button } from 'react-bootstrap';
-import { Icon } from '@iconify/react';
+import { Button } from '@/shared/components/ui/muiAdapters';
+import Icon from '../../../shared/components/Icon.jsx';
 import LatexText from '../../../shared/components/LatexText/LatexText';
+
+
 
 /**
  * Item hiển thị bài báo liên quan đến keyword.
@@ -43,7 +45,7 @@ export default function KeywordArticleItem({
           <LatexText text={article.abstract} />
         </p>}
 
-      <Button type="button" onClick={() => onViewDetail && onViewDetail(article.article_id)} className="keyword-article-action d-inline-flex align-items-center gap-2">{t("journal.xemChiTiet")}<Icon icon="lucide:arrow-right" width="16" />
+      <Button sx={{ display: "inline-flex", alignItems: "center", gap: "0.5rem" }} type="button" onClick={() => onViewDetail && onViewDetail(article.article_id)} className="keyword-article-action">{t("journal.xemChiTiet")}<Icon icon="lucide:arrow-right" width="16" />
       </Button>
     </div>;
 }

@@ -6,6 +6,10 @@ import { useTranslation } from "react-i18next";
 import SuccessIcon from './SuccessIcon';
 import CountdownRedirect from '../../../../shared/components/CountdownRedirect';
 import AuthActionButtons from './AuthActionButtons';
+
+
+import MuiBox from '@mui/material/Box';
+
 const SuccessState = ({
   countdown,
   totalSeconds,
@@ -20,14 +24,14 @@ const SuccessState = ({
       <SuccessIcon />
 
       {/* Heading */}
-      <h4 className="text-center mb-2" style={{
+      <MuiBox component="h4" sx={{ textAlign: "center", marginBottom: "0.5rem" }}  style={{
       fontFamily: "var(--font-display)",
       fontWeight: 600,
       color: 'var(--text-main, #0D1B1C)'
-    }}>{t("auth.kichHoatTaiKhoanThanhCong")}</h4>
+    }}>{t("auth.kichHoatTaiKhoanThanhCong")}</MuiBox>
 
       {/* Mô tả */}
-      <p className="text-center mb-4" style={{
+      <MuiBox component="p" sx={{ textAlign: "center", marginBottom: "1.5rem" }}  style={{
       fontSize: '0.93rem',
       color: 'var(--text-muted, #6B6B6B)',
       lineHeight: 1.6
@@ -39,7 +43,7 @@ const SuccessState = ({
           ResearchPulse
         </span>
         .
-      </p>
+      </MuiBox>
 
       {/* Countdown + Progress bar */}
       <CountdownRedirect countdown={countdown} total={totalSeconds} />

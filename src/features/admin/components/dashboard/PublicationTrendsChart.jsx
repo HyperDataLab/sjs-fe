@@ -1,4 +1,8 @@
 import { useTranslation } from "react-i18next";
+
+
+import MuiBox from '@mui/material/Box';
+
 const MONTH_LABELS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
 // Kích thước & padding của vùng vẽ SVG - cố định để tính toán toạ độ cột
@@ -50,7 +54,7 @@ export default function PublicationTrendsChart({
         </select>
       </div>
 
-      {loading ? <p className="admin-muted-text mb-0">{t("admin.dangTaiDuLieuXuHuongXuatBan")}</p> : error ? <p className="admin-error-text mb-0">{error}</p> : safeData.length === 0 ? <p className="admin-muted-text mb-0">{t("admin.chuaCoDuLieuXuHuongXuatBan")}</p> : <>
+      {loading ? <MuiBox component="p" sx={{ marginBottom: "0" }} className="admin-muted-text">{t("admin.dangTaiDuLieuXuHuongXuatBan")}</MuiBox> : error ? <MuiBox component="p" sx={{ marginBottom: "0" }} className="admin-error-text">{error}</MuiBox> : safeData.length === 0 ? <MuiBox component="p" sx={{ marginBottom: "0" }} className="admin-muted-text">{t("admin.chuaCoDuLieuXuHuongXuatBan")}</MuiBox> : <>
           {/* Vùng chart SVG */}
           <div className="admin-trends-card__chart">
             <svg viewBox={`0 0 ${CHART_WIDTH} ${CHART_HEIGHT}`} preserveAspectRatio="xMidYMid meet" className="admin-trends-svg">
@@ -69,16 +73,16 @@ export default function PublicationTrendsChart({
             const hasAnyPublished = safeData.some(d => d.published > 0);
             const hasAnyManuscripts = safeData.some(d => d.manuscripts > 0);
             const activeBarsCount = (hasAnyPublished ? 1 : 0) + (hasAnyManuscripts ? 1 : 0) || 1;
-            
+
             const totalBarGroupWidth = activeBarsCount * barWidth + Math.max(0, activeBarsCount - 1) * barGap;
             const startOffset = (slotWidth - totalBarGroupWidth) / 2;
-            
+
             // Tính toạ độ X cho từng cột
             let currentX = slotX + startOffset;
-            
+
             const manuscriptsX = currentX;
             if (hasAnyManuscripts) currentX += barWidth + barGap;
-            
+
             const publishedX = currentX;
             // API trả month dạng số (1-12) -> convert sang label viết tắt (Jan, Feb...)
             const monthLabel = MONTH_LABELS[item.month - 1] || item.month;

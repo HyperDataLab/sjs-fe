@@ -1,8 +1,8 @@
 import { useTranslation } from "react-i18next";
 import { t } from "i18next";
 import { useEffect, useMemo, useState } from 'react';
-import { Row, Col, Card } from 'react-bootstrap';
-import { Icon } from '@iconify/react';
+import { Row, Col, Card } from '@/shared/components/ui/muiAdapters';
+import Icon from '../../../shared/components/Icon.jsx';
 import { useJournalManagement } from '../../journal/hooks/useJournalManagement';
 import { getJournalArticlesApi } from '../../journal/api/journalApi';
 import { getAdminJournalRepositorySummary } from '../api/adminDashboard.api';
@@ -12,6 +12,10 @@ import SwitchJournalModal from '../components/modals/SwitchJournalModal';
 import CreateVolumeModal from '../components/modals/CreateVolumeModal';
 import CreateIssueModal from '../components/modals/CreateIssueModal';
 import PrimaryButton from '../../../shared/components/Button/PrimaryButton';
+
+
+import MuiBox from '@mui/material/Box';
+
 
 /**
  * RepositoryManagementPage - Admin repository coordinator for selected journal volumes and issues.
@@ -137,140 +141,140 @@ export default function RepositoryManagementPage() {
     year: 'numeric'
   }) : 'N/A';
   const activeVolObj = currentVolumes.find(volume => volume.id === selectedVolume);
-  return <div className="d-flex flex-column gap-3 text-start">
-      <div className="d-flex justify-content-between align-items-center mb-1">
+  return <MuiBox component="div" sx={{ display: "flex", flexDirection: "column", gap: "1rem", textAlign: "left" }} >
+      <MuiBox component="div" sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "0.25rem" }} >
         <div>
-          <span className="text-muted-custom small text-uppercase fw-semibold" style={{
+          <MuiBox component="span" sx={{ fontSize: "0.875em", textTransform: "uppercase", fontWeight: 600 }} className="text-muted-custom" style={{
           letterSpacing: '0.05em'
         }}>
             Resource Management
-          </span>
-          <h2 className="font-display fw-bold text-main mb-1">Repository Management</h2>
-          <p className="text-muted-custom small mb-0">
+          </MuiBox>
+          <MuiBox component="h2" sx={{ fontWeight: 700, marginBottom: "0.25rem" }} className="font-display text-main">Repository Management</MuiBox>
+          <MuiBox component="p" sx={{ fontSize: "0.875em", marginBottom: "0" }} className="text-muted-custom">
             Manage volumes and publication issues for your active journals.
-          </p>
+          </MuiBox>
         </div>
-        <PrimaryButton className="py-2 px-3" onClick={() => setShowVolumeModal(true)}>
+        <PrimaryButton sx={{ paddingTop: "0.5rem", paddingBottom: "0.5rem", paddingLeft: "1rem", paddingRight: "1rem" }}  onClick={() => setShowVolumeModal(true)}>
           <Icon icon="lucide:plus" width="16" />
           <span>New Volume</span>
         </PrimaryButton>
-      </div>
+      </MuiBox>
 
-      <div className="bg-white p-4 rounded-3 border d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-2" style={{
+      <MuiBox component="div" sx={{ bgcolor: "background.paper", padding: "1.5rem", borderRadius: "0.5rem", border: "1px solid #dee2e6", display: "flex", flexDirection: "column", "@media (min-width:768px)": { flexDirection: "row", alignItems: "center" }, justifyContent: "space-between", gap: "1rem", marginBottom: "0.5rem" }}  style={{
       borderColor: 'var(--border)'
     }}>
-        <div className="d-flex align-items-center gap-3">
-          <div className="admin-icon-tile d-none d-sm-flex">
+        <MuiBox component="div" sx={{ display: "flex", alignItems: "center", gap: "1rem" }} >
+          <MuiBox component="div" sx={{ display: "none", "@media (min-width:576px)": { display: "flex" } }} className="admin-icon-tile">
             <Icon icon="lucide:book-open" width="24" />
-          </div>
+          </MuiBox>
           <div>
-            <div className="text-muted-custom text-uppercase small fw-bold" style={{
+            <MuiBox component="div" sx={{ textTransform: "uppercase", fontSize: "0.875em", fontWeight: 700 }} className="text-muted-custom" style={{
             fontSize: '0.7rem',
             letterSpacing: '0.05em'
           }}>
               Select Journal Repository
-            </div>
-            <h5 className="font-display fw-bold text-main m-0 d-flex align-items-center gap-2">
+            </MuiBox>
+            <MuiBox component="h5" sx={{ fontWeight: 700, margin: "0", display: "flex", alignItems: "center", gap: "0.5rem" }} className="font-display text-main">
               {currentJournal ? currentJournal.title : 'No active journal selected'}
-              <span className="badge admin-status-badge admin-status-badge--accent text-xs font-display rounded px-2 py-0.5">
+              <MuiBox component="span" sx={{ display: "inline-block", px: "0.65em", py: "0.35em", fontSize: "0.75em", fontWeight: 700, lineHeight: 1, color: "#fff", textAlign: "center", whiteSpace: "nowrap", verticalAlign: "baseline", borderRadius: "0.375rem", paddingLeft: "0.5rem", paddingRight: "0.5rem" }} className="admin-status-badge admin-status-badge--accent text-xs font-display py-0.5">
                 ACTIVE
-              </span>
-            </h5>
-            <small className="text-muted-custom font-monospace">
+              </MuiBox>
+            </MuiBox>
+            <MuiBox component="small" sx={{ fontFamily: "monospace" }} className="text-muted-custom">
               ISSN: {currentJournal?.issn} • Publisher: {currentJournal?.publisher || 'N/A'}
-            </small>
+            </MuiBox>
           </div>
-        </div>
-        <PrimaryButton variant="outline" className="py-2 px-3 btn-custom-sm" onClick={() => setShowSwitchModal(true)}>
+        </MuiBox>
+        <PrimaryButton sx={{ paddingTop: "0.5rem", paddingBottom: "0.5rem", paddingLeft: "1rem", paddingRight: "1rem" }} variant="outline" className="btn-custom-sm" onClick={() => setShowSwitchModal(true)}>
           <Icon icon="lucide:refresh-cw" width="14" />
           <span>Switch Journal</span>
         </PrimaryButton>
-      </div>
+      </MuiBox>
 
-      {summaryError && <div className="alert alert-danger border-0 rounded-3 small mb-2">
+      {summaryError && <MuiBox component="div" sx={{ position: "relative", p: "1rem", mb: "1rem", border: 0, borderRadius: "0.5rem", bgcolor: "#f8d7da", borderColor: "#f5c2c7", color: "#842029", fontSize: "0.875em", marginBottom: "0.5rem" }} >
           {summaryError}
-        </div>}
+        </MuiBox>}
 
-      <Row className="g-3 mb-2">
+      <Row sx={{ gap: "1rem", marginBottom: "0.5rem" }} >
         <Col xs={12} sm={6} md={3}>
-          <Card className="border p-3 shadow-none bg-white rounded-3">
-            <div className="d-flex align-items-center justify-content-between mb-2">
-              <div className="text-muted-custom small text-uppercase fw-semibold">Total Volumes</div>
-              <div className="text-muted bg-light p-1.5 rounded-2 d-flex"><Icon icon="lucide:layers" width="16" /></div>
-            </div>
-            <h3 className="fw-bold text-main m-0 font-monospace">{summaryLoading ? '...' : totalVolumes}</h3>
+          <Card sx={{ border: "1px solid #dee2e6", padding: "1rem", boxShadow: "none", bgcolor: "background.paper", borderRadius: "0.5rem" }} >
+            <MuiBox component="div" sx={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "0.5rem" }} >
+              <MuiBox component="div" sx={{ fontSize: "0.875em", textTransform: "uppercase", fontWeight: 600 }} className="text-muted-custom">Total Volumes</MuiBox>
+              <MuiBox component="div" sx={{ color: "text.secondary", bgcolor: "#f8f9fa", borderRadius: "0.375rem", display: "flex" }} className="p-1.5"><Icon icon="lucide:layers" width="16" /></MuiBox>
+            </MuiBox>
+            <MuiBox component="h3" sx={{ fontWeight: 700, margin: "0", fontFamily: "monospace" }} className="text-main">{summaryLoading ? '...' : totalVolumes}</MuiBox>
           </Card>
         </Col>
         <Col xs={12} sm={6} md={3}>
-          <Card className="border p-3 shadow-none bg-white rounded-3">
-            <div className="d-flex align-items-center justify-content-between mb-2">
-              <div className="text-muted-custom small text-uppercase fw-semibold">Active Issues</div>
-              <div className="text-muted bg-light p-1.5 rounded-2 d-flex"><Icon icon="lucide:book-marked" width="16" /></div>
-            </div>
-            <h3 className="fw-bold text-main m-0 font-monospace">{summaryLoading ? '...' : activeIssues}</h3>
+          <Card sx={{ border: "1px solid #dee2e6", padding: "1rem", boxShadow: "none", bgcolor: "background.paper", borderRadius: "0.5rem" }} >
+            <MuiBox component="div" sx={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "0.5rem" }} >
+              <MuiBox component="div" sx={{ fontSize: "0.875em", textTransform: "uppercase", fontWeight: 600 }} className="text-muted-custom">Active Issues</MuiBox>
+              <MuiBox component="div" sx={{ color: "text.secondary", bgcolor: "#f8f9fa", borderRadius: "0.375rem", display: "flex" }} className="p-1.5"><Icon icon="lucide:book-marked" width="16" /></MuiBox>
+            </MuiBox>
+            <MuiBox component="h3" sx={{ fontWeight: 700, margin: "0", fontFamily: "monospace" }} className="text-main">{summaryLoading ? '...' : activeIssues}</MuiBox>
           </Card>
         </Col>
         <Col xs={12} sm={6} md={3}>
-          <Card className="border p-3 shadow-none bg-white rounded-3">
-            <div className="d-flex align-items-center justify-content-between mb-2">
-              <div className="text-muted-custom small text-uppercase fw-semibold">Total Articles</div>
-              <div className="text-muted bg-light p-1.5 rounded-2 d-flex"><Icon icon="lucide:file-text" width="16" /></div>
-            </div>
-            <h3 className="fw-bold text-main m-0 font-monospace">{summaryLoading ? '...' : totalPublications}</h3>
+          <Card sx={{ border: "1px solid #dee2e6", padding: "1rem", boxShadow: "none", bgcolor: "background.paper", borderRadius: "0.5rem" }} >
+            <MuiBox component="div" sx={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "0.5rem" }} >
+              <MuiBox component="div" sx={{ fontSize: "0.875em", textTransform: "uppercase", fontWeight: 600 }} className="text-muted-custom">Total Articles</MuiBox>
+              <MuiBox component="div" sx={{ color: "text.secondary", bgcolor: "#f8f9fa", borderRadius: "0.375rem", display: "flex" }} className="p-1.5"><Icon icon="lucide:file-text" width="16" /></MuiBox>
+            </MuiBox>
+            <MuiBox component="h3" sx={{ fontWeight: 700, margin: "0", fontFamily: "monospace" }} className="text-main">{summaryLoading ? '...' : totalPublications}</MuiBox>
           </Card>
         </Col>
         <Col xs={12} sm={6} md={3}>
-          <Card className="border p-3 shadow-none bg-white rounded-3">
-            <div className="d-flex align-items-center justify-content-between mb-2">
-              <div className="text-muted-custom small text-uppercase fw-semibold">Next Release</div>
-              <div className="text-muted bg-light p-1.5 rounded-2 d-flex"><Icon icon="lucide:calendar" width="16" /></div>
-            </div>
-            <h3 className="fw-bold text-main m-0 font-monospace admin-accent-text" style={{
+          <Card sx={{ border: "1px solid #dee2e6", padding: "1rem", boxShadow: "none", bgcolor: "background.paper", borderRadius: "0.5rem" }} >
+            <MuiBox component="div" sx={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "0.5rem" }} >
+              <MuiBox component="div" sx={{ fontSize: "0.875em", textTransform: "uppercase", fontWeight: 600 }} className="text-muted-custom">Next Release</MuiBox>
+              <MuiBox component="div" sx={{ color: "text.secondary", bgcolor: "#f8f9fa", borderRadius: "0.375rem", display: "flex" }} className="p-1.5"><Icon icon="lucide:calendar" width="16" /></MuiBox>
+            </MuiBox>
+            <MuiBox component="h3" sx={{ fontWeight: 700, margin: "0", fontFamily: "monospace" }} className="text-main admin-accent-text" style={{
             fontSize: '1.25rem'
           }}>
               {summaryLoading ? '...' : nextRelease}
-            </h3>
+            </MuiBox>
           </Card>
         </Col>
       </Row>
 
-      <Row className="g-4 align-items-start">
+      <Row sx={{ gap: "1.5rem", alignItems: "flex-start" }} >
         <Col xs={12} lg={4}>
-          <div className="d-flex justify-content-between align-items-center mb-3">
-            <h5 className="font-display fw-bold text-main mb-0 d-flex align-items-center gap-2">
+          <MuiBox component="div" sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1rem" }} >
+            <MuiBox component="h5" sx={{ fontWeight: 700, marginBottom: "0", display: "flex", alignItems: "center", gap: "0.5rem" }} className="font-display text-main">
               Volumes Repository
-              <Icon icon="lucide:sliders-horizontal" className="text-muted" width="16" />
-            </h5>
-          </div>
+              <Icon sx={{ color: "text.secondary" }} icon="lucide:sliders-horizontal"  width="16" />
+            </MuiBox>
+          </MuiBox>
           <VolumeList volumes={currentVolumes} selectedVolumeId={selectedVolume} onSelectVolume={setSelectedVolume} volumeStatsById={volumeStatsById} />
         </Col>
 
         <Col xs={12} lg={8}>
-          <div className="bg-white p-4 rounded-3 border" style={{
+          <MuiBox component="div" sx={{ bgcolor: "background.paper", padding: "1.5rem", borderRadius: "0.5rem", border: "1px solid #dee2e6" }}  style={{
           borderColor: 'var(--border)'
         }}>
-            <div className="d-flex justify-content-between align-items-start border-bottom pb-3 mb-3">
+            <MuiBox component="div" sx={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", borderBottom: "1px solid #dee2e6", paddingBottom: "1rem", marginBottom: "1rem" }} >
               <div>
-                <h5 className="font-display fw-bold text-main mb-1">
+                <MuiBox component="h5" sx={{ fontWeight: 700, marginBottom: "0.25rem" }} className="font-display text-main">
                   {activeVolObj ? `${activeVolObj.volumeNumber} Overview` : 'Volume Overview'}
-                </h5>
+                </MuiBox>
                 <small className="text-muted-custom">
                   Published: {activeVolObj?.frequency || 'Quarterly'} • Frequency: Q1, Q2, Q3, Q4
                 </small>
               </div>
-              <PrimaryButton className="btn-custom-sm px-3 py-2" disabled={!selectedVolume} onClick={() => setShowIssueModal(true)}>
+              <PrimaryButton sx={{ paddingLeft: "1rem", paddingRight: "1rem", paddingTop: "0.5rem", paddingBottom: "0.5rem" }} className="btn-custom-sm" disabled={!selectedVolume} onClick={() => setShowIssueModal(true)}>
                 <Icon icon="lucide:plus-circle" width="14" />
                 <span>Add Issue</span>
               </PrimaryButton>
-            </div>
+            </MuiBox>
 
             <IssueTable issues={currentIssues} articleCountsByIssueId={articleCountsByIssueId} />
-          </div>
+          </MuiBox>
         </Col>
       </Row>
 
       <SwitchJournalModal show={showSwitchModal} handleClose={() => setShowSwitchModal(false)} />
       <CreateVolumeModal show={showVolumeModal} handleClose={() => setShowVolumeModal(false)} />
       <CreateIssueModal show={showIssueModal} handleClose={() => setShowIssueModal(false)} />
-    </div>;
+    </MuiBox>;
 }

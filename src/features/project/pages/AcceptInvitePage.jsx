@@ -1,11 +1,15 @@
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSearchParams, useNavigate } from 'react-router-dom';
-import { Icon } from '@iconify/react';
+import Icon from '../../../shared/components/Icon.jsx';
 import ROUTES from '../../../app/routes/routePaths';
 import projectService from '../services/projectService';
 import PrimaryButton from '../../../shared/components/Button/PrimaryButton';
 import Header from '../../landing/components/Header';
+import { getClassNameSx } from '../../../shared/theme/classNameSx';
+
+import MuiBox from '@mui/material/Box';
+
 
 const AcceptInvitePage = () => {
   const { t } = useTranslation();
@@ -36,26 +40,26 @@ const AcceptInvitePage = () => {
   }, [searchParams]);
 
   return (
-    <div className="container-fluid pb-4 grid-bg min-vh-100 position-relative overflow-hidden" style={{ paddingTop: '80px' }}>
+    <MuiBox component="div" sx={{ width: "100%", px: "0.75rem", mx: "auto", paddingBottom: "1.5rem", minHeight: "100vh", position: "relative", overflow: "hidden" }} className="grid-bg" style={{ paddingTop: '80px' }}>
       <Header />
-      <div className="container mx-auto position-relative z-1 d-flex justify-content-center align-items-center" style={{ minHeight: '60vh' }}>
-        <div className="glass-card rounded-4 shadow-sm border p-5 text-center" style={{ maxWidth: '500px', width: '100%' }}>
+      <MuiBox component="div" sx={{ width: "100%", mx: "auto", px: "0.75rem", "@media (min-width:576px)": { maxWidth: 540 }, "@media (min-width:768px)": { maxWidth: 720 }, "@media (min-width:992px)": { maxWidth: 960 }, "@media (min-width:1200px)": { maxWidth: 1140 }, "@media (min-width:1400px)": { maxWidth: 1320 }, position: "relative", zIndex: 1, display: "flex", justifyContent: "center", alignItems: "center" }}  style={{ minHeight: '60vh' }}>
+        <MuiBox component="div" sx={{ borderRadius: "0.75rem", boxShadow: "0 .125rem .25rem rgba(0,0,0,.075)", border: "1px solid #dee2e6", padding: "3rem", textAlign: "center" }} className="glass-card" style={{ maxWidth: '500px', width: '100%' }}>
           {status === 'loading' && (
             <>
-              <div className="spinner-border text-primary mb-4" role="status" style={{ width: '3rem', height: '3rem' }}></div>
-              <h4 className="fw-bold text-main mb-2">{t("project.dangXuLy", "Đang xử lý lời mời...")}</h4>
+              <MuiBox component="div" sx={{ display: "inline-block", width: "2rem", height: "2rem", verticalAlign: "-0.125em", border: "0.25em solid currentColor", borderRightColor: "transparent", borderRadius: "50%", animation: "spin .75s linear infinite", color: "primary.main", marginBottom: "1.5rem" }}  role="status" style={{ width: '3rem', height: '3rem' }}></MuiBox>
+              <MuiBox component="h4" sx={{ fontWeight: 700, marginBottom: "0.5rem" }} className="text-main">{t("project.dangXuLy", "Đang xử lý lời mời...")}</MuiBox>
               <p className="text-muted-custom">{t("project.vuiLongChoTrongGiayLat", "Vui lòng chờ trong giây lát.")}</p>
             </>
           )}
 
           {status === 'success' && (
             <>
-              <div className="rounded-circle bg-success bg-opacity-10 d-inline-flex p-3 mb-4">
-                <Icon icon="lucide:check-circle" width="48" className="text-success" />
-              </div>
-              <h4 className="fw-bold text-main mb-2">{t("project.xacNhanThanhCong", "Xác nhận thành công!")}</h4>
-              <p className="text-muted-custom mb-4">{t("project.banDaDuocThemVaoDuAnThanhCong", "Bạn đã được thêm vào dự án thành công. Bây giờ bạn có thể truy cập dự án.")}</p>
-              <PrimaryButton className="w-100" onClick={() => navigate(ROUTES.PROJECTS)}>
+              <MuiBox component="div" sx={getClassNameSx("rounded-circle bg-success bg-opacity-10 d-inline-flex p-3 mb-4")}>
+                <Icon sx={{ color: "success.main" }} icon="lucide:check-circle" width="48"  />
+              </MuiBox>
+              <MuiBox component="h4" sx={{ fontWeight: 700, marginBottom: "0.5rem" }} className="text-main">{t("project.xacNhanThanhCong", "Xác nhận thành công!")}</MuiBox>
+              <MuiBox component="p" sx={{ marginBottom: "1.5rem" }} className="text-muted-custom">{t("project.banDaDuocThemVaoDuAnThanhCong", "Bạn đã được thêm vào dự án thành công. Bây giờ bạn có thể truy cập dự án.")}</MuiBox>
+              <PrimaryButton sx={{ width: "100%" }}  onClick={() => navigate(ROUTES.PROJECTS)}>
                 {t("project.chuyenDenDanhSachDuAn", "Chuyển đến danh sách dự án")}
               </PrimaryButton>
             </>
@@ -63,19 +67,19 @@ const AcceptInvitePage = () => {
 
           {status === 'error' && (
             <>
-              <div className="rounded-circle bg-danger bg-opacity-10 d-inline-flex p-3 mb-4">
-                <Icon icon="lucide:x-circle" width="48" className="text-danger" />
-              </div>
-              <h4 className="fw-bold text-main mb-2">{t("project.xacNhanThatBai", "Xác nhận thất bại")}</h4>
-              <p className="text-danger mb-4">{errorMessage}</p>
-              <PrimaryButton variant="outline" className="w-100" onClick={() => navigate(ROUTES.HOME)}>
+              <MuiBox component="div" sx={getClassNameSx("rounded-circle bg-danger bg-opacity-10 d-inline-flex p-3 mb-4")}>
+                <Icon sx={{ color: "error.main" }} icon="lucide:x-circle" width="48"  />
+              </MuiBox>
+              <MuiBox component="h4" sx={{ fontWeight: 700, marginBottom: "0.5rem" }} className="text-main">{t("project.xacNhanThatBai", "Xác nhận thất bại")}</MuiBox>
+              <MuiBox component="p" sx={{ color: "error.main", marginBottom: "1.5rem" }} >{errorMessage}</MuiBox>
+              <PrimaryButton sx={{ width: "100%" }} variant="outline"  onClick={() => navigate(ROUTES.HOME)}>
                 {t("project.troVeTrangChu", "Trở về trang chủ")}
               </PrimaryButton>
             </>
           )}
-        </div>
-      </div>
-    </div>
+        </MuiBox>
+      </MuiBox>
+    </MuiBox>
   );
 };
 

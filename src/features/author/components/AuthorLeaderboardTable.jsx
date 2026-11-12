@@ -4,13 +4,17 @@ import { useTranslation } from "react-i18next";
  * @description Hiển thị bảng xếp hạng các tác giả hàng đầu trong hệ thống dưới dạng bảng.
  */
 
-import { Table } from 'react-bootstrap';
+import { Table } from '@/shared/components/ui/muiAdapters';
 import { useNavigate } from 'react-router-dom';
 import AuthorAvatar from './AuthorAvatar';
 import AuthorRankBadge from './AuthorRankBadge';
 import LoadingSkeleton from '../../../shared/components/LoadingSkeleton';
 import EmptyState from '../../../shared/components/EmptyState';
 import ErrorState from '../../../shared/components/ErrorState';
+
+
+import MuiBox from '@mui/material/Box';
+
 export default function AuthorLeaderboardTable({
   authors = [],
   loading = false,
@@ -40,21 +44,21 @@ export default function AuthorLeaderboardTable({
     if (id) navigate(`/authors/${id}`);
   };
   return <div className="author-leaderboard-table-shell">
-      <Table hover responsive className="author-leaderboard-table m-0 align-middle">
+      <Table sx={{ margin: "0", verticalAlign: "middle" }} hover responsive className="author-leaderboard-table">
         <thead>
           <tr>
-            <th className="author-leaderboard-rank-col text-center py-3">{t("author.thuHang")}</th>
-            <th className="py-3">{t("typeAuthor")}</th>
-            <th className="py-3">{t("author.linhVucChinh")}</th>
-            <th className="py-3">{t("articles")}</th>
-            <th className="py-3">Citations</th>
+            <MuiBox component="th" sx={{ textAlign: "center", paddingTop: "1rem", paddingBottom: "1rem" }} className="author-leaderboard-rank-col">{t("author.thuHang")}</MuiBox>
+            <MuiBox component="th" sx={{ paddingTop: "1rem", paddingBottom: "1rem" }} >{t("typeAuthor")}</MuiBox>
+            <MuiBox component="th" sx={{ paddingTop: "1rem", paddingBottom: "1rem" }} >{t("author.linhVucChinh")}</MuiBox>
+            <MuiBox component="th" sx={{ paddingTop: "1rem", paddingBottom: "1rem" }} >{t("articles")}</MuiBox>
+            <MuiBox component="th" sx={{ paddingTop: "1rem", paddingBottom: "1rem" }} >Citations</MuiBox>
           </tr>
         </thead>
         <tbody>
           {loading ? Array.from({
           length: limit || 5
         }).map((_, idx) => <tr key={idx}>
-                <td className="text-center"><LoadingSkeleton width="30px" height="30px" borderRadius="50%" /></td>
+                <MuiBox component="td" sx={{ textAlign: "center" }} ><LoadingSkeleton width="30px" height="30px" borderRadius="50%" /></MuiBox>
                 <td>
                   <div className="author-leaderboard-author">
                     <LoadingSkeleton width="32px" height="32px" borderRadius="50%" />
@@ -74,11 +78,11 @@ export default function AuthorLeaderboardTable({
           const rank = author.final_rank ?? idx + 1;
           const avatarColor = author.avatar_color ?? (rank === 1 ? '#FF7A33' : rank === 2 ? '#6366F1' : rank === 3 ? '#0EA5E9' : '#071A1C');
           return <tr key={id ?? idx} onClick={() => handleAuthorClick(author)} className="author-leaderboard-row">
-                  <td className="text-center py-3">
-                    <div className="d-flex justify-content-center">
+                  <MuiBox component="td" sx={{ textAlign: "center", paddingTop: "1rem", paddingBottom: "1rem" }} >
+                    <MuiBox component="div" sx={{ display: "flex", justifyContent: "center" }} >
                       <AuthorRankBadge rank={rank} />
-                    </div>
-                  </td>
+                    </MuiBox>
+                  </MuiBox>
                   <td>
                     <div className="author-leaderboard-author">
                       <AuthorAvatar name={name} size="sm" bgColor={avatarColor} />

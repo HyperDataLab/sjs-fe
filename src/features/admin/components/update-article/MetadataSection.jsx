@@ -1,5 +1,9 @@
 import KeywordInput from '../shared/KeywordInput';
 
+
+import MuiBox from '@mui/material/Box';
+
+
 export default function MetadataSection({
   abstract,
   keywords,
@@ -11,7 +15,7 @@ export default function MetadataSection({
 }) {
   return (
     <div className="admin-card admin-form-section">
-      <h3 className="admin-card__title mb-3">Metadata</h3>
+      <MuiBox component="h3" sx={{ marginBottom: "1rem" }} className="admin-card__title">Metadata</MuiBox>
 
       {/* Abstract - textarea full width */}
       <div className="admin-form-group">

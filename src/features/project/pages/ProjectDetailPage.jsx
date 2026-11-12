@@ -13,14 +13,18 @@ import ManageKeywordsModal from '../../keyword/components/ManageKeywordsModal';
 import UpgradePlanModal from '../components/UpgradePlanModal';
 import ProjectMembersList from '../components/ProjectMembersList';
 import InviteMemberModal from '../components/InviteMemberModal';
-import { Icon } from '@iconify/react';
-import { Modal } from 'react-bootstrap';
+import Icon from '../../../shared/components/Icon.jsx';
+import { Modal } from '@/shared/components/ui/muiAdapters';
 import Header from '../../landing/components/Header';
 import PrimaryButton from '../../../shared/components/Button/PrimaryButton';
 import projectService from '../../project/services/projectService';
 import LatexText from '../../../shared/components/LatexText/LatexText';
 import useAuth from '../../auth/hooks/useAuth';
 import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid, PieChart, Pie, Cell } from 'recharts';
+import { getClassNameSx, stripMappedClassNames } from '../../../shared/theme/classNameSx';
+
+import MuiBox from '@mui/material/Box';
+
 const ProjectDetailPage = () => {
   const { t: _t, i18n } = useTranslation();
   const {
@@ -48,7 +52,7 @@ const ProjectDetailPage = () => {
     refetch: refetchProjectDetails
   } = useKeywordTracking(projectId);
   const [activeTab, setActiveTab] = useState(tabParam && ['overview', 'articles', 'keywords', 'members'].includes(tabParam) ? tabParam : 'articles');
-  
+
   useEffect(() => {
     if (tabParam && ['overview', 'articles', 'keywords', 'members'].includes(tabParam)) {
       setActiveTab(tabParam);
@@ -65,14 +69,14 @@ const ProjectDetailPage = () => {
   const [showUpgradeModal, setShowUpgradeModal] = useState(false);
   const [showInviteModal, setShowInviteModal] = useState(false);
   const [confirmModal, setConfirmModal] = useState({ show: false, userId: null });
-  
+
   const queryClient = useQueryClient();
   const { data: overviewData, isLoading: overviewLoading, error: overviewErrorRaw, refetch: fetchProjectOverview } = useProjectOverviewQuery(projectId);
   const overviewError = overviewErrorRaw ? t("project.khongTheTaiDuLieuTongQuanVuiLo") : null;
 
   const { data: membersData, isLoading: membersLoading } = useProjectMembersQuery(projectId);
   const members = membersData || [];
-  
+
   const [membersActionLoading, setMembersActionLoading] = useState(false);
 
   const chartColors = ['#ff702f', '#ff9f68', '#ffc09b', '#334155', '#64748b', '#94a3b8'];
@@ -145,10 +149,10 @@ const ProjectDetailPage = () => {
     fontFamily: 'var(--font-display)',
     fontSize: '12px'
   };
-  const renderEmptyChart = (message = t("project.chuaCoDuLieuBieuDo")) => <div className="d-flex flex-column align-items-center justify-content-center h-100 text-muted-custom py-5">
-      <Icon icon="lucide:chart-no-axes-column" width="42" className="mb-2 opacity-50" />
-      <span className="small">{message}</span>
-    </div>;
+  const renderEmptyChart = (message = t("project.chuaCoDuLieuBieuDo")) => <MuiBox component="div" sx={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", height: "100%", paddingTop: "3rem", paddingBottom: "3rem" }} className="text-muted-custom">
+      <Icon sx={{ marginBottom: "0.5rem", opacity: 0.5 }} icon="lucide:chart-no-axes-column" width="42"  />
+      <MuiBox component="span" sx={{ fontSize: "0.875em" }} >{message}</MuiBox>
+    </MuiBox>;
   const renderDonutChart = (chart, centerLabel) => {
     let data = mapChartData(chart);
     if (!hasChartData(chart)) return renderEmptyChart();
@@ -168,8 +172,8 @@ const ProjectDetailPage = () => {
       data = top5;
     }
     const total = data.reduce((sum, item) => sum + item.value, 0);
-    return <div className="row align-items-center g-3">
-        <div className="col-12 col-sm-6 d-flex justify-content-center position-relative">
+    return <MuiBox component="div" sx={{ display: "grid", gridTemplateColumns: "repeat(12,minmax(0,1fr))", width: "100%", alignItems: "center", gap: "1rem" }} >
+        <MuiBox component="div" sx={{ gridColumn: "span 12", "@media (min-width:576px)": { gridColumn: "span 6" }, display: "flex", justifyContent: "center", position: "relative" }} >
           <div style={{
           width: '100%',
           height: '220px'
@@ -183,53 +187,53 @@ const ProjectDetailPage = () => {
               </PieChart>
             </ResponsiveContainer>
           </div>
-          <div className="position-absolute d-flex flex-column align-items-center justify-content-center" style={{
+          <MuiBox component="div" sx={{ position: "absolute", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center" }}  style={{
           top: 0,
           bottom: 0,
           left: 0,
           right: 0,
           pointerEvents: 'none'
         }}>
-            <span className="fw-bold text-main" style={{
+            <MuiBox component="span" sx={{ fontWeight: 700 }} className="text-main" style={{
             fontSize: '1.25rem'
-          }}>{formatNumber(total)}</span>
+          }}>{formatNumber(total)}</MuiBox>
             <span className="text-muted-custom" style={{
             fontSize: '0.65rem',
             textTransform: 'uppercase',
             letterSpacing: '0.05em',
             fontWeight: 600
           }}>{t("project.tongSo")}</span>
-          </div>
-        </div>
-        <div className="col-12 col-sm-6">
-          <div className="d-flex flex-column gap-2 pe-2 custom-scrollbar" style={{
+          </MuiBox>
+        </MuiBox>
+        <MuiBox component="div" sx={{ gridColumn: "span 12", "@media (min-width:576px)": { gridColumn: "span 6" } }} >
+          <MuiBox component="div" sx={{ display: "flex", flexDirection: "column", gap: "0.5rem", paddingInlineEnd: "0.5rem" }} className="custom-scrollbar" style={{
           maxHeight: '200px',
           overflowY: 'auto'
         }}>
             {data.map((item, index) => {
             const percentage = total > 0 ? (item.value / total * 100).toFixed(1) : 0;
-            return <div key={index} className="d-flex align-items-center justify-content-between py-1 border-bottom border-light-subtle">
-                  <div className="d-flex align-items-center gap-2 text-truncate" style={{
+            return <MuiBox component="div" sx={{ display: "flex", alignItems: "center", justifyContent: "space-between", paddingTop: "0.25rem", paddingBottom: "0.25rem", borderBottom: "1px solid #dee2e6", borderColor: "#dee2e6" }} key={index} >
+                  <MuiBox component="div" sx={{ display: "flex", alignItems: "center", gap: "0.5rem", overflow: "hidden", whiteSpace: "nowrap", textOverflow: "ellipsis" }}  style={{
                 maxWidth: '70%'
               }}>
-                    <span className="rounded-circle flex-shrink-0" style={{
+                    <MuiBox component="span" sx={{ borderRadius: "50%", flexShrink: 0 }}  style={{
                   width: 8,
                   height: 8,
                   backgroundColor: chartColors[index % chartColors.length]
                 }} />
-                    <span className="small text-main text-truncate fw-medium" title={item.name}>{item.name}</span>
-                  </div>
-                  <div className="small text-muted-custom text-nowrap">
-                    <span className="fw-semibold text-main me-1">{formatNumber(item.value)}</span>
+                    <MuiBox component="span" sx={{ fontSize: "0.875em", overflow: "hidden", whiteSpace: "nowrap", textOverflow: "ellipsis", fontWeight: 500 }} className="text-main" title={item.name}>{item.name}</MuiBox>
+                  </MuiBox>
+                  <MuiBox component="div" sx={{ fontSize: "0.875em", whiteSpace: "nowrap" }} className="text-muted-custom">
+                    <MuiBox component="span" sx={{ fontWeight: 600, marginInlineEnd: "0.25rem" }} className="text-main">{formatNumber(item.value)}</MuiBox>
                     <span style={{
                   fontSize: '0.85em'
                 }}>({percentage}%)</span>
-                  </div>
-                </div>;
+                  </MuiBox>
+                </MuiBox>;
           })}
-          </div>
-        </div>
-      </div>;
+          </MuiBox>
+        </MuiBox>
+      </MuiBox>;
   };
   const renderLineChart = chart => {
     const data = mapChartData(chart);
@@ -269,21 +273,21 @@ const ProjectDetailPage = () => {
     const summary = overviewData?.summary || {};
     const charts = overviewData?.charts || {};
     if (overviewLoading) {
-      return <div className="glass-card rounded-3 border-0 p-5 text-center text-muted-custom">
-          <Icon icon="lucide:loader-circle" width="32" className="animate-spin-slow mb-3" style={{ color: 'var(--primary)' }} />
-          <p className="small mb-0 mt-3">{t("project.dangTaiDuLieuTongQuan")}</p>
-        </div>;
+      return <MuiBox component="div" sx={{ borderRadius: "0.5rem", border: 0, padding: "3rem", textAlign: "center" }} className="glass-card text-muted-custom">
+          <Icon sx={{ marginBottom: "1rem" }} icon="lucide:loader-circle" width="32" className="animate-spin-slow" style={{ color: 'var(--primary)' }} />
+          <MuiBox component="p" sx={{ fontSize: "0.875em", marginBottom: "0", marginTop: "1rem" }} >{t("project.dangTaiDuLieuTongQuan")}</MuiBox>
+        </MuiBox>;
     }
     if (overviewError) {
-      return <div className="glass-card rounded-3 border-0 p-4 text-center">
-          <Icon icon="lucide:circle-alert" width="42" className="text-danger mb-3" />
-          <h6 className="fw-bold text-main">{t("article.khongTheTaiBieuDo")}</h6>
-          <p className="text-muted-custom small">{overviewError}</p>
-          <PrimaryButton className="px-3 py-2" onClick={fetchProjectOverview}>{t("article.thuLai")}</PrimaryButton>
-        </div>;
+      return <MuiBox component="div" sx={{ borderRadius: "0.5rem", border: 0, padding: "1.5rem", textAlign: "center" }} className="glass-card">
+          <Icon sx={{ color: "error.main", marginBottom: "1rem" }} icon="lucide:circle-alert" width="42"  />
+          <MuiBox component="h6" sx={{ fontWeight: 700 }} className="text-main">{t("article.khongTheTaiBieuDo")}</MuiBox>
+          <MuiBox component="p" sx={{ fontSize: "0.875em" }} className="text-muted-custom">{overviewError}</MuiBox>
+          <PrimaryButton sx={{ paddingLeft: "1rem", paddingRight: "1rem", paddingTop: "0.5rem", paddingBottom: "0.5rem" }}  onClick={fetchProjectOverview}>{t("article.thuLai")}</PrimaryButton>
+        </MuiBox>;
     }
-    return <div className="d-flex flex-column gap-3">
-        <div className="po-metrics mb-4" style={{ borderTop: 0, paddingTop: 0, marginTop: 0 }}>
+    return <MuiBox component="div" sx={{ display: "flex", flexDirection: "column", gap: "1rem" }} >
+        <MuiBox component="div" sx={{ marginBottom: "1.5rem" }} className="po-metrics" style={{ borderTop: 0, paddingTop: 0, marginTop: 0 }}>
           <div className="po-metric">
             <div className="po-metric__label">{t("project.tongSoBaiBao")}</div>
             <div className="po-metric__value">{formatNumber(summary.totalArticles)}</div>
@@ -300,33 +304,33 @@ const ProjectDetailPage = () => {
             <div className="po-metric__label">{t("project.capNhatGanNhat")}</div>
             <div className="po-metric__value" style={{ fontSize: '1.125rem' }}>{formatDate(summary.lastUpdatedAt)}</div>
           </div>
-        </div>
+        </MuiBox>
 
-        <div className="glass-card glass-card--flat rounded-3 p-4">
-          <div className="mb-3">
-            <h6 className="fw-semibold text-main mb-1" style={{ letterSpacing: '-0.005em' }}>{t("project.xuHuongXuatBan")}</h6>
-            <p className="text-muted-custom small mb-0">{t("project.soLuongBaiBaoLienQuanTheoTungN")}</p>
-          </div>
+        <MuiBox component="div" sx={{ borderRadius: "0.5rem", padding: "1.5rem" }} className="glass-card glass-card--flat">
+          <MuiBox component="div" sx={{ marginBottom: "1rem" }} >
+            <MuiBox component="h6" sx={{ fontWeight: 600, marginBottom: "0.25rem" }} className="text-main" style={{ letterSpacing: '-0.005em' }}>{t("project.xuHuongXuatBan")}</MuiBox>
+            <MuiBox component="p" sx={{ fontSize: "0.875em", marginBottom: "0" }} className="text-muted-custom">{t("project.soLuongBaiBaoLienQuanTheoTungN")}</MuiBox>
+          </MuiBox>
           {renderLineChart(charts.publicationTrend)}
-        </div>
+        </MuiBox>
 
-        <div className="row g-3">
-          <div className="col-12 col-lg-6">
-            <div className="glass-card glass-card--flat rounded-3 p-4 h-100">
-              <h6 className="fw-semibold text-main mb-1" style={{ letterSpacing: '-0.005em' }}>{t("project.phanBoLinhVuc")}</h6>
-              <p className="text-muted-custom small mb-3">{t("project.tyTrongBaiBaoTheoSubjectArea")}</p>
+        <MuiBox component="div" sx={{ display: "grid", gridTemplateColumns: "repeat(12,minmax(0,1fr))", width: "100%", gap: "1rem" }} >
+          <MuiBox component="div" sx={{ gridColumn: "span 12", "@media (min-width:992px)": { gridColumn: "span 6" } }} >
+            <MuiBox component="div" sx={{ borderRadius: "0.5rem", padding: "1.5rem", height: "100%" }} className="glass-card glass-card--flat">
+              <MuiBox component="h6" sx={{ fontWeight: 600, marginBottom: "0.25rem" }} className="text-main" style={{ letterSpacing: '-0.005em' }}>{t("project.phanBoLinhVuc")}</MuiBox>
+              <MuiBox component="p" sx={{ fontSize: "0.875em", marginBottom: "1rem" }} className="text-muted-custom">{t("project.tyTrongBaiBaoTheoSubjectArea")}</MuiBox>
               {renderDonutChart(charts.subjectAreaDistribution, 'Subject Areas')}
-            </div>
-          </div>
-          <div className="col-12 col-lg-6">
-            <div className="glass-card glass-card--flat rounded-3 p-4 h-100">
-              <h6 className="fw-semibold text-main mb-1" style={{ letterSpacing: '-0.005em' }}>{t("project.loaiNguonXuatBan")}</h6>
-              <p className="text-muted-custom small mb-3">{t("project.phanBoTheoJournalConferenceBoo")}</p>
+            </MuiBox>
+          </MuiBox>
+          <MuiBox component="div" sx={{ gridColumn: "span 12", "@media (min-width:992px)": { gridColumn: "span 6" } }} >
+            <MuiBox component="div" sx={{ borderRadius: "0.5rem", padding: "1.5rem", height: "100%" }} className="glass-card glass-card--flat">
+              <MuiBox component="h6" sx={{ fontWeight: 600, marginBottom: "0.25rem" }} className="text-main" style={{ letterSpacing: '-0.005em' }}>{t("project.loaiNguonXuatBan")}</MuiBox>
+              <MuiBox component="p" sx={{ fontSize: "0.875em", marginBottom: "1rem" }} className="text-muted-custom">{t("project.phanBoTheoJournalConferenceBoo")}</MuiBox>
               {renderDonutChart(charts.publicationTypeDistribution, 'Publication Types')}
-            </div>
-          </div>
-        </div>
-      </div>;
+            </MuiBox>
+          </MuiBox>
+        </MuiBox>
+      </MuiBox>;
   };
   const renderPagination = type => {
     const pagination = type === 'keywords' ? keywordArticlesPagination : watchArticlesPagination;
@@ -348,17 +352,15 @@ const ProjectDetailPage = () => {
         pages.push(1, '...', page - 1, page, page + 1, '...', totalPages);
       }
     }
-    return <div className="d-flex justify-content-center mt-4">
-        <ul className="pagination shadow-sm">
-          <li className={`page-item ${page <= 1 ? 'disabled' : ''}`}>
-            <button className="page-link text-dark" onClick={() => fetchFn(page - 1)} style={{
-            cursor: page <= 1 ? 'not-allowed' : 'pointer'
-          }}>
+    return <MuiBox component="div" sx={{ display: "flex", justifyContent: "center", marginTop: "1.5rem" }} >
+        <MuiBox component="ul" sx={{ display: "flex", paddingLeft: 0, listStyle: "none", boxShadow: "0 .125rem .25rem rgba(0,0,0,.075)" }} >
+          <MuiBox component="li" sx={{ display: "flex" }}>
+            <MuiBox component="button" sx={{ position: "relative", display: "block", minWidth: 36, px: "0.75rem", py: "0.375rem", color: "text.primary", textDecoration: "none", bgcolor: "background.paper", border: "1px solid #dee2e6", cursor: page <= 1 ? "not-allowed" : "pointer", "&:hover:not(:disabled)": { bgcolor: "action.hover" }, "&:disabled": { color: "text.disabled" } }} disabled={page <= 1} onClick={() => fetchFn(page - 1)}>
               <Icon icon="lucide:chevron-left" />
-            </button>
-          </li>
-          {pages.map((p, idx) => <li key={idx} className={`page-item ${p === page ? 'active' : ''} ${p === '...' ? 'disabled' : ''}`}>
-              <button className={`page-link ${p === page ? '' : 'text-dark'}`} style={p === page ? {
+            </MuiBox>
+          </MuiBox>
+          {pages.map((p, idx) => <MuiBox component="li" sx={{ display: "flex" }} key={idx}>
+              <MuiBox component="button" sx={{ position: "relative", display: "block", minWidth: 36, px: "0.75rem", py: "0.375rem", color: p === page ? "#fff" : "text.primary", textDecoration: "none", bgcolor: p === page ? "#fd7e14" : "background.paper", border: "1px solid", borderColor: p === page ? "#fd7e14" : "#dee2e6", cursor: p === '...' || p === page ? "default" : "pointer", "&:hover:not(:disabled)": { bgcolor: p === page ? "#fd7e14" : "action.hover" }, "&:disabled": { color: "text.disabled" } }} disabled={p === '...'} aria-current={p === page ? "page" : undefined} style={p === page ? {
             backgroundColor: '#fd7e14',
             borderColor: '#fd7e14',
             color: '#fff',
@@ -367,39 +369,37 @@ const ProjectDetailPage = () => {
             cursor: p === '...' ? 'default' : 'pointer'
           }} onClick={() => p !== '...' && p !== page && fetchFn(p)}>
                 {p}
-              </button>
-            </li>)}
-          <li className={`page-item ${page >= totalPages ? 'disabled' : ''}`}>
-            <button className="page-link text-dark" onClick={() => fetchFn(page + 1)} style={{
-            cursor: page >= totalPages ? 'not-allowed' : 'pointer'
-          }}>
+              </MuiBox>
+            </MuiBox>)}
+          <MuiBox component="li" sx={{ display: "flex" }}>
+            <MuiBox component="button" sx={{ position: "relative", display: "block", minWidth: 36, px: "0.75rem", py: "0.375rem", color: "text.primary", textDecoration: "none", bgcolor: "background.paper", border: "1px solid #dee2e6", cursor: page >= totalPages ? "not-allowed" : "pointer", "&:hover:not(:disabled)": { bgcolor: "action.hover" }, "&:disabled": { color: "text.disabled" } }} disabled={page >= totalPages} onClick={() => fetchFn(page + 1)}>
               <Icon icon="lucide:chevron-right" />
-            </button>
-          </li>
-        </ul>
-      </div>;
+            </MuiBox>
+          </MuiBox>
+        </MuiBox>
+      </MuiBox>;
   };
   if (loading) {
-    return <div className="container-fluid py-4 grid-bg min-vh-100 d-flex justify-content-center align-items-center">
-        <div className="spinner-border text-primary" role="status"></div>
-      </div>;
+    return <MuiBox component="div" sx={{ width: "100%", px: "0.75rem", mx: "auto", paddingTop: "1.5rem", paddingBottom: "1.5rem", minHeight: "100vh", display: "flex", justifyContent: "center", alignItems: "center" }} className="grid-bg">
+        <MuiBox component="div" sx={{ display: "inline-block", width: "2rem", height: "2rem", verticalAlign: "-0.125em", border: "0.25em solid currentColor", borderRightColor: "transparent", borderRadius: "50%", animation: "spin .75s linear infinite", color: "primary.main" }}  role="status"></MuiBox>
+      </MuiBox>;
   }
   if (error || !project) {
-    return <div className="container-fluid py-4 grid-bg min-vh-100">
-        <div className="container mx-auto" style={{
+    return <MuiBox component="div" sx={{ width: "100%", px: "0.75rem", mx: "auto", paddingTop: "1.5rem", paddingBottom: "1.5rem", minHeight: "100vh" }} className="grid-bg">
+        <MuiBox component="div" sx={{ width: "100%", mx: "auto", px: "0.75rem", "@media (min-width:576px)": { maxWidth: 540 }, "@media (min-width:768px)": { maxWidth: 720 }, "@media (min-width:992px)": { maxWidth: 960 }, "@media (min-width:1200px)": { maxWidth: 1140 }, "@media (min-width:1400px)": { maxWidth: 1320 } }}  style={{
         maxWidth: '1000px',
         marginTop: '20px'
       }}>
-          <div className="alert alert-danger border-0 rounded-4 shadow-sm p-4 d-flex align-items-center gap-3">
-            <Icon icon="lucide:alert-triangle" width="24" className="text-danger flex-shrink-0" />
+          <MuiBox component="div" sx={{ position: "relative", p: "1rem", mb: "1rem", border: 0, borderRadius: "0.75rem", bgcolor: "#f8d7da", borderColor: "#f5c2c7", color: "#842029", boxShadow: "0 .125rem .25rem rgba(0,0,0,.075)", padding: "1.5rem", display: "flex", alignItems: "center", gap: "1rem" }} >
+            <Icon sx={{ color: "error.main", flexShrink: 0 }} icon="lucide:alert-triangle" width="24"  />
             <div>
-              <h6 className="fw-bold mb-1">{t("project.khongTheTaiDuAn")}</h6>
-              <p className="mb-0 small">{error || t("project.duAnKhongTonTaiHoacDaBiXoa")}</p>
+              <MuiBox component="h6" sx={{ fontWeight: 700, marginBottom: "0.25rem" }} >{t("project.khongTheTaiDuAn")}</MuiBox>
+              <MuiBox component="p" sx={{ marginBottom: "0", fontSize: "0.875em" }} >{error || t("project.duAnKhongTonTaiHoacDaBiXoa")}</MuiBox>
             </div>
-            <button className="btn btn-outline-danger btn-sm ms-auto" onClick={() => navigate(ROUTES.PROJECTS)}>{t("auth.quayLai")}</button>
-          </div>
-        </div>
-      </div>;
+            <MuiBox component="button" sx={{ display: "inline-flex", alignItems: "center", justifyContent: "center", px: "0.5rem", py: "0.25rem", border: "1px solid", borderRadius: "0.25rem", fontSize: "0.875rem", fontWeight: 400, lineHeight: 1.5, cursor: "pointer", textDecoration: "none", borderColor: "error.main", bgcolor: "transparent", color: "error.main", ml: "auto" }}  onClick={() => navigate(ROUTES.PROJECTS)}>{t("auth.quayLai")}</MuiBox>
+          </MuiBox>
+        </MuiBox>
+      </MuiBox>;
   }
   const title = project.title || 'Untitled Project';
   const areaName = project.subject_area?.display_name || project.subject_area?.name || (typeof project.subject_area === 'string' ? project.subject_area : t("project.chuaXacDinhLinhVuc"));
@@ -407,31 +407,31 @@ const ProjectDetailPage = () => {
   const keywordCount = watchedKeywords?.length || 0;
   const articleCount = watchArticlesPagination?.total || 0;
   const isProjectActive = String(project.status || '').toUpperCase() === 'ACTIVE';
-  return <div className="container-fluid pb-4 grid-bg min-vh-100 position-relative overflow-hidden" style={{
+  return <MuiBox component="div" sx={{ width: "100%", px: "0.75rem", mx: "auto", paddingBottom: "1.5rem", minHeight: "100vh", position: "relative", overflow: "hidden" }} className="grid-bg" style={{
     paddingTop: '80px'
   }}>
-      <div className="position-absolute w-100 h-100 radial-fade pe-none" style={{
+      <MuiBox component="div" sx={{ position: "absolute", width: "100%", height: "100%", pointerEvents: "none" }} className="radial-fade" style={{
       top: 0,
       left: 0,
       zIndex: 0
     }} />
       <Header />
-      <div className="container mx-auto position-relative z-1" style={{
+      <MuiBox component="div" sx={{ width: "100%", mx: "auto", px: "0.75rem", "@media (min-width:576px)": { maxWidth: 540 }, "@media (min-width:768px)": { maxWidth: 720 }, "@media (min-width:992px)": { maxWidth: 960 }, "@media (min-width:1200px)": { maxWidth: 1140 }, "@media (min-width:1400px)": { maxWidth: 1320 }, position: "relative", zIndex: 1 }}  style={{
       maxWidth: '1200px',
       marginTop: '40px'
     }}>
         {/* Breadcrumb */}
-        <nav aria-label="breadcrumb" className="po-breadcrumb mb-2">
-          <ol className="breadcrumb mb-0">
-            <li className="breadcrumb-item"><Link to={ROUTES.DASHBOARD} className="text-decoration-none">{t("author.tongQuan")}</Link></li>
-            <li className="breadcrumb-item"><Link to={ROUTES.PROJECTS} className="text-decoration-none">{t("project.duAnTheoDoi")}</Link></li>
-            <li className="breadcrumb-item active" aria-current="page">{title}</li>
-          </ol>
-        </nav>
+        <MuiBox component="nav" sx={{ marginBottom: "0.5rem" }} aria-label="breadcrumb" className="po-breadcrumb">
+          <MuiBox component="ol" sx={{ display: "flex", flexWrap: "wrap", padding: 0, marginBottom: "0", listStyle: "none" }} >
+            <MuiBox component="li" sx={{ display: "flex", alignItems: "center", "&:not(:last-child)::after": { content: "\"/\"", px: "0.5rem", color: "text.secondary" } }} ><MuiBox component={Link} sx={{ textDecoration: "none" }} to={ROUTES.DASHBOARD} >{t("author.tongQuan")}</MuiBox></MuiBox>
+            <MuiBox component="li" sx={{ display: "flex", alignItems: "center", "&:not(:last-child)::after": { content: "\"/\"", px: "0.5rem", color: "text.secondary" } }} ><MuiBox component={Link} sx={{ textDecoration: "none" }} to={ROUTES.PROJECTS} >{t("project.duAnTheoDoi")}</MuiBox></MuiBox>
+            <MuiBox component="li" sx={{ display: "flex", alignItems: "center", "&:not(:last-child)::after": { content: "\"/\"", px: "0.5rem", color: "text.secondary" } }} className="active" aria-current="page">{title}</MuiBox>
+          </MuiBox>
+        </MuiBox>
 
         {/* Header section (Mockup 3) */}
-        <div className="po-header mb-3">
-          <div className="d-flex flex-wrap justify-content-between align-items-start gap-3">
+        <MuiBox component="div" sx={{ marginBottom: "1rem" }} className="po-header">
+          <MuiBox component="div" sx={{ display: "flex", flexWrap: "wrap", justifyContent: "space-between", alignItems: "flex-start", gap: "1rem" }} >
 
             {/* LEFT: meta + title + status */}
             <div className="min-w-0" style={{ flex: '1 1 320px' }}>
@@ -440,20 +440,20 @@ const ProjectDetailPage = () => {
                 <span className="po-meta__sep">·</span>
                 <span>{t("project.capNhatLuc")}{createdAt}</span>
               </div>
-              <div className="d-flex align-items-center gap-3 flex-wrap">
-                <h1 className="font-display text-main mb-0" style={{ fontSize: 'clamp(2rem, 1.625rem + 1.5vw, 2.625rem)', fontWeight: 700, letterSpacing: '-0.03em', lineHeight: 1.05 }}>{title}</h1>
+              <MuiBox component="div" sx={{ display: "flex", alignItems: "center", gap: "1rem", flexWrap: "wrap" }} >
+                <MuiBox component="h1" sx={{ marginBottom: "0" }} className="font-display text-main" style={{ fontSize: 'clamp(2rem, 1.625rem + 1.5vw, 2.625rem)', fontWeight: 700, letterSpacing: '-0.03em', lineHeight: 1.05 }}>{title}</MuiBox>
                 <span className={`po-status ${isProjectActive ? 'is-active' : ''}`}>
                   <span className="po-status__dot" aria-hidden="true" />
                   {isProjectActive ? t("project.dangHoatDong") : t("project.chuaKichHoat", "Chưa kích hoạt")}
                 </span>
-              </div>
+              </MuiBox>
             </div>
 
             {/* RIGHT: action buttons */}
-            <div className="d-flex align-items-center gap-2 flex-shrink-0">
+            <MuiBox component="div" sx={{ display: "flex", alignItems: "center", gap: "0.5rem", flexShrink: 0 }} >
               {!isProjectActive && (
-                <PrimaryButton
-                  className="px-3"
+                <PrimaryButton sx={{ paddingLeft: "1rem", paddingRight: "1rem" }}
+
                   variant="outline"
                   style={{ minHeight: 36, padding: '0.4rem 0.85rem', fontSize: '0.85rem' }}
                   onClick={() => setShowUpgradeModal(true)}
@@ -463,8 +463,8 @@ const ProjectDetailPage = () => {
                 </PrimaryButton>
               )}
 
-              <PrimaryButton
-                className="px-3"
+              <PrimaryButton sx={{ paddingLeft: "1rem", paddingRight: "1rem" }}
+
                 variant={isProjectActive ? 'primary' : 'outline'}
                 disabled={!isProjectActive}
                 style={!isProjectActive ? { opacity: 0.55, cursor: 'not-allowed', minHeight: 36, padding: '0.4rem 0.85rem', fontSize: '0.85rem' } : { minHeight: 36, padding: '0.4rem 0.85rem', fontSize: '0.85rem' }}
@@ -478,8 +478,8 @@ const ProjectDetailPage = () => {
                 <Icon icon={isProjectActive ? "lucide:sparkles" : "lucide:lock"} width="14" />
                 {t("project.phanTichChuyenSau")}
               </PrimaryButton>
-            </div>
-          </div>
+            </MuiBox>
+          </MuiBox>
 
           {/* Single information-dense metrics row, no individual cards.
               Reading order (left → right): hero → strong → default → muted.
@@ -514,7 +514,7 @@ const ProjectDetailPage = () => {
               <div className="po-metric__value po-metric__value--muted">{project?.alerts_24h?.todayCount || 0}</div>
             </div>
           </div>
-        </div>
+        </MuiBox>
 
         <nav className="po-tabs" role="tablist" aria-label="Project sections">
           <button role="tab" aria-selected={activeTab === 'overview'}
@@ -547,91 +547,91 @@ const ProjectDetailPage = () => {
         </nav>
 
         {/* Tab Content */}
-        <div className="mb-5">
+        <MuiBox component="div" sx={{ marginBottom: "3rem" }} >
           {activeTab === 'overview' && renderOverviewTab()}
 
-          {activeTab === 'articles' && <div className="glass-card rounded-4 shadow-sm border p-4">
-              <div className="mb-4">
-                <h5 className="fw-bold text-main mb-1">{t("project.luongBaiVietCapNhat")}</h5>
-                <p className="text-muted-custom small mb-0">{t("project.danhSachCacBaiBaoKhoaHocXuatBa")}</p>
-              </div>
+          {activeTab === 'articles' && <MuiBox component="div" sx={{ borderRadius: "0.75rem", boxShadow: "0 .125rem .25rem rgba(0,0,0,.075)", border: "1px solid #dee2e6", padding: "1.5rem" }} className="glass-card">
+              <MuiBox component="div" sx={{ marginBottom: "1.5rem" }} >
+                <MuiBox component="h5" sx={{ fontWeight: 700, marginBottom: "0.25rem" }} className="text-main">{t("project.luongBaiVietCapNhat")}</MuiBox>
+                <MuiBox component="p" sx={{ fontSize: "0.875em", marginBottom: "0" }} className="text-muted-custom">{t("project.danhSachCacBaiBaoKhoaHocXuatBa")}</MuiBox>
+              </MuiBox>
 
-              {watchArticles.length === 0 ? <div className="text-center py-5 text-muted-custom">
-                  <Icon icon="lucide:file-x" width="48" className="mb-3 opacity-50" />
-                  <p className="mb-0">{t("project.chuaCoBaiBaoNaoKhopVoiTuKhoaCu")}</p>
-                </div> : <div className="list-group list-group-flush border-top pt-2">
-                  {watchArticles.map((article, index) => <div key={index} className="list-group-item bg-transparent px-0 py-3 border-bottom">
-                      <div className="d-flex justify-content-between align-items-start mb-2">
-                        <span className="text-muted-custom small">{article.journal_name || article.journal?.title || t("author.tapChiKhoaHoc")}</span>
-                        <span className="text-muted-custom small">{article.publication_year || new Date(article.publication_date).getFullYear()}</span>
-                      </div>
-                      <Link to={`/articles/${article.article_id || article.id}/visual`} className="text-decoration-none">
-                        <h6 className="fw-bold text-main mb-2 hover-primary lh-base">
+              {watchArticles.length === 0 ? <MuiBox component="div" sx={{ textAlign: "center", paddingTop: "3rem", paddingBottom: "3rem" }} className="text-muted-custom">
+                  <Icon sx={{ marginBottom: "1rem", opacity: 0.5 }} icon="lucide:file-x" width="48"  />
+                  <MuiBox component="p" sx={{ marginBottom: "0" }} >{t("project.chuaCoBaiBaoNaoKhopVoiTuKhoaCu")}</MuiBox>
+                </MuiBox> : <MuiBox component="div" sx={{ display: "flex", flexDirection: "column", paddingLeft: 0, marginBottom: 0, borderRadius: 0, borderTop: "1px solid #dee2e6", paddingTop: "0.5rem" }} >
+                  {watchArticles.map((article, index) => <MuiBox component="div" sx={{ position: "relative", display: "block", p: "0.5rem 1rem", color: "text.primary", textDecoration: "none", bgcolor: "transparent", border: "1px solid rgba(0,0,0,.125)", paddingLeft: "0", paddingRight: "0", paddingTop: "1rem", paddingBottom: "1rem", borderBottom: "1px solid #dee2e6" }} key={index} >
+                      <MuiBox component="div" sx={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "0.5rem" }} >
+                        <MuiBox component="span" sx={{ fontSize: "0.875em" }} className="text-muted-custom">{article.journal_name || article.journal?.title || t("author.tapChiKhoaHoc")}</MuiBox>
+                        <MuiBox component="span" sx={{ fontSize: "0.875em" }} className="text-muted-custom">{article.publication_year || new Date(article.publication_date).getFullYear()}</MuiBox>
+                      </MuiBox>
+                      <MuiBox component={Link} sx={{ textDecoration: "none" }} to={`/articles/${article.article_id || article.id}/visual`} >
+                        <MuiBox component="h6" sx={{ fontWeight: 700, marginBottom: "0.5rem", lineHeight: 1.5 }} className="text-main hover-primary">
                           <LatexText text={article.title} />
-                        </h6>
-                      </Link>
-                      <div className="d-flex justify-content-between align-items-center mt-2">
-                        <div className="text-muted-custom small text-truncate pe-3">
+                        </MuiBox>
+                      </MuiBox>
+                      <MuiBox component="div" sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: "0.5rem" }} >
+                        <MuiBox component="div" sx={{ fontSize: "0.875em", overflow: "hidden", whiteSpace: "nowrap", textOverflow: "ellipsis", paddingInlineEnd: "1rem" }} className="text-muted-custom">
                           {article.doi && <>
-                              DOI: <a href={article.doi.startsWith('http') ? article.doi : `https://doi.org/${article.doi}`} target="_blank" rel="noopener noreferrer" className="text-muted-custom text-decoration-none hover-primary">{article.doi}</a>
+                              DOI: <MuiBox component="a" sx={{ textDecoration: "none" }} href={article.doi.startsWith('http') ? article.doi : `https://doi.org/${article.doi}`} target="_blank" rel="noopener noreferrer" className="text-muted-custom hover-primary">{article.doi}</MuiBox>
                             </>}
-                        </div>
-                        <div className="d-flex gap-2 flex-wrap justify-content-end">
-                          {article.matched_areas?.map((area, aIdx) => <span key={`area-${aIdx}`} className="badge fw-medium text-nowrap" style={{
+                        </MuiBox>
+                        <MuiBox component="div" sx={{ display: "flex", gap: "0.5rem", flexWrap: "wrap", justifyContent: "flex-end" }} >
+                          {article.matched_areas?.map((area, aIdx) => <MuiBox component="span" sx={{ display: "inline-block", px: "0.65em", py: "0.35em", fontSize: "0.75em", fontWeight: 500, lineHeight: 1, color: "#fff", textAlign: "center", whiteSpace: "nowrap", verticalAlign: "baseline", borderRadius: "0.375rem" }} key={`area-${aIdx}`}  style={{
                     fontSize: '0.7rem',
                     backgroundColor: 'var(--primary-light)',
                     color: 'var(--primary)',
                     border: 'none',
                     boxShadow: 'none'
                   }}>
-                              <Icon icon="lucide:book-open" className="me-1" width="12" />
+                              <Icon sx={{ marginInlineEnd: "0.25rem" }} icon="lucide:book-open"  width="12" />
                               {area}
-                            </span>)}
-                          {article.matched_keywords?.map((kw, kwIdx) => <span key={`kw-${kwIdx}`} className="badge fw-medium text-nowrap" style={{
+                            </MuiBox>)}
+                          {article.matched_keywords?.map((kw, kwIdx) => <MuiBox component="span" sx={{ display: "inline-block", px: "0.65em", py: "0.35em", fontSize: "0.75em", fontWeight: 500, lineHeight: 1, color: "#fff", textAlign: "center", whiteSpace: "nowrap", verticalAlign: "baseline", borderRadius: "0.375rem" }} key={`kw-${kwIdx}`}  style={{
                     fontSize: '0.7rem',
                     backgroundColor: 'var(--primary-light)',
                     color: 'var(--primary)',
                     border: 'none',
                     boxShadow: 'none'
                   }}>
-                              <Icon icon="lucide:sparkles" className="me-1" width="12" />
+                              <Icon sx={{ marginInlineEnd: "0.25rem" }} icon="lucide:sparkles"  width="12" />
                               {kw}
-                            </span>)}
-                          {!article.matched_keywords?.length && !article.matched_areas?.length && <span className="badge fw-medium text-nowrap" style={{
+                            </MuiBox>)}
+                          {!article.matched_keywords?.length && !article.matched_areas?.length && <MuiBox component="span" sx={{ display: "inline-block", px: "0.65em", py: "0.35em", fontSize: "0.75em", fontWeight: 500, lineHeight: 1, color: "#fff", textAlign: "center", whiteSpace: "nowrap", verticalAlign: "baseline", borderRadius: "0.375rem" }}  style={{
                     fontSize: '0.7rem',
                     backgroundColor: 'var(--primary-light)',
                     color: 'var(--primary)',
                     border: 'none',
                     boxShadow: 'none'
-                  }}>{t("project.doTrungKhopCao")}</span>}
-                        </div>
-                      </div>
-                    </div>)}
-                </div>}
-              
-              {renderPagination('articles')}
-            </div>}
+                  }}>{t("project.doTrungKhopCao")}</MuiBox>}
+                        </MuiBox>
+                      </MuiBox>
+                    </MuiBox>)}
+                </MuiBox>}
 
-          {activeTab === 'keywords' && <div className="glass-card rounded-4 shadow-sm border p-4">
-              <div className="d-flex justify-content-between align-items-center mb-4">
+              {renderPagination('articles')}
+            </MuiBox>}
+
+          {activeTab === 'keywords' && <MuiBox component="div" sx={{ borderRadius: "0.75rem", boxShadow: "0 .125rem .25rem rgba(0,0,0,.075)", border: "1px solid #dee2e6", padding: "1.5rem" }} className="glass-card">
+              <MuiBox component="div" sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1.5rem" }} >
                 <div>
-                  <h5 className="fw-bold text-main mb-1">{t("project.quanLyWatchlistTuKhoa")}</h5>
-                  <p className="text-muted-custom small mb-0">{t("project.heThongSeLienTucQuetBaiBaoMoiV")}</p>
+                  <MuiBox component="h5" sx={{ fontWeight: 700, marginBottom: "0.25rem" }} className="text-main">{t("project.quanLyWatchlistTuKhoa")}</MuiBox>
+                  <MuiBox component="p" sx={{ fontSize: "0.875em", marginBottom: "0" }} className="text-muted-custom">{t("project.heThongSeLienTucQuetBaiBaoMoiV")}</MuiBox>
                 </div>
-                <PrimaryButton variant="outline" className="px-3 py-2" onClick={() => navigate(`/projects/${projectId}/edit`)}>
+                <PrimaryButton sx={{ paddingLeft: "1rem", paddingRight: "1rem", paddingTop: "0.5rem", paddingBottom: "0.5rem" }} variant="outline"  onClick={() => navigate(`/projects/${projectId}/edit`)}>
                   <Icon icon="lucide:edit-2" width="16" />{t("project.chinhSuaDanhSach")}</PrimaryButton>
-              </div>
+              </MuiBox>
 
               <KeywordWatchList watchedKeywords={watchedKeywords} articles={keywordArticles} loading={loading} onManageClick={() => setShowManageModal(true)} />
-              
+
               {renderPagination('keywords')}
-            </div>}
-            
+            </MuiBox>}
+
           {activeTab === 'members' && (
-            <ProjectMembersList 
+            <ProjectMembersList
               project={project}
-              members={members} 
-              loading={membersLoading} 
+              members={members}
+              loading={membersLoading}
               onInviteClick={() => setShowInviteModal(true)}
               onChangeRole={handleChangeRole}
               onRemoveMember={handleRemoveMember}
@@ -639,37 +639,37 @@ const ProjectDetailPage = () => {
               currentUser={currentUser}
             />
           )}
-        </div>
-      </div>
+        </MuiBox>
+      </MuiBox>
 
       {/* Modals */}
       <AddKeywordModal show={showAddModal} onHide={() => setShowAddModal(false)} onAdd={addKeywordWatch} actionLoading={actionLoading} />
 
       <ManageKeywordsModal show={showManageModal} onHide={() => setShowManageModal(false)} watchedKeywords={watchedKeywords} onRemove={removeKeywordWatch} actionLoading={actionLoading} />
 
-      <InviteMemberModal 
-        show={showInviteModal} 
-        onHide={() => setShowInviteModal(false)} 
-        onInvite={handleInviteMember} 
-        actionLoading={membersActionLoading} 
+      <InviteMemberModal
+        show={showInviteModal}
+        onHide={() => setShowInviteModal(false)}
+        onInvite={handleInviteMember}
+        actionLoading={membersActionLoading}
       />
 
       <Modal show={confirmModal.show} onHide={() => setConfirmModal({ show: false, userId: null })} centered>
-        <Modal.Header closeButton className="border-0 pb-0">
-          <Modal.Title className="fw-bold text-main">
+        <Modal.Header sx={{ border: 0, paddingBottom: "0" }} closeButton >
+          <Modal.Title sx={{ fontWeight: 700 }} className="text-main">
             {t("project.xoaThanhVienTitle", "Xóa thành viên")}
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <p className="text-muted-custom">{t("project.banCoChacMuonXoaThanhVien", "Bạn có chắc chắn muốn xóa thành viên này / hủy lời mời khỏi dự án không?")}</p>
         </Modal.Body>
-        <Modal.Footer className="border-0 pt-0">
-          <PrimaryButton variant="outline" className="px-4" onClick={() => setConfirmModal({ show: false, userId: null })}>
+        <Modal.Footer sx={{ border: 0, paddingTop: "0" }} >
+          <PrimaryButton sx={{ paddingLeft: "1.5rem", paddingRight: "1.5rem" }} variant="outline"  onClick={() => setConfirmModal({ show: false, userId: null })}>
             {t("admin.huy", "Hủy")}
           </PrimaryButton>
-          <button className="btn btn-danger px-4" onClick={confirmRemoveMember} style={{ fontWeight: 600, borderRadius: '12px' }}>
+          <MuiBox component="button" sx={{ display: "inline-flex", alignItems: "center", justifyContent: "center", px: "0.75rem", py: "0.375rem", border: "1px solid transparent", borderRadius: "0.375rem", fontSize: "1rem", fontWeight: 400, lineHeight: 1.5, cursor: "pointer", textDecoration: "none", bgcolor: "error.main", borderColor: "error.main", color: "#fff", paddingLeft: "1.5rem", paddingRight: "1.5rem" }}  onClick={confirmRemoveMember} style={{ fontWeight: 600, borderRadius: '12px' }}>
             {t("project.xoa", "Xóa")}
-          </button>
+          </MuiBox>
         </Modal.Footer>
       </Modal>
 
@@ -678,6 +678,6 @@ const ProjectDetailPage = () => {
       if (refetchProjectDetails) refetchProjectDetails();
       setShowUpgradeModal(false);
     }} />
-    </div>;
+    </MuiBox>;
 };
 export default ProjectDetailPage;

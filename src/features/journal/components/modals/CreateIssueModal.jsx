@@ -1,9 +1,13 @@
 import { useTranslation } from "react-i18next";
 import { t } from "i18next";
 import { useState } from 'react';
-import { Modal, Form, Row, Col } from 'react-bootstrap';
+import { Modal, Form, Row, Col } from '@/shared/components/ui/muiAdapters';
 import PrimaryButton from '../../../../shared/components/Button/PrimaryButton';
 import { useJournalManagement } from '../../hooks/useJournalManagement';
+
+
+import MuiBox from '@mui/material/Box';
+
 
 /**
  * Component CreateIssueModal - Cửa sổ Modal bật lên để Admin thêm Số phát hành (Issue) mới vào Volume đang chọn.
@@ -74,25 +78,25 @@ export default function CreateIssueModal({
     handleClose();
   };
   return <Modal show={show} onHide={handleClose} centered backdrop="static" className="text-main">
-      <Modal.Header closeButton className="border-bottom-0 pb-0">
-        <Modal.Title className="font-display fw-bold h5 text-main">{t("journal.taoSoPhatHanhMoiCreateNewIssue")}</Modal.Title>
+      <Modal.Header sx={{ borderBottom: 0, paddingBottom: "0" }} closeButton >
+        <Modal.Title sx={{ fontWeight: 500, fontSize: "1.25rem", lineHeight: 1.2 }} className="font-display text-main">{t("journal.taoSoPhatHanhMoiCreateNewIssue")}</Modal.Title>
       </Modal.Header>
 
       <Form onSubmit={handleSubmit}>
-        <Modal.Body className="py-3 text-start">
-          
+        <Modal.Body sx={{ paddingTop: "1rem", paddingBottom: "1rem", textAlign: "left" }} >
+
           {/* Tên tiêu đề số / Tên Issue */}
-          <Form.Group className="mb-3">
-            <Form.Label className="fw-medium small text-main">{t("journal.tenIssueIssueName")}<span className="text-danger">*</span></Form.Label>
+          <Form.Group sx={{ marginBottom: "1rem" }} >
+            <Form.Label sx={{ fontWeight: 500, fontSize: "0.875em" }} className="text-main">{t("journal.tenIssueIssueName")}<MuiBox component="span" sx={{ color: "error.main" }} >*</MuiBox></Form.Label>
             <Form.Control type="text" name="issueName" value={formData.issueName} onChange={handleChange} isInvalid={!!errors.issueName} placeholder={t("journal.viDuSpecialIssueOnAppliedDeepL")} />
             <Form.Control.Feedback type="invalid">{errors.issueName}</Form.Control.Feedback>
           </Form.Group>
 
-          <Row className="g-3 mb-0">
+          <Row sx={{ gap: "1rem", marginBottom: "0" }} >
             {/* Số hiệu định vị số (Issue Number) */}
             <Col xs={12} sm={6}>
               <Form.Group>
-                <Form.Label className="fw-medium small text-main">{t("journal.soDinhDanhIssueNumber")}<span className="text-danger">*</span></Form.Label>
+                <Form.Label sx={{ fontWeight: 500, fontSize: "0.875em" }} className="text-main">{t("journal.soDinhDanhIssueNumber")}<MuiBox component="span" sx={{ color: "error.main" }} >*</MuiBox></Form.Label>
                 <Form.Control type="text" name="issueNumber" value={formData.issueNumber} onChange={handleChange} isInvalid={!!errors.issueNumber} placeholder={t("journal.viDuNo1No2Vol3No1")} />
                 <Form.Control.Feedback type="invalid">{errors.issueNumber}</Form.Control.Feedback>
               </Form.Group>
@@ -101,14 +105,14 @@ export default function CreateIssueModal({
             {/* Năm phát hành */}
             <Col xs={12} sm={6}>
               <Form.Group>
-                <Form.Label className="fw-medium small text-main">{t("journal.namPhatHanhPublicationYear")}</Form.Label>
+                <Form.Label sx={{ fontWeight: 500, fontSize: "0.875em" }} className="text-main">{t("journal.namPhatHanhPublicationYear")}</Form.Label>
                 <Form.Control type="number" name="publicationYear" value={formData.publicationYear} onChange={handleChange} />
               </Form.Group>
             </Col>
           </Row>
 
         </Modal.Body>
-        <Modal.Footer className="border-top-0 pt-0">
+        <Modal.Footer sx={{ borderTop: 0, paddingTop: "0" }} >
           <PrimaryButton variant="outline" onClick={handleClose}>{t("journal.huyBo")}</PrimaryButton>
           <PrimaryButton type="submit">{t("admin.taoIssue")}</PrimaryButton>
         </Modal.Footer>

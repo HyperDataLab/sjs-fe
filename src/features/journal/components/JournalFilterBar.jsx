@@ -1,6 +1,11 @@
 import { useTranslation } from "react-i18next";
-import { Row, Col, Form, Button, InputGroup } from 'react-bootstrap';
+import { Row, Col, Form, Button, InputGroup } from '@/shared/components/ui/muiAdapters';
 import PrimaryButton from '../../../shared/components/Button/PrimaryButton';
+import Icon from '../../../shared/components/Icon';
+
+
+import MuiBox from '@mui/material/Box';
+
 
 /**
  * Component JournalFilterBar - Thanh công cụ lọc, tìm kiếm và chuyển đổi giao diện hiển thị.
@@ -24,7 +29,7 @@ export default function JournalFilterBar({
   const {
     t
   } = useTranslation();
-  return <Row className="mb-4 align-items-center g-3">
+  return <Row sx={{ marginBottom: "1.5rem", alignItems: "center", gap: "1rem" }} >
       {/* Cột 1: Ô tìm kiếm Tạp chí theo Tên hoặc ISSN */}
       <Col xs={12} md={4}>
         <InputGroup>
@@ -48,17 +53,17 @@ export default function JournalFilterBar({
       </Col>
 
       {/* Cột 3: Nút Chuyển đổi hiển thị Table / Card và Nút thêm mới */}
-      <Col xs={6} md={5} className="d-flex justify-content-md-end align-items-center gap-2">
+      <Col sx={{ display: "flex", "@media (min-width:768px)": { justifyContent: "flex-end" }, alignItems: "center", gap: "0.5rem" }} xs={6} md={5} >
         {/* Toggle View Mode */}
-        <div className="btn-group" role="group">
+        <MuiBox component="div" sx={{ display: "inline-flex", verticalAlign: "middle", "& > :not(:first-of-type)": { ml: "-1px" } }}  role="group">
           <Button variant={viewMode === 'table' ? 'dark' : 'light'} onClick={() => onViewModeChange('table')} className="btn-custom-sm">
-            <i className="bi bi-table me-1"></i>{t("journal.bang")}</Button>
+            <Icon icon="lucide:table" width="16" sx={{ mr: 0.5 }} />{t("journal.bang")}</Button>
           <Button variant={viewMode === 'card' ? 'dark' : 'light'} onClick={() => onViewModeChange('card')} className="btn-custom-sm">
-            <i className="bi bi-grid-three-up me-1"></i>{t("journal.the")}</Button>
-        </div>
+            <Icon icon="lucide:layout-grid" width="16" sx={{ mr: 0.5 }} />{t("journal.the")}</Button>
+        </MuiBox>
 
         {/* Nút Tạo Tạp chí Mới (Add Journal) */}
-        <PrimaryButton className="gap-1" icon="bi:plus-circle" onClick={onOpenAddModal}>{t("journal.themTapChi")}</PrimaryButton>
+        <PrimaryButton sx={{ gap: "0.25rem" }}  icon="bi:plus-circle" onClick={onOpenAddModal}>{t("journal.themTapChi")}</PrimaryButton>
       </Col>
     </Row>;
 }

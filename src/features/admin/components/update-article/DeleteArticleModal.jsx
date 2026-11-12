@@ -5,7 +5,7 @@
  * - articleTitle: tên bài báo - hiển thị trong nội dung cảnh báo để
  *                  admin chắc chắn đang xóa đúng bài.
  */
-import { Modal } from 'react-bootstrap';
+import { Modal } from '@/shared/components/ui/muiAdapters';
 import Icon from '../../../../shared/components/Icon';
 
 export default function DeleteArticleModal({ show, onClose, onConfirm, articleTitle }) {

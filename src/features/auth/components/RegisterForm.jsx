@@ -6,7 +6,7 @@ import { t } from "i18next";
  * File: features\auth\components\RegisterForm.jsx
  */
 import { useState } from 'react';
-import { Form, Row, Col } from 'react-bootstrap';
+import { Form, Row, Col } from '@/shared/components/ui/muiAdapters';
 import { Link } from 'react-router-dom';
 import ROUTES from '../../../app/routes/routePaths';
 import InputField from '../../../shared/components/InputField';
@@ -17,6 +17,10 @@ import RoleSelect from './RoleSelect';
 import CheckboxField from './CheckboxField';
 import SubmitButton from './SubmitButton';
 import FormErrorMessage from './FormErrorMessage';
+
+
+import MuiBox from '@mui/material/Box';
+
 export default function RegisterForm({
   onSubmit,
   isLoading,
@@ -142,22 +146,22 @@ export default function RegisterForm({
       first_name: payload.first_name.trim()
     });
   };
-  const termsLabel = <span className="d-inline-flex flex-wrap align-items-center gap-1">{t("auth.toiDongYVoi")}{' '}
-      <a href="#" className="text-decoration-none" style={{
+  const termsLabel = <MuiBox component="span" sx={{ display: "inline-flex", flexWrap: "wrap", alignItems: "center", gap: "0.25rem" }} >{t("auth.toiDongYVoi")}{' '}
+      <MuiBox component="a" sx={{ textDecoration: "none" }} href="#"  style={{
       color: 'var(--primary)',
       fontWeight: 500
-    }} onClick={e => e.preventDefault()}>{t("auth.dieuKhoanDichVu")}</a>{' '}{t("article.va")}{' '}
-      <a href="#" className="text-decoration-none" style={{
+    }} onClick={e => e.preventDefault()}>{t("auth.dieuKhoanDichVu")}</MuiBox>{' '}{t("article.va")}{' '}
+      <MuiBox component="a" sx={{ textDecoration: "none" }} href="#"  style={{
       color: 'var(--primary)',
       fontWeight: 500
-    }} onClick={e => e.preventDefault()}>{t("auth.chinhSachBaoMat")}</a>
-    </span>;
+    }} onClick={e => e.preventDefault()}>{t("auth.chinhSachBaoMat")}</MuiBox>
+    </MuiBox>;
   return <Form onSubmit={handleSubmit} noValidate>
       {/* Server API Error Banner */}
       <FormErrorMessage message={apiError} />
 
       {/* Row: Last Name & First Name (Stacked on mobile, side-by-side on tablet/desktop) */}
-      <Row className="g-3">
+      <Row sx={{ gap: "1rem" }} >
         <Col xs={12} sm={6}>
           <InputField label={t("auth.ho", "Last Name")} name="last_name" value={formData.last_name} onChange={handleChange} onBlur={handleBlur} placeholder={t("auth.nguyen")} error={errors.last_name} required disabled={isLoading} />
         </Col>
@@ -173,7 +177,7 @@ export default function RegisterForm({
       <PasswordInput label={t("auth.matKhau")} name="password" value={formData.password} onChange={handleChange} onBlur={handleBlur} placeholder={t("auth.toiThieu8KyTu")} error={errors.password} required disabled={isLoading} />
 
       {/* Row: Date of Birth & Gender (Stacked on mobile, side-by-side on tablet/desktop) */}
-      <Row className="g-3">
+      <Row sx={{ gap: "1rem" }} >
         <Col xs={12} sm={6}>
           <DateInput label={t("auth.ngaySinh")} name="date_of_birth" value={formData.date_of_birth} onChange={handleChange} onBlur={handleBlur} error={errors.date_of_birth} required disabled={isLoading} />
         </Col>
@@ -192,14 +196,14 @@ export default function RegisterForm({
       <SubmitButton isLoading={isLoading} loadingText={t("auth.dangTaoTaiKhoan")} label={t("auth.taoTaiKhoan")} />
 
       {/* Link Redirect to Login */}
-      <div className="text-center mt-4 text-sm font-medium">
+      <MuiBox component="div" sx={{ textAlign: "center", marginTop: "1.5rem" }} className="text-sm font-medium">
         <span className="text-muted-custom" style={{
         color: '#94a3b8 !important'
       }}>{t("auth.daCoTaiKhoan")}</span>{' '}
-        <Link to={ROUTES.LOGIN} className="text-decoration-none transition-all" style={{
+        <MuiBox component={Link} sx={{ textDecoration: "none" }} to={ROUTES.LOGIN} className="transition-all" style={{
         color: 'var(--primary)',
         fontWeight: 600
-      }}>{t("signIn")}</Link>
-      </div>
+      }}>{t("signIn")}</MuiBox>
+      </MuiBox>
     </Form>;
 }

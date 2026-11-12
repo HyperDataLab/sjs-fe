@@ -4,8 +4,12 @@ import { useTranslation } from "react-i18next";
  *
  * File: features\keywords\components\KeywordListItem.jsx
  */
-import { Badge, Button } from 'react-bootstrap';
-import { Icon } from '@iconify/react';
+import { Badge, Button } from '@/shared/components/ui/muiAdapters';
+import Icon from '../../../shared/components/Icon.jsx';
+
+
+import MuiBox from '@mui/material/Box';
+
 
 /**
  * Card hiển thị một keyword trong danh sách.
@@ -20,7 +24,7 @@ export default function KeywordListItem({
   const keywordId = keyword.keyword_id || keyword.id || keyword.keywordId;
   const articleCount = Number(keyword.article_count || 0);
   return <div className="keyword-card">
-      <div className="d-flex align-items-start justify-content-between gap-3 mb-3">
+      <MuiBox component="div" sx={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: "1rem", marginBottom: "1rem" }} >
         <div>
           <div className="keyword-card-label">
             Research keyword
@@ -30,17 +34,17 @@ export default function KeywordListItem({
           </h3>
         </div>
         <Icon icon="lucide:sparkles" width="18" className="keyword-card-icon" />
-      </div>
+      </MuiBox>
 
-      <div className="d-flex align-items-center gap-2 flex-wrap mb-4">
+      <MuiBox component="div" sx={{ display: "flex", alignItems: "center", gap: "0.5rem", flexWrap: "wrap", marginBottom: "1.5rem" }} >
         {articleCount > 0 && <Badge className="keyword-count-badge">
             {articleCount}{t("author.baiBao")}</Badge>}
         {(keyword.topic_name || keyword.topic) && <Badge className="keyword-topic-badge">
             {keyword.topic_name || keyword.topic}
           </Badge>}
-      </div>
+      </MuiBox>
 
-      <Button id={`keyword-view-${keywordId || keyword.display_name}`} type="button" disabled={!keywordId} onClick={() => keywordId && onViewArticles && onViewArticles(keywordId)} className="keyword-card-action d-inline-flex align-items-center gap-2">
+      <Button sx={{ display: "inline-flex", alignItems: "center", gap: "0.5rem" }} id={`keyword-view-${keywordId || keyword.display_name}`} type="button" disabled={!keywordId} onClick={() => keywordId && onViewArticles && onViewArticles(keywordId)} className="keyword-card-action">
         <span>{t("article.xemBaiBaoLienQuan")}</span>
         <Icon icon="lucide:arrow-up-right" width="16" />
       </Button>

@@ -1,9 +1,13 @@
 import { useTranslation } from "react-i18next";
+
+
+import MuiBox from '@mui/material/Box';
+
 const SupportText = () => {
   const {
     t
   } = useTranslation();
-  return <p className="text-center mt-4" style={{
+  return <MuiBox component="p" sx={{ textAlign: "center", marginTop: "1.5rem" }}  style={{
     fontSize: '0.85rem',
     color: 'var(--text-muted, #6B6B6B)'
   }}>
@@ -13,6 +17,6 @@ const SupportText = () => {
       textDecoration: 'none',
       fontWeight: 500
     }}>{t("auth.lienHeChungToi")}</a>
-    </p>;
+    </MuiBox>;
 };
 export default SupportText;

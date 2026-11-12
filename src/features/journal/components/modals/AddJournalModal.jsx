@@ -1,9 +1,13 @@
 import { useTranslation } from "react-i18next";
 import { t } from "i18next";
 import { useState } from 'react';
-import { Modal, Form, Row, Col } from 'react-bootstrap';
+import { Modal, Form, Row, Col } from '@/shared/components/ui/muiAdapters';
 import PrimaryButton from '../../../../shared/components/Button/PrimaryButton';
 import { useJournalManagement } from '../../hooks/useJournalManagement';
+
+
+import MuiBox from '@mui/material/Box';
+
 
 /**
  * Component AddJournalModal - Form cửa sổ bật lên để Admin khởi tạo một Tạp chí mới.
@@ -78,49 +82,49 @@ export default function AddJournalModal({
     handleClose();
   };
   return <Modal show={show} onHide={handleClose} centered backdrop="static" className="text-main">
-      <Modal.Header closeButton className="border-bottom-0 pb-0">
-        <Modal.Title className="font-display fw-bold h4 text-main">{t("journal.themTapChiMoi")}</Modal.Title>
+      <Modal.Header sx={{ borderBottom: 0, paddingBottom: "0" }} closeButton >
+        <Modal.Title sx={{ fontWeight: 500, fontSize: "1.5rem", lineHeight: 1.2 }} className="font-display text-main">{t("journal.themTapChiMoi")}</Modal.Title>
       </Modal.Header>
-      
+
       <Form onSubmit={handleSubmit}>
-        <Modal.Body className="py-4">
-          
+        <Modal.Body sx={{ paddingTop: "1.5rem", paddingBottom: "1.5rem" }} >
+
           {/* Tên Journal */}
-          <Form.Group className="mb-3">
-            <Form.Label className="fw-medium small text-main">{t("journal.tenTapChiJournalTitle")}<span className="text-danger">*</span></Form.Label>
+          <Form.Group sx={{ marginBottom: "1rem" }} >
+            <Form.Label sx={{ fontWeight: 500, fontSize: "0.875em" }} className="text-main">{t("journal.tenTapChiJournalTitle")}<MuiBox component="span" sx={{ color: "error.main" }} >*</MuiBox></Form.Label>
             <Form.Control type="text" name="title" value={formData.title} onChange={handleChange} isInvalid={!!errors.title} placeholder={t("journal.nhapTenChinhThucCuaTapChi")} />
             <Form.Control.Feedback type="invalid">{errors.title}</Form.Control.Feedback>
           </Form.Group>
 
           {/* Mã số định danh quốc tế ISSN */}
-          <Row className="g-3 mb-3">
+          <Row sx={{ gap: "1rem", marginBottom: "1rem" }} >
             <Col xs={12} sm={6}>
               <Form.Group>
-                <Form.Label className="fw-medium small text-main">Print ISSN <span className="text-danger">*</span></Form.Label>
+                <Form.Label sx={{ fontWeight: 500, fontSize: "0.875em" }} className="text-main">Print ISSN <MuiBox component="span" sx={{ color: "error.main" }} >*</MuiBox></Form.Label>
                 <Form.Control type="text" name="issn" value={formData.issn} onChange={handleChange} isInvalid={!!errors.issn} placeholder={t("journal.viDu19374771")} />
                 <Form.Control.Feedback type="invalid">{errors.issn}</Form.Control.Feedback>
               </Form.Group>
             </Col>
             <Col xs={12} sm={6}>
               <Form.Group>
-                <Form.Label className="fw-medium small text-main">Online ISSN</Form.Label>
+                <Form.Label sx={{ fontWeight: 500, fontSize: "0.875em" }} className="text-main">Online ISSN</Form.Label>
                 <Form.Control type="text" name="onlineIssn" value={formData.onlineIssn} placeholder={t("journal.viDu1937478x")} />
               </Form.Group>
             </Col>
           </Row>
 
           {/* Nhà xuất bản */}
-          <Form.Group className="mb-3">
-            <Form.Label className="fw-medium small text-main">{t("admin.nhaXuatBanPublisher")}<span className="text-danger">*</span></Form.Label>
+          <Form.Group sx={{ marginBottom: "1rem" }} >
+            <Form.Label sx={{ fontWeight: 500, fontSize: "0.875em" }} className="text-main">{t("admin.nhaXuatBanPublisher")}<MuiBox component="span" sx={{ color: "error.main" }} >*</MuiBox></Form.Label>
             <Form.Control type="text" name="publisher" value={formData.publisher} onChange={handleChange} isInvalid={!!errors.publisher} placeholder={t("journal.nhapTenNhaXuatBan")} />
             <Form.Control.Feedback type="invalid">{errors.publisher}</Form.Control.Feedback>
           </Form.Group>
 
           {/* Danh mục phân loại và Lĩnh vực nghiên cứu */}
-          <Row className="g-3 mb-3">
+          <Row sx={{ gap: "1rem", marginBottom: "1rem" }} >
             <Col xs={12} sm={6}>
               <Form.Group>
-                <Form.Label className="fw-medium small text-main">{t("journal.danhMucSubjectCategory")}<span className="text-danger">*</span></Form.Label>
+                <Form.Label sx={{ fontWeight: 500, fontSize: "0.875em" }} className="text-main">{t("journal.danhMucSubjectCategory")}<MuiBox component="span" sx={{ color: "error.main" }} >*</MuiBox></Form.Label>
                 <Form.Select name="subjectCategory" value={formData.subjectCategory} onChange={handleChange} isInvalid={!!errors.subjectCategory}>
                   <option value="">{t("journal.chonDanhMuc")}</option>
                   <option value="Computer Science">Computer Science</option>
@@ -133,7 +137,7 @@ export default function AddJournalModal({
             </Col>
             <Col xs={12} sm={6}>
               <Form.Group>
-                <Form.Label className="fw-medium small text-main">{t("journal.linhVucSubjectArea")}<span className="text-danger">*</span></Form.Label>
+                <Form.Label sx={{ fontWeight: 500, fontSize: "0.875em" }} className="text-main">{t("journal.linhVucSubjectArea")}<MuiBox component="span" sx={{ color: "error.main" }} >*</MuiBox></Form.Label>
                 <Form.Control type="text" name="subjectArea" value={formData.subjectArea} onChange={handleChange} isInvalid={!!errors.subjectArea} placeholder={t("journal.viDuArtificialIntelligence")} />
                 <Form.Control.Feedback type="invalid">{errors.subjectArea}</Form.Control.Feedback>
               </Form.Group>
@@ -141,13 +145,13 @@ export default function AddJournalModal({
           </Row>
 
           {/* Nhà xuất bản */}
-          <Form.Group className="mb-0">
-            <Form.Label className="fw-medium small text-main">{t("admin.nhaXuatBanPublisher")}</Form.Label>
+          <Form.Group sx={{ marginBottom: "0" }} >
+            <Form.Label sx={{ fontWeight: 500, fontSize: "0.875em" }} className="text-main">{t("admin.nhaXuatBanPublisher")}</Form.Label>
             <Form.Control type="text" name="publisher" value={formData.publisher} placeholder={t("journal.nhapTenGiaoSuTienSi")} />
           </Form.Group>
 
         </Modal.Body>
-        <Modal.Footer className="border-top-0 pt-0">
+        <Modal.Footer sx={{ borderTop: 0, paddingTop: "0" }} >
           <PrimaryButton variant="outline" onClick={handleClose}>{t("journal.huyBo")}</PrimaryButton>
           <PrimaryButton type="submit">{t("journal.taoTapChi")}</PrimaryButton>
         </Modal.Footer>

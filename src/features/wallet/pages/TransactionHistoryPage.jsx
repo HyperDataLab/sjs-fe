@@ -1,8 +1,11 @@
 import { useTranslation } from "react-i18next";
 import { useEffect, useState } from 'react';
-import { Icon } from '@iconify/react';
+import Icon from '../../../shared/components/Icon.jsx';
 import { getWalletTransactions } from '../api/walletApi';
-import './TransactionHistoryPage.css';
+import { getClassNameSx, stripMappedClassNames } from '../../../shared/theme/classNameSx';
+
+import MuiBox from '@mui/material/Box';
+
 export default function TransactionHistoryPage() {
   const { t } = useTranslation();
   const [transactions, setTransactions] = useState([]);
@@ -120,22 +123,22 @@ export default function TransactionHistoryPage() {
 
       {/* Filter Tabs */}
       <div className="tx-history-filters">
-        <button type="button" className={`tx-filter-tab ${filterType === '' ? 'active' : ''}`} onClick={() => {
+        <MuiBox component="button" sx={getClassNameSx(`tx-filter-tab ${filterType === '' ? 'active' : ''}`)} type="button" className={stripMappedClassNames(`tx-filter-tab ${filterType === '' ? 'active' : ''}`)} onClick={() => {
         setFilterType('');
         setPage(1);
-      }}>{t("dashboard.tatCa")}</button>
-        <button type="button" className={`tx-filter-tab ${filterType === 'deposit' ? 'active' : ''}`} onClick={() => {
+      }}>{t("dashboard.tatCa")}</MuiBox>
+        <MuiBox component="button" sx={getClassNameSx(`tx-filter-tab ${filterType === 'deposit' ? 'active' : ''}`)} type="button" className={stripMappedClassNames(`tx-filter-tab ${filterType === 'deposit' ? 'active' : ''}`)} onClick={() => {
         setFilterType('deposit');
         setPage(1);
-      }}>{t("wallet.napCoin1")}</button>
-        <button type="button" className={`tx-filter-tab ${filterType === 'spend' ? 'active' : ''}`} onClick={() => {
+      }}>{t("wallet.napCoin1")}</MuiBox>
+        <MuiBox component="button" sx={getClassNameSx(`tx-filter-tab ${filterType === 'spend' ? 'active' : ''}`)} type="button" className={stripMappedClassNames(`tx-filter-tab ${filterType === 'spend' ? 'active' : ''}`)} onClick={() => {
         setFilterType('spend');
         setPage(1);
-      }}>{t("wallet.tieuCoin")}</button>
-        <button type="button" className={`tx-filter-tab ${filterType === 'refund' ? 'active' : ''}`} onClick={() => {
+      }}>{t("wallet.tieuCoin")}</MuiBox>
+        <MuiBox component="button" sx={getClassNameSx(`tx-filter-tab ${filterType === 'refund' ? 'active' : ''}`)} type="button" className={stripMappedClassNames(`tx-filter-tab ${filterType === 'refund' ? 'active' : ''}`)} onClick={() => {
         setFilterType('refund');
         setPage(1);
-      }}>{t("wallet.hoanCoin")}</button>
+      }}>{t("wallet.hoanCoin")}</MuiBox>
       </div>
 
       {/* Main Table Card */}

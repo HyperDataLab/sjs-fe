@@ -4,11 +4,15 @@ import { useTranslation } from "react-i18next";
  *
  * File: features\dashboard\components\TopAuthorsTable.jsx
  */
-import { Icon } from '@iconify/react';
+import Icon from '../../../shared/components/Icon.jsx';
 import { useNavigate } from 'react-router-dom';
 import { EntityCard } from '../../../shared/components/Card';
 import { formatCount } from '../../../shared/utils/formatNumber';
 import { truncate } from '../../../shared/utils/formatNumber';
+
+
+import MuiBox from '@mui/material/Box';
+
 
 /** Rank badge — top 3 có màu riêng */
 function RankBadge({
@@ -35,7 +39,7 @@ function RankBadge({
     color: 'var(--text-muted)',
     icon: null
   };
-  return <div className="d-flex align-items-center justify-content-center rounded-circle flex-shrink-0" style={{
+  return <MuiBox component="div" sx={{ display: "flex", alignItems: "center", justifyContent: "center", borderRadius: "50%", flexShrink: 0 }}  style={{
     width: 28,
     height: 28,
     backgroundColor: cfg.bg,
@@ -44,14 +48,14 @@ function RankBadge({
     fontWeight: 700
   }}>
       {cfg.icon ? <Icon icon={cfg.icon} width={12} /> : rank}
-    </div>;
+    </MuiBox>;
 }
 
 /** Author field badge */
 function FieldBadge({
   field
 }) {
-  return <span className="px-2 py-1 rounded-pill d-none d-sm-inline" style={{
+  return <MuiBox component="span" sx={{ paddingLeft: "0.5rem", paddingRight: "0.5rem", paddingTop: "0.25rem", paddingBottom: "0.25rem", borderRadius: "50rem", display: "none", "@media (min-width:576px)": { display: "inline" } }}  style={{
     fontSize: '0.65rem',
     fontWeight: 600,
     backgroundColor: 'var(--bg-section)',
@@ -60,7 +64,7 @@ function FieldBadge({
     justifySelf: 'start'
   }}>
       {field}
-    </span>;
+    </MuiBox>;
 }
 
 /** Author avatar initials */
@@ -68,7 +72,7 @@ function AuthorAvatar({
   name
 }) {
   const initials = (name || '?').split(' ').slice(0, 2).map(w => w[0]?.toUpperCase() ?? '').join('');
-  return <div className="d-flex align-items-center justify-content-center flex-shrink-0 text-white" style={{
+  return <MuiBox component="div" sx={{ display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, color: "#fff" }}  style={{
     width: 32,
     height: 32,
     borderRadius: '50%',
@@ -77,7 +81,7 @@ function AuthorAvatar({
     fontWeight: 700
   }}>
       {initials}
-    </div>;
+    </MuiBox>;
 }
 
 /**
@@ -95,7 +99,7 @@ export default function TopAuthorsTable({
     t
   } = useTranslation();
   const navigate = useNavigate();
-  const actions = onViewAll ? <button className="btn btn-link p-0 text-decoration-none" onClick={onViewAll} style={{
+  const actions = onViewAll ? <MuiBox component="button" sx={{ display: "inline-flex", alignItems: "center", justifyContent: "center", px: "0.75rem", py: "0.375rem", border: 0, borderRadius: "0.375rem", fontSize: "1rem", fontWeight: 400, lineHeight: 1.5, cursor: "pointer", textDecoration: "none", bgcolor: "transparent", color: "primary.main", padding: "0" }}  onClick={onViewAll} style={{
     fontSize: '0.75rem',
     color: 'var(--primary)'
   }} onMouseEnter={e => {
@@ -103,52 +107,52 @@ export default function TopAuthorsTable({
     e.currentTarget.style.textUnderlineOffset = '4px';
   }} onMouseLeave={e => {
     e.currentTarget.style.textDecoration = 'none';
-  }}>{t("dashboard.bangXepHang")}</button> : null;
-  const description = loading ? <div className="p-4">
-      {[1, 2, 3, 4, 5].map(i => <div key={i} className="d-flex align-items-center gap-3 py-2">
-          <div className="skeleton-shimmer rounded-circle" style={{
+  }}>{t("dashboard.bangXepHang")}</MuiBox> : null;
+  const description = loading ? <MuiBox component="div" sx={{ padding: "1.5rem" }} >
+      {[1, 2, 3, 4, 5].map(i => <MuiBox component="div" sx={{ display: "flex", alignItems: "center", gap: "1rem", paddingTop: "0.5rem", paddingBottom: "0.5rem" }} key={i} >
+          <MuiBox component="div" sx={{ borderRadius: "50%" }} className="skeleton-shimmer" style={{
         width: 28,
         height: 28
       }} />
-          <div className="skeleton-shimmer rounded-circle" style={{
+          <MuiBox component="div" sx={{ borderRadius: "50%" }} className="skeleton-shimmer" style={{
         width: 32,
         height: 32
       }} />
-          <div className="flex-grow-1">
-            <div className="skeleton-shimmer rounded mb-1" style={{
+          <MuiBox component="div" sx={{ flexGrow: 1 }} >
+            <MuiBox component="div" sx={{ borderRadius: "0.375rem", marginBottom: "0.25rem" }} className="skeleton-shimmer" style={{
           width: '50%',
           height: 13
         }} />
-            <div className="skeleton-shimmer rounded" style={{
+            <MuiBox component="div" sx={{ borderRadius: "0.375rem" }} className="skeleton-shimmer" style={{
           width: '30%',
           height: 10
         }} />
-          </div>
-          <div className="skeleton-shimmer rounded" style={{
+          </MuiBox>
+          <MuiBox component="div" sx={{ borderRadius: "0.375rem" }} className="skeleton-shimmer" style={{
         width: 60,
         height: 13
       }} />
-        </div>)}
-    </div> : error ? <div className="text-center py-5 px-4">
+        </MuiBox>)}
+    </MuiBox> : error ? <MuiBox component="div" sx={{ textAlign: "center", paddingTop: "3rem", paddingBottom: "3rem", paddingLeft: "1.5rem", paddingRight: "1.5rem" }} >
       <Icon icon="lucide:alert-circle" width={32} style={{
       color: '#ef4444'
     }} />
-      <p className="text-muted-custom mt-2 mb-0" style={{
+      <MuiBox component="p" sx={{ marginTop: "0.5rem", marginBottom: "0" }} className="text-muted-custom" style={{
       fontSize: '0.8rem'
-    }}>{error}</p>
-    </div> : authors.length === 0 ? <div className="text-center py-5 px-4">
+    }}>{error}</MuiBox>
+    </MuiBox> : authors.length === 0 ? <MuiBox component="div" sx={{ textAlign: "center", paddingTop: "3rem", paddingBottom: "3rem", paddingLeft: "1.5rem", paddingRight: "1.5rem" }} >
       <Icon icon="lucide:users" width={36} style={{
       color: 'var(--text-muted)'
     }} />
-      <p className="text-main fw-semibold mt-2 mb-1" style={{
+      <MuiBox component="p" sx={{ fontWeight: 600, marginTop: "0.5rem", marginBottom: "0.25rem" }} className="text-main" style={{
       fontSize: '0.85rem'
-    }}>{t("dashboard.chuaCoDuLieuTacGia")}</p>
-      <p className="text-muted-custom mb-0" style={{
+    }}>{t("dashboard.chuaCoDuLieuTacGia")}</MuiBox>
+      <MuiBox component="p" sx={{ marginBottom: "0" }} className="text-muted-custom" style={{
       fontSize: '0.75rem'
-    }}>{t("dashboard.duLieuLeaderboardSeHienThiODay")}</p>
-    </div> : <div>
+    }}>{t("dashboard.duLieuLeaderboardSeHienThiODay")}</MuiBox>
+    </MuiBox> : <div>
       {/* Table header */}
-      <div className="d-none d-md-grid px-4 py-2 mb-2 rounded-3 mx-2 mt-2" style={{
+      <MuiBox component="div" sx={{ display: "none", "@media (min-width:768px)": { display: "grid" }, paddingLeft: "1.5rem", paddingRight: "1.5rem", paddingTop: "0.5rem", paddingBottom: "0.5rem", marginBottom: "0.5rem", borderRadius: "0.5rem", marginLeft: "0.5rem", marginRight: "0.5rem", marginTop: "0.5rem" }}  style={{
       gridTemplateColumns: '40px 200px 1fr 80px 90px',
       gap: '12px',
       alignItems: 'center',
@@ -160,10 +164,10 @@ export default function TopAuthorsTable({
         textTransform: 'uppercase',
         letterSpacing: '0.05em'
       }}>{h}</span>)}
-      </div>
+      </MuiBox>
 
       {/* Rows */}
-      <div className="d-flex flex-column gap-2 pb-3 px-2">
+      <MuiBox component="div" sx={{ display: "flex", flexDirection: "column", gap: "0.5rem", paddingBottom: "1rem", paddingLeft: "0.5rem", paddingRight: "0.5rem" }} >
       {authors.map((author, i) => {
       const name = author.display_name ?? author.full_name ?? author.author_name ?? author.name ?? 'Unknown';
       const orcid = author.orcid ?? null;
@@ -171,7 +175,7 @@ export default function TopAuthorsTable({
       const articles = author.article_count ?? author.papers ?? author.works_count ?? 0;
       const citations = author.citation_count ?? author.citations ?? author.cited_by_count ?? 0;
       const rank = i + 1;
-      return <div key={author.author_id ?? author.id ?? i} className="d-flex d-md-grid px-3 py-3 align-items-center gap-3 font-display rounded-4" style={{
+      return <MuiBox component="div" sx={{ display: "flex", "@media (min-width:768px)": { display: "grid" }, paddingLeft: "1rem", paddingRight: "1rem", paddingTop: "1rem", paddingBottom: "1rem", alignItems: "center", gap: "1rem", borderRadius: "0.75rem" }} key={author.author_id ?? author.id ?? i} className="font-display" style={{
         gridTemplateColumns: '40px 200px 1fr 80px 90px',
         cursor: 'pointer',
         transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)',
@@ -188,23 +192,23 @@ export default function TopAuthorsTable({
         e.currentTarget.style.boxShadow = 'none';
       }}>
             <RankBadge rank={rank} />
-            <div className="d-flex align-items-center gap-2">
+            <MuiBox component="div" sx={{ display: "flex", alignItems: "center", gap: "0.5rem" }} >
               <AuthorAvatar name={name} />
-              <div className="text-truncate" style={{
+              <MuiBox component="div" sx={{ overflow: "hidden", whiteSpace: "nowrap", textOverflow: "ellipsis" }}  style={{
             minWidth: 0
           }}>
-                <div className="text-main fw-semibold" style={{
+                <MuiBox component="div" sx={{ fontWeight: 600 }} className="text-main" style={{
               fontSize: '0.85rem'
             }}>
                   {truncate(name, 24)}
-                </div>
+                </MuiBox>
                 {orcid ? <div className="text-muted-custom" style={{
               fontSize: '0.75rem'
             }}>
                     {truncate(orcid, 32)}
                   </div> : null}
-              </div>
-            </div>
+              </MuiBox>
+            </MuiBox>
             <FieldBadge field={field == "" ? "—" : field} />
             <span className="text-muted-custom" style={{
           fontSize: '0.85rem'
@@ -218,9 +222,9 @@ export default function TopAuthorsTable({
         }}>
               ↑ {formatCount(citations)}
             </span>
-          </div>;
+          </MuiBox>;
     })}
-      </div>
+      </MuiBox>
     </div>;
   return <EntityCard title={t("dashboard.topAuthorsTuanNay")} actions={actions} description={description} bodyClassName="flex-column align-items-stretch" />;
 }

@@ -1,8 +1,12 @@
 import { useTranslation } from "react-i18next";
 import { t } from "i18next";
-import { Table } from 'react-bootstrap';
-import { Icon } from '@iconify/react';
+import { Table } from '@/shared/components/ui/muiAdapters';
+import Icon from '../../../../shared/components/Icon.jsx';
 import { StateCard } from '../../../../shared/components/Card';
+import { getClassNameSx, stripMappedClassNames } from '../../../../shared/theme/classNameSx';
+
+import MuiBox from '@mui/material/Box';
+
 const getIssueId = issue => issue.issue_id || issue.id;
 const getIssueNumber = issue => issue.issue_number ?? issue.issueNumber ?? '—';
 const getIssueYear = issue => issue.publication_year || issue.publicationYear;
@@ -21,22 +25,22 @@ export default function IssueTable({
 }) {
   const { t: _t } = useTranslation();
   if (!issues || issues.length === 0) {
-    return <StateCard variant="neutral" icon="lucide:calendar-dashed" title="No issues found" description="This volume does not have any issues created yet." className="my-4 border-dashed" />;
+    return <StateCard sx={{ marginTop: "1.5rem", marginBottom: "1.5rem" }} variant="neutral" icon="lucide:calendar-dashed" title="No issues found" description="This volume does not have any issues created yet." className="border-dashed" />;
   }
-  return <div className="table-responsive rounded-3 border shadow-sm">
-      <Table hover className="align-middle mb-0 text-start bg-white">
-        <thead className="table-light">
+  return <MuiBox component="div" sx={{ width: "100%", overflowX: "auto", WebkitOverflowScrolling: "touch", borderRadius: "0.5rem", border: "1px solid #dee2e6", boxShadow: "0 .125rem .25rem rgba(0,0,0,.075)" }} >
+      <Table sx={{ verticalAlign: "middle", marginBottom: "0", textAlign: "left", bgcolor: "background.paper" }} hover >
+        <MuiBox component="thead" sx={{ "& th, & td": { bgcolor: "#f8f9fa" } }} >
           <tr>
-            <th className="py-3 ps-4 text-muted-custom" style={{
+            <MuiBox component="th" sx={{ paddingTop: "1rem", paddingBottom: "1rem", paddingInlineStart: "1.5rem" }} className="text-muted-custom" style={{
             width: '240px'
-          }}>Issue Details</th>
-            <th className="py-3 text-muted-custom">Publication Year</th>
-            <th className="py-3 text-muted-custom">Articles</th>
-            <th className="py-3 pe-4 text-muted-custom" style={{
+          }}>Issue Details</MuiBox>
+            <MuiBox component="th" sx={{ paddingTop: "1rem", paddingBottom: "1rem" }} className="text-muted-custom">Publication Year</MuiBox>
+            <MuiBox component="th" sx={{ paddingTop: "1rem", paddingBottom: "1rem" }} className="text-muted-custom">Articles</MuiBox>
+            <MuiBox component="th" sx={{ paddingTop: "1rem", paddingBottom: "1rem", paddingInlineEnd: "1.5rem" }} className="text-muted-custom" style={{
             width: '120px'
-          }}>Status</th>
+          }}>Status</MuiBox>
           </tr>
-        </thead>
+        </MuiBox>
         <tbody>
           {issues.map(issue => {
           const issueId = getIssueId(issue);
@@ -44,31 +48,31 @@ export default function IssueTable({
           const isPublished = issueStatus === 'Published' || issueStatus === 'Active';
           const articleCount = articleCountsByIssueId[issueId];
           return <tr key={issueId} className="transition-hover">
-                <td className="py-3 ps-4">
-                  <div className="fw-bold text-main font-monospace">
+                <MuiBox component="td" sx={{ paddingTop: "1rem", paddingBottom: "1rem", paddingInlineStart: "1.5rem" }} >
+                  <MuiBox component="div" sx={{ fontWeight: 700, fontFamily: "monospace" }} className="text-main">
                     {getIssueNumber(issue)}
-                  </div>
+                  </MuiBox>
                   <small className="text-muted-custom font-display">
                     {issue.issueName || issue.title || `Issue ${getIssueNumber(issue)}`}
                   </small>
-                </td>
+                </MuiBox>
 
-                <td className="text-muted-custom font-display small">
+                <MuiBox component="td" sx={{ fontSize: "0.875em" }} className="text-muted-custom font-display">
                   {getIssueYear(issue) || '—'}
-                </td>
+                </MuiBox>
 
-                <td className="text-main fw-medium font-monospace">
+                <MuiBox component="td" sx={{ fontWeight: 500, fontFamily: "monospace" }} className="text-main">
                   {typeof articleCount === 'number' ? articleCount : t("admin.chuaCoApiArticleTheoIssueidDaX")}
-                </td>
+                </MuiBox>
 
-                <td className="pe-4">
-                  <span className={`badge px-2.5 py-1.5 rounded text-uppercase ${isPublished ? 'admin-status-badge admin-status-badge--accent' : issueStatus === 'Deleted' ? 'admin-status-badge admin-status-badge--muted' : 'admin-status-badge admin-status-badge--warning'}`}>
+                <MuiBox component="td" sx={{ paddingInlineEnd: "1.5rem" }} >
+                  <MuiBox component="span" sx={getClassNameSx(`badge px-2.5 py-1.5 rounded text-uppercase ${isPublished ? 'admin-status-badge admin-status-badge--accent' : issueStatus === 'Deleted' ? 'admin-status-badge admin-status-badge--muted' : 'admin-status-badge admin-status-badge--warning'}`)} className={stripMappedClassNames(`badge px-2.5 py-1.5 rounded text-uppercase ${isPublished ? 'admin-status-badge admin-status-badge--accent' : issueStatus === 'Deleted' ? 'admin-status-badge admin-status-badge--muted' : 'admin-status-badge admin-status-badge--warning'}`)}>
                     {issueStatus}
-                  </span>
-                </td>
+                  </MuiBox>
+                </MuiBox>
               </tr>;
         })}
         </tbody>
       </Table>
-    </div>;
+    </MuiBox>;
 }

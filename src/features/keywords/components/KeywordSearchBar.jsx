@@ -5,8 +5,8 @@ import { useTranslation } from "react-i18next";
  * File: features\keywords\components\KeywordSearchBar.jsx
  */
 import { useState, useEffect } from 'react';
-import { InputGroup, Form, Button } from 'react-bootstrap';
-import { Icon } from '@iconify/react';
+import { InputGroup, Form, Button } from '@/shared/components/ui/muiAdapters';
+import Icon from '../../../shared/components/Icon.jsx';
 
 /**
  * Thanh tìm kiếm keyword với nút submit và reset.

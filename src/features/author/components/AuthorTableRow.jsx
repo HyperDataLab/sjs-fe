@@ -6,6 +6,10 @@ import { useTranslation } from "react-i18next";
 
 import { useNavigate } from 'react-router-dom';
 import AuthorAvatar from './AuthorAvatar';
+
+
+import MuiBox from '@mui/material/Box';
+
 export default function AuthorTableRow({
   author,
   index
@@ -33,23 +37,23 @@ export default function AuthorTableRow({
   const handleRowClick = () => {
     if (id) navigate(`/authors/${id}`);
   };
-  return <tr onClick={handleRowClick} className="author-table-row align-middle">
-      <td className="author-table-index text-center">{index}</td>
+  return <MuiBox component="tr" sx={{ verticalAlign: "middle" }} onClick={handleRowClick} className="author-table-row">
+      <MuiBox component="td" sx={{ textAlign: "center" }} className="author-table-index">{index}</MuiBox>
       <td>
-        <div className="d-flex align-items-center gap-2">
+        <MuiBox component="div" sx={{ display: "flex", alignItems: "center", gap: "0.5rem" }} >
           <AuthorAvatar name={name} url={avatarUrl} size="sm" bgColor={avatarColor} />
           <div className="min-w-0">
-            <div className="author-table-name text-truncate">{name}</div>
+            <MuiBox component="div" sx={{ overflow: "hidden", whiteSpace: "nowrap", textOverflow: "ellipsis" }} className="author-table-name">{name}</MuiBox>
             {orcid && orcid !== '—' && <div className="author-table-orcid">ORCID: {orcid}</div>}
           </div>
-        </div>
+        </MuiBox>
       </td>
-      <td className="author-table-cell author-table-org text-truncate">{institutionText}</td>
+      <MuiBox component="td" sx={{ overflow: "hidden", whiteSpace: "nowrap", textOverflow: "ellipsis" }} className="author-table-cell author-table-org">{institutionText}</MuiBox>
       <td className="author-table-cell">{formatLocalNumber(articlesCount)}</td>
       <td className="author-table-cell">{formatLocalNumber(citations)}</td>
       <td className="author-table-cell author-table-hindex">{hIndex}</td>
       <td>
         <span className="author-table-link">{t("author.chiTiet")}</span>
       </td>
-    </tr>;
+    </MuiBox>;
 }

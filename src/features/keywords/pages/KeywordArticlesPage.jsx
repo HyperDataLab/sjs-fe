@@ -4,14 +4,16 @@ import { useTranslation } from "react-i18next";
  *
  * File: features\keywords\pages\KeywordArticlesPage.jsx
  */
-import { Container } from 'react-bootstrap';
+import { Container } from '@/shared/components/ui/muiAdapters';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Icon } from '@iconify/react';
+import Icon from '../../../shared/components/Icon.jsx';
 import Header from '../../landing/components/Header';
 import LoadingSkeleton from '../../../shared/components/LoadingSkeleton';
 import KeywordArticleList from '../components/KeywordArticleList';
 import { useKeywordArticles } from '../hooks/useKeywordArticles';
-import './KeywordArticlesPage.css';
+
+
+import MuiBox from '@mui/material/Box';
 
 /**
  * Trang bài báo theo Keyword.
@@ -41,34 +43,34 @@ export default function KeywordArticlesPage() {
   const handleRetry = () => {
     handlePageChange(1);
   };
-  return <div className="grid-bg keyword-articles-page d-flex flex-column">
+  return <MuiBox component="div" sx={{ display: "flex", flexDirection: "column" }} className="grid-bg keyword-articles-page">
       <Header />
 
-      <Container className="pb-5 flex-grow-1">
-        <nav aria-label="breadcrumb" className="keyword-articles-breadcrumb mb-4">
-          <ol className="breadcrumb">
-            <li className="breadcrumb-item">
+      <Container sx={{ paddingBottom: "3rem", flexGrow: 1 }} >
+        <MuiBox component="nav" sx={{ marginBottom: "1.5rem" }} aria-label="breadcrumb" className="keyword-articles-breadcrumb">
+          <MuiBox component="ol" sx={{ display: "flex", flexWrap: "wrap", padding: 0, marginBottom: "1rem", listStyle: "none" }} >
+            <MuiBox component="li" sx={{ display: "flex", alignItems: "center", "&:not(:last-child)::after": { content: "\"/\"", px: "0.5rem", color: "text.secondary" } }} >
               <span role="button" tabIndex={0} onClick={() => navigate('/keywords')} onKeyDown={e => e.key === 'Enter' && navigate('/keywords')} className="keyword-articles-back-link">
                 Keywords
               </span>
-            </li>
-            <li className="breadcrumb-item active text-main fw-semibold" aria-current="page">{t("keywords.baiBaoTheoKeyword")}</li>
-          </ol>
-        </nav>
+            </MuiBox>
+            <MuiBox component="li" sx={{ display: "flex", alignItems: "center", "&:not(:last-child)::after": { content: "\"/\"", px: "0.5rem", color: "text.secondary" }, fontWeight: 600 }} className="active text-main" aria-current="page">{t("keywords.baiBaoTheoKeyword")}</MuiBox>
+          </MuiBox>
+        </MuiBox>
 
         <section className="keyword-articles-hero">
           <div className="keyword-articles-hero__content">
             {loadingKeyword ? <>
-                <LoadingSkeleton width="200px" height="14px" className="mb-3" />
-                <LoadingSkeleton width="400px" height="36px" className="mb-3" />
+                <LoadingSkeleton sx={{ marginBottom: "1rem" }} width="200px" height="14px"  />
+                <LoadingSkeleton sx={{ marginBottom: "1rem" }} width="400px" height="36px"  />
                 <LoadingSkeleton width="280px" height="18px" />
-              </> : keywordError ? <div className="d-flex align-items-center gap-3">
+              </> : keywordError ? <MuiBox component="div" sx={{ display: "flex", alignItems: "center", gap: "1rem" }} >
                 <Icon icon="lucide:alert-circle" width="28" className="keyword-article-state-icon" />
                 <div>
                   <h1 className="keyword-articles-empty-title">{t("keywords.keywordKhongTimThay")}</h1>
-                  <p className="text-muted-custom mb-0">ID: {keywordId}</p>
+                  <MuiBox component="p" sx={{ marginBottom: "0" }} className="text-muted-custom">ID: {keywordId}</MuiBox>
                 </div>
-              </div> : keyword ? <div>
+              </MuiBox> : keyword ? <div>
                 <div className="keyword-articles-eyebrow">
                   <Icon icon="lucide:tag" width="16" />
                   <span>
@@ -88,8 +90,8 @@ export default function KeywordArticlesPage() {
         <div>
           <div className="keyword-articles-heading">
             <h2 className="keyword-articles-section-title">{t("keywords.baiBaoLienQuan")}</h2>
-            <button type="button" className="btn btn-link btn-sm d-flex align-items-center gap-2 keyword-articles-return" onClick={() => navigate('/keywords')}>
-              <Icon icon="lucide:arrow-left" width="16" />{t("keywords.quayLaiKeywords")}</button>
+            <MuiBox component="button" sx={{ display: "flex", alignItems: "center", justifyContent: "center", px: "0.5rem", py: "0.25rem", border: 0, borderRadius: "0.25rem", fontSize: "0.875rem", fontWeight: 400, lineHeight: 1.5, cursor: "pointer", textDecoration: "underline", bgcolor: "transparent", color: "primary.main", gap: "0.5rem" }} type="button" className="keyword-articles-return" onClick={() => navigate('/keywords')}>
+              <Icon icon="lucide:arrow-left" width="16" />{t("keywords.quayLaiKeywords")}</MuiBox>
           </div>
 
           <KeywordArticleList articles={articles} loading={loadingArticles} error={articlesError} pagination={pagination} onPageChange={page => {
@@ -101,5 +103,5 @@ export default function KeywordArticlesPage() {
         }} onViewDetail={handleViewDetail} onRetry={handleRetry} />
         </div>
       </Container>
-    </div>;
+    </MuiBox>;
 }

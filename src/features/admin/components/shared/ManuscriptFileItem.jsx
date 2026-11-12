@@ -1,6 +1,6 @@
 import Icon from '../../../../shared/components/Icon';
 
-// Map file type -> icon Iconify hiển thị ở đầu mỗi dòng file
+// Map file types to Heroicons displayed beside each file.
 const FILE_TYPE_ICON = {
   pdf: 'lucide:file-text',
   zip: 'lucide:file-archive',

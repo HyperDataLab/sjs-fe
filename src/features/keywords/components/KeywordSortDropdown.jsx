@@ -4,8 +4,12 @@ import { useTranslation } from "react-i18next";
  *
  * File: features\keywords\components\KeywordSortDropdown.jsx
  */
-import { Dropdown } from 'react-bootstrap';
-import { Icon } from '@iconify/react';
+import { Dropdown } from '@/shared/components/ui/muiAdapters';
+import Icon from '../../../shared/components/Icon.jsx';
+
+
+import MuiBox from '@mui/material/Box';
+
 
 /**
  * Dropdown sắp xếp danh sách keyword.
@@ -37,10 +41,10 @@ export default function KeywordSortDropdown({
   const active = keywordSortOptions.find(option => option.sortBy === sortBy && option.sortOrder === sortOrder) || keywordSortOptions[0];
   return <Dropdown align="end">
       <Dropdown.Toggle id="keyword-sort-dropdown" className="keyword-sort-toggle">
-        <span className="d-inline-flex align-items-center gap-2">
+        <MuiBox component="span" sx={{ display: "inline-flex", alignItems: "center", gap: "0.5rem" }} >
           <Icon icon="lucide:arrow-up-down" width="16" />
           {active.label}
-        </span>
+        </MuiBox>
       </Dropdown.Toggle>
 
       <Dropdown.Menu className="keyword-sort-menu">

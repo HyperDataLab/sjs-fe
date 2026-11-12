@@ -4,8 +4,12 @@
  * File: features\landing\components\Footer.jsx
  */
 import { useTranslation } from 'react-i18next';
-import Container from 'react-bootstrap/Container';
+import { Container } from '@/shared/components/ui/muiAdapters';
 import Icon from '../../../shared/components/Icon';
+
+
+import MuiBox from '@mui/material/Box';
+
 
 export default function Footer() {
   const { t } = useTranslation();
@@ -19,19 +23,19 @@ export default function Footer() {
   ];
 
   return (
-    <footer 
-      className="py-4"
+    <MuiBox component="footer" sx={{ paddingTop: "1.5rem", paddingBottom: "1.5rem" }}
+
       style={{
         backgroundColor: 'var(--bg-section)',
         borderTop: '1px solid var(--border)'
       }}
     >
       <Container>
-        <div className="d-flex flex-column flex-md-row align-items-center justify-content-between gap-4">
+        <MuiBox component="div" sx={{ display: "flex", flexDirection: "column", "@media (min-width:768px)": { flexDirection: "row" }, alignItems: "center", justifyContent: "space-between", gap: "1.5rem" }} >
           {/* Brand and Description */}
-          <div className="d-flex align-items-center gap-3">
-            <div 
-              className="d-flex align-items-center justify-content-center rounded-circle"
+          <MuiBox component="div" sx={{ display: "flex", alignItems: "center", gap: "1rem" }} >
+            <MuiBox component="div" sx={{ display: "flex", alignItems: "center", justifyContent: "center", borderRadius: "50%" }}
+
               style={{
                 width: '40px',
                 height: '40px',
@@ -39,8 +43,8 @@ export default function Footer() {
                 color: 'white'
               }}
             >
-              <Icon icon="lucide:line-chart" className="fs-5" />
-            </div>
+              <Icon sx={{ fontSize: "1.25rem" }} icon="lucide:line-chart"  />
+            </MuiBox>
             <div>
               <div className="font-display text-main" style={{ fontWeight: 800, fontSize: '1.25rem' }}>
                 ResearchPulse
@@ -49,33 +53,33 @@ export default function Footer() {
                 {t('footerDesc')}
               </div>
             </div>
-          </div>
+          </MuiBox>
 
           {/* Navigation Links */}
-          <nav className="d-flex flex-wrap justify-content-center gap-4">
+          <MuiBox component="nav" sx={{ display: "flex", flexWrap: "wrap", justifyContent: "center", gap: "1.5rem" }} >
             {links.map((link) => (
-              <a
+              <MuiBox component="a" sx={{ textDecoration: "none" }}
                 key={link.labelKey}
                 href={link.href}
-                className="text-muted-custom text-decoration-none"
+                className="text-muted-custom"
                 style={{ fontSize: '0.85rem', transition: 'color 0.2s ease' }}
                 onMouseEnter={(e) => (e.currentTarget.style.color = 'var(--primary)')}
                 onMouseLeave={(e) => (e.currentTarget.style.color = 'var(--text-muted)')}
               >
                 {t(link.labelKey)}
-              </a>
+              </MuiBox>
             ))}
-          </nav>
-        </div>
+          </MuiBox>
+        </MuiBox>
 
         {/* Copyright */}
-        <div 
-          className="text-center text-muted-custom mt-4 pt-4" 
+        <MuiBox component="div" sx={{ textAlign: "center", marginTop: "1.5rem", paddingTop: "1.5rem" }}
+          className="text-muted-custom"
           style={{ borderTop: '1px solid var(--border)', fontSize: '0.75rem' }}
         >
           © {currentYear} ResearchPulse. {t('footerRights')}
-        </div>
+        </MuiBox>
       </Container>
-    </footer>
+    </MuiBox>
   );
 }

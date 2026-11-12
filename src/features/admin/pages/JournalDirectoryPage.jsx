@@ -1,11 +1,15 @@
 import { useState, useEffect } from 'react';
-import { Row } from 'react-bootstrap';
+import { Row } from '@/shared/components/ui/muiAdapters';
 import { useJournalManagement } from '../../journal/hooks/useJournalManagement';
 import JournalFilterBar from '../components/journals/JournalFilterBar';
 import JournalTableAdmin from '../components/journals/JournalTableAdmin';
 import JournalCardAdmin from '../components/journals/JournalCardAdmin';
 import AddJournalModal from '../components/modals/AddJournalModal';
 import Pagination from '../../../shared/components/Pagination';
+
+
+import MuiBox from '@mui/material/Box';
+
 
 /**
  * JournalDirectoryPage - Màn hình chính quản lý thư mục các Tạp chí dành cho Admin.
@@ -60,14 +64,14 @@ export default function JournalDirectoryPage() {
   );
 
   return (
-      <div className="d-flex flex-column gap-3">
+      <MuiBox component="div" sx={{ display: "flex", flexDirection: "column", gap: "1rem" }} >
         {/* Header Title Section */}
-        <div className="text-start mb-2">
-          <h2 className="font-display fw-bold text-main mb-1">Journal Directory</h2>
-          <p className="text-muted-custom small mb-0">
+        <MuiBox component="div" sx={{ textAlign: "left", marginBottom: "0.5rem" }} >
+          <MuiBox component="h2" sx={{ fontWeight: 700, marginBottom: "0.25rem" }} className="font-display text-main">Journal Directory</MuiBox>
+          <MuiBox component="p" sx={{ fontSize: "0.875em", marginBottom: "0" }} className="text-muted-custom">
             Manage and monitor the entire publication lifecycle for your academic portfolio.
-          </p>
-        </div>
+          </MuiBox>
+        </MuiBox>
 
         {/* Filters and Search toolbar */}
         <JournalFilterBar
@@ -84,27 +88,27 @@ export default function JournalDirectoryPage() {
 
         {/* Display journals */}
         {loading ? (
-          <div className="text-center py-5">
-            <div className="spinner-border admin-spinner" role="status">
-              <span className="visually-hidden">Loading journals...</span>
-            </div>
-          </div>
+          <MuiBox component="div" sx={{ textAlign: "center", paddingTop: "3rem", paddingBottom: "3rem" }} >
+            <MuiBox component="div" sx={{ display: "inline-block", width: "2rem", height: "2rem", verticalAlign: "-0.125em", border: "0.25em solid currentColor", borderRightColor: "transparent", borderRadius: "50%", animation: "spin .75s linear infinite" }} className="admin-spinner" role="status">
+              <MuiBox component="span" sx={{ position: "absolute", width: 1, height: 1, padding: 0, margin: -1, overflow: "hidden", clip: "rect(0,0,0,0)", whiteSpace: "nowrap", border: 0 }} >Loading journals...</MuiBox>
+            </MuiBox>
+          </MuiBox>
         ) : error ? (
-          <div className="alert alert-danger border-0 rounded-3 small mb-0">
+          <MuiBox component="div" sx={{ position: "relative", p: "1rem", mb: "1rem", border: 0, borderRadius: "0.5rem", bgcolor: "#f8d7da", borderColor: "#f5c2c7", color: "#842029", fontSize: "0.875em", marginBottom: "0" }} >
             {error}
-          </div>
+          </MuiBox>
         ) : filteredJournals.length === 0 ? (
-          <div className="text-center py-5 bg-white rounded-3 border" style={{ borderColor: 'var(--border)' }}>
-            <p className="text-muted-custom mb-0">No journals match the selected filters.</p>
-          </div>
+          <MuiBox component="div" sx={{ textAlign: "center", paddingTop: "3rem", paddingBottom: "3rem", bgcolor: "background.paper", borderRadius: "0.5rem", border: "1px solid #dee2e6" }}  style={{ borderColor: 'var(--border)' }}>
+            <MuiBox component="p" sx={{ marginBottom: "0" }} className="text-muted-custom">No journals match the selected filters.</MuiBox>
+          </MuiBox>
         ) : viewMode === 'table' ? (
-          <div className="glass-card p-0 border-0 shadow-sm text-start bg-white rounded-3 overflow-hidden">
+          <MuiBox component="div" sx={{ padding: "0", border: 0, boxShadow: "0 .125rem .25rem rgba(0,0,0,.075)", textAlign: "left", bgcolor: "background.paper", borderRadius: "0.5rem", overflow: "hidden" }} className="glass-card">
             <JournalTableAdmin
               journals={paginatedJournals}
               page={safePage}
               limit={limit}
             />
-            <div className="px-3 pb-3">
+            <MuiBox component="div" sx={{ paddingLeft: "1rem", paddingRight: "1rem", paddingBottom: "1rem" }} >
               <Pagination
                 totalItems={filteredJournals.length}
                 currentPage={safePage}
@@ -112,16 +116,16 @@ export default function JournalDirectoryPage() {
                 onPageChange={setCurrentPage}
                 entityName="journals"
               />
-            </div>
-          </div>
+            </MuiBox>
+          </MuiBox>
         ) : (
           <div>
-            <Row className="g-3 mb-4">
+            <Row sx={{ gap: "1rem", marginBottom: "1.5rem" }} >
               {paginatedJournals.map((j) => (
                 <JournalCardAdmin key={j.id || j.journal_id} journal={j} />
               ))}
             </Row>
-            <div className="bg-white border rounded-3 px-3 pb-3">
+            <MuiBox component="div" sx={{ bgcolor: "background.paper", border: "1px solid #dee2e6", borderRadius: "0.5rem", paddingLeft: "1rem", paddingRight: "1rem", paddingBottom: "1rem" }} >
               <Pagination
                 totalItems={filteredJournals.length}
                 currentPage={safePage}
@@ -129,7 +133,7 @@ export default function JournalDirectoryPage() {
                 onPageChange={setCurrentPage}
                 entityName="journals"
               />
-            </div>
+            </MuiBox>
           </div>
         )}
 
@@ -138,6 +142,6 @@ export default function JournalDirectoryPage() {
           show={showAddModal}
           handleClose={() => setShowAddModal(false)}
         />
-      </div>
+      </MuiBox>
   );
 }

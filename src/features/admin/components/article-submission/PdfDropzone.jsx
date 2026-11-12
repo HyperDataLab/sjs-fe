@@ -1,12 +1,16 @@
 import { useTranslation } from "react-i18next";
 import { useState, useRef } from 'react';
-import { Button, Alert, ProgressBar } from 'react-bootstrap';
+import { Button, Alert, ProgressBar } from '@/shared/components/ui/muiAdapters';
 import Icon from '../../../../shared/components/Icon';
+import { getClassNameSx, stripMappedClassNames } from '../../../../shared/theme/classNameSx';
+
+import MuiBox from '@mui/material/Box';
+
 
 /**
  * PdfDropzone Component
  * Interactive drag-and-drop zone for uploading PDF manuscripts.
- * 
+ *
  * @param {Object} props - Props
  * @param {File} props.selectedFile - Current selected File object
  * @param {function} props.onFileSelect - Callback when valid file is selected
@@ -102,86 +106,83 @@ export default function PdfDropzone({
     const i = Math.floor(Math.log(bytes) / Math.log(k));
     return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
   };
-  return <div className="w-100">
-      {error && <Alert variant="danger" className="py-2 px-3 small border-0 mb-3 rounded-3">
+  return <MuiBox component="div" sx={{ width: "100%" }} >
+      {error && <Alert sx={{ paddingTop: "0.5rem", paddingBottom: "0.5rem", paddingLeft: "1rem", paddingRight: "1rem", fontSize: "0.875em", border: 0, marginBottom: "1rem", borderRadius: "0.5rem" }} variant="danger" >
           {error}
         </Alert>}
 
       {/* Hidden native input file */}
-      <input type="file" ref={fileInputRef} onChange={handleFileChange} accept=".pdf,application/pdf" className="d-none" />
+      <MuiBox component="input" sx={{ display: "none" }} type="file" ref={fileInputRef} onChange={handleFileChange} accept=".pdf,application/pdf"  />
 
       {!selectedFile ?
     // Dropzone Area
-    <div onDragEnter={handleDrag} onDragOver={handleDrag} onDragLeave={handleDrag} onDrop={handleDrop} onClick={triggerFileInput} className={`d-flex flex-column align-items-center justify-content-center p-5 rounded-4 premium-dropzone ${isDragActive ? 'drag-active' : ''}`}>
+    <MuiBox component="div" sx={getClassNameSx(`d-flex flex-column align-items-center justify-content-center p-5 rounded-4 premium-dropzone ${isDragActive ? 'drag-active' : ''}`)} onDragEnter={handleDrag} onDragOver={handleDrag} onDragLeave={handleDrag} onDrop={handleDrop} onClick={triggerFileInput} className={stripMappedClassNames(`d-flex flex-column align-items-center justify-content-center p-5 rounded-4 premium-dropzone ${isDragActive ? 'drag-active' : ''}`)}>
           {/* Cloud Upload Icon */}
-          <div className="rounded-circle d-flex align-items-center justify-content-center mb-3 premium-dropzone-icon-wrapper">
+          <MuiBox component="div" sx={{ borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", marginBottom: "1rem" }} className="premium-dropzone-icon-wrapper">
             <Icon icon="lucide:cloud-upload" width="28" />
-          </div>
+          </MuiBox>
 
-          <h5 className="fw-bold text-main mb-1.5" style={{
+          <MuiBox component="h5" sx={{ fontWeight: 700 }} className="text-main mb-1.5" style={{
         fontFamily: 'var(--font-display)'
       }}>
             Click to upload or drag and drop
-          </h5>
-          <p className="text-muted-custom small mb-4">PDF files only (max. 25MB)</p>
+          </MuiBox>
+          <MuiBox component="p" sx={{ fontSize: "0.875em", marginBottom: "1.5rem" }} className="text-muted-custom">PDF files only (max. 25MB)</MuiBox>
 
-          <Button type="button" className="px-4 py-2 rounded-pill premium-dropzone-btn" onClick={e => {
+          <Button sx={{ paddingLeft: "1.5rem", paddingRight: "1.5rem", paddingTop: "0.5rem", paddingBottom: "0.5rem", borderRadius: "50rem" }} type="button" className="premium-dropzone-btn" onClick={e => {
         e.stopPropagation();
         triggerFileInput();
       }}>
             Browse Files
           </Button>
-        </div> :
+        </MuiBox> :
     // Selected File Display panel
-    <div className="p-4 rounded-4 border bg-white">
-          <div className="d-flex align-items-center justify-content-between">
-            <div className="d-flex align-items-center gap-3">
+    <MuiBox component="div" sx={{ padding: "1.5rem", borderRadius: "0.75rem", border: "1px solid #dee2e6", bgcolor: "background.paper" }} >
+          <MuiBox component="div" sx={{ display: "flex", alignItems: "center", justifyContent: "space-between" }} >
+            <MuiBox component="div" sx={{ display: "flex", alignItems: "center", gap: "1rem" }} >
               {/* PDF Document Icon */}
-              <div className="rounded-3 d-flex align-items-center justify-content-center" style={{
+              <MuiBox component="div" sx={{ borderRadius: "0.5rem", display: "flex", alignItems: "center", justifyContent: "center" }}  style={{
             width: '46px',
             height: '46px',
             backgroundColor: '#fee2e2',
             color: '#ef4444'
           }}>
                 <Icon icon="lucide:file-text" width="24" />
-              </div>
+              </MuiBox>
               <div>
-                <div className="fw-bold text-main text-truncate" style={{
+                <MuiBox component="div" sx={{ fontWeight: 700, overflow: "hidden", whiteSpace: "nowrap", textOverflow: "ellipsis" }} className="text-main" style={{
               maxWidth: '280px',
               fontSize: '0.925rem'
             }}>
                   {selectedFile.name}
-                </div>
-                <div className="text-muted-custom small">
-                  {formatBytes(selectedFile.size)}{t("admin.aPdfDocument")}</div>
+                </MuiBox>
+                <MuiBox component="div" sx={{ fontSize: "0.875em" }} className="text-muted-custom">
+                  {formatBytes(selectedFile.size)}{t("admin.aPdfDocument")}</MuiBox>
               </div>
-            </div>
+            </MuiBox>
 
             {/* Remove File button */}
-            <button type="button" onClick={e => {
+            <MuiBox component="button" sx={{ display: "inline-flex", alignItems: "center", justifyContent: "center", px: "0.75rem", py: "0.375rem", border: 0, borderRadius: "50%", fontSize: "1rem", fontWeight: 400, lineHeight: 1.5, cursor: "pointer", textDecoration: "none", bgcolor: "transparent", color: "primary.main" }} type="button" onClick={e => {
           e.stopPropagation();
           onFileRemove();
-        }} className="btn btn-link p-1.5 text-decoration-none text-muted-custom hover-danger border-0 rounded-circle" style={{
+        }} className="p-1.5 text-muted-custom hover-danger" style={{
           width: '36px',
           height: '36px'
         }} title="Remove File">
               <Icon icon="lucide:trash" width="18" />
-            </button>
-          </div>
+            </MuiBox>
+          </MuiBox>
 
           {/* Submission status */}
-          <div className="mt-4 pt-2 border-top">
-            <div className="d-flex justify-content-between small text-muted-custom mb-1.5">
+          <MuiBox component="div" sx={{ marginTop: "1.5rem", paddingTop: "0.5rem", borderTop: "1px solid #dee2e6" }} >
+            <MuiBox component="div" sx={{ display: "flex", justifyContent: "space-between", fontSize: "0.875em" }} className="text-muted-custom mb-1.5">
               <span>{t("admin.chuaCoApiUploadPdfArticleDaXoa")}</span>
-              <span className="fw-semibold" style={{
+              <MuiBox component="span" sx={{ fontWeight: 600 }}  style={{
             color: 'var(--primary)'
-          }}>N/A</span>
-            </div>
-            <ProgressBar now={0} style={{
-          height: '4px',
-          '--bs-progress-bar-bg': 'var(--primary)'
-        }} />
-          </div>
-        </div>}
-    </div>;
+          }}>N/A</MuiBox>
+            </MuiBox>
+            <ProgressBar now={0} sx={{ height: 4, '& .MuiLinearProgress-bar': { bgcolor: 'primary.main' } }} />
+          </MuiBox>
+        </MuiBox>}
+    </MuiBox>;
 }

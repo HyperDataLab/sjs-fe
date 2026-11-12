@@ -15,11 +15,13 @@ import { useTranslation } from "react-i18next";
  */
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Icon } from '@iconify/react';
+import Icon from '../../../shared/components/Icon.jsx';
 import { useWalletStore } from '../../../app/store/walletStore';
 import ROUTES from '../../../app/routes/routePaths';
 import { getCoinPackages } from '../api/walletApi';
-import './TopUpPage.css';
+import { getClassNameSx, stripMappedClassNames } from '../../../shared/theme/classNameSx';
+
+import MuiBox from '@mui/material/Box';
 
 // Gói nổi bật (package_id hoặc coin_amount nếu muốn cứng)
 const RECOMMENDED_COIN_AMOUNT = 10;
@@ -167,7 +169,7 @@ export default function TopUpPage() {
         <div className="topup-section-title">{t("wallet.chonGoiCoinPhuHop")}</div>
 
         {loadingPackages && <div className="topup-loading-area">
-            <div className="spinner-border spinner-border-sm" role="status" style={{
+            <MuiBox component="div" sx={{ display: "inline-block", width: "1rem", height: "1rem", verticalAlign: "-0.125em", border: "0.25em solid currentColor", borderRightColor: "transparent", borderRadius: "50%", animation: "spin .75s linear infinite", borderWidth: "0.2em" }}  role="status" style={{
           color: '#ff7a33'
         }} />
             <span>{t("wallet.dangTaiGoiCoin")}</span>
@@ -236,7 +238,7 @@ export default function TopUpPage() {
         {!loadingPackages && packages.length > 0 && <>
             <div className="topup-section-title">{t("wallet.phuongThucThanhToan")}</div>
             <div className="topup-method-row">
-              {PAYMENT_METHODS.map(m => <button key={m.key} type="button" className={`topup-method-btn ${paymentMethod === m.key ? 'active' : ''}`} onClick={() => !m.disabled && setPaymentMethod(m.key)} disabled={m.disabled} title={m.disabled ? t("wallet.sapRaMat") : m.label}>
+              {PAYMENT_METHODS.map(m => <MuiBox component="button" sx={getClassNameSx(`topup-method-btn ${paymentMethod === m.key ? 'active' : ''}`)} key={m.key} type="button" className={stripMappedClassNames(`topup-method-btn ${paymentMethod === m.key ? 'active' : ''}`)} onClick={() => !m.disabled && setPaymentMethod(m.key)} disabled={m.disabled} title={m.disabled ? t("wallet.sapRaMat") : m.label}>
                   <Icon icon={m.icon} width={18} color={m.color} />
                   {m.label}
                   {m.disabled && <span style={{
@@ -244,7 +246,7 @@ export default function TopUpPage() {
               marginLeft: 4,
               color: 'var(--text-muted)'
             }}>{t("wallet.sapRaMat1")}</span>}
-                </button>)}
+                </MuiBox>)}
             </div>
           </>}
 

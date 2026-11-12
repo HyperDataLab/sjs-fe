@@ -7,8 +7,8 @@ import { t } from "i18next";
  */
 import { useState, useEffect, useCallback, useMemo } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Container, Button, Modal } from 'react-bootstrap';
-import { Icon } from '@iconify/react';
+import { Container, Button, Modal } from '@/shared/components/ui/muiAdapters';
+import Icon from '../../../shared/components/Icon.jsx';
 
 // Layout
 import Header from '../../landing/components/Header';
@@ -29,7 +29,10 @@ import AuthRequiredModal from '../../../shared/components/AuthRequiredModal';
 import { toast } from '../../../shared/utils/toast';
 import { getDoiUrl, normalizeArticleDetail } from '../utils/articleFormatters';
 import LatexText from '../../../shared/components/LatexText/LatexText';
-import '../Article.css';
+import { getClassNameSx, stripMappedClassNames } from '../../../shared/theme/classNameSx';
+
+import MuiBox from '@mui/material/Box';
+
 const formatAuthorsLine = (authors = [], limit = 3) => {  if (!authors || authors.length === 0) return t("article.dangCapNhatTacGia");
   const names = authors.slice(0, limit).map(author => author.display_name || author.name || author.author_name || t("typeAuthor")).join(', ');
   return authors.length > limit ? `${names}...` : names;
@@ -240,13 +243,13 @@ export default function ArticleDetailPage() {
   return <div className="article-detail-page grid-bg">
       <Header />
 
-      <Container fluid className="position-relative z-1 px-3 px-xl-5">
+      <Container sx={{ position: "relative", zIndex: 1, paddingLeft: "1rem", paddingRight: "1rem", "@media (min-width:1200px)": { paddingLeft: "3rem", paddingRight: "3rem" } }} fluid >
         {isLoading ? <ArticleDetailSkeleton /> : error ? <ArticleDetailError errorMsg={error} onRetry={fetchArticleDetail} /> : !article ? <ArticleDetailEmpty articleId={id} /> : <main className="article-detail-container">
             <div className="article-detail-shell">
-              <aside className="article-detail-sidebar d-none d-xl-block">
-                <h2 className={`article-detail-journal-title mb-4 ${article.journal_id ? 'is-clickable' : ''}`} role={article.journal_id ? 'button' : undefined} onClick={() => article.journal_id && navigate(`/journals/${article.journal_id}`)}>
+              <MuiBox component="aside" sx={{ display: "none", "@media (min-width:1200px)": { display: "block" } }} className="article-detail-sidebar">
+                <MuiBox component="h2" sx={getClassNameSx(`article-detail-journal-title mb-4 ${article.journal_id ? 'is-clickable' : ''}`)} className={stripMappedClassNames(`article-detail-journal-title mb-4 ${article.journal_id ? 'is-clickable' : ''}`)} role={article.journal_id ? 'button' : undefined} onClick={() => article.journal_id && navigate(`/journals/${article.journal_id}`)}>
                   {article.journal_name || 'Scientific Journal'}
-                </h2>
+                </MuiBox>
 
                 <div className="article-detail-meta-list">
                   <span><strong>Date:</strong> {article.publication_year || t("article.dangCapNhat")}</span>
@@ -268,12 +271,12 @@ export default function ArticleDetailPage() {
 
                 <div className="article-detail-divider" />
 
-                <div className="text-muted-custom text-xs fw-bold text-uppercase mb-2">{t("article.publisher")}</div>
-                <div className="text-xs text-muted-custom fw-semibold text-uppercase d-flex flex-column gap-1">
+                <MuiBox component="div" sx={{ fontWeight: 700, textTransform: "uppercase", marginBottom: "0.5rem" }} className="text-muted-custom text-xs">{t("article.publisher")}</MuiBox>
+                <MuiBox component="div" sx={{ fontWeight: 600, textTransform: "uppercase", display: "flex", flexDirection: "column", gap: "0.25rem" }} className="text-xs text-muted-custom">
                   <span>{article.publisher_name || t("article.dangCapNhat")}</span>
                   <span>Coverage: {article.publication_year || '—'}</span>
-                </div>
-              </aside>
+                </MuiBox>
+              </MuiBox>
 
               <section className="article-detail-main">
                 <div className="article-detail-breadcrumb">
@@ -319,7 +322,7 @@ export default function ArticleDetailPage() {
                       <Icon icon="lucide:share-2" width="15" />
                       {t("article.share")}
                     </Button>
-                    
+
                   </div>
                 </div>
 
@@ -351,7 +354,7 @@ export default function ArticleDetailPage() {
                 color: 'var(--primary)',
                 fontWeight: 'bold'
               }}>
-                    <Icon icon="lucide:network" width="14" className="me-1" />
+                    <Icon sx={{ marginInlineEnd: "0.25rem" }} icon="lucide:network" width="14"  />
                     Interactive Graph
                   </Button>
                 </div>
@@ -363,7 +366,7 @@ export default function ArticleDetailPage() {
                           <h2 className="article-section-title" style={{
                     fontSize: '1.4rem'
                   }}>TL;DR</h2>
-                          <div className="p-3 rounded" style={{
+                          <MuiBox component="div" sx={{ padding: "1rem", borderRadius: "0.375rem" }}  style={{
                     backgroundColor: 'var(--primary-light)',
                     borderLeft: '4px solid var(--primary)',
                     color: 'var(--text-main)',
@@ -371,7 +374,7 @@ export default function ArticleDetailPage() {
                     lineHeight: '1.65'
                   }}>
                             <strong>Summary:</strong> {article.semantic_tldr}
-                          </div>
+                          </MuiBox>
                         </section>}
 
                       <section id="abstract" className="article-section">
@@ -394,62 +397,62 @@ export default function ArticleDetailPage() {
                       </section>
                     </article>
 
-                    <aside className="article-toc-aside d-none d-lg-block">
+                    <MuiBox component="aside" sx={{ display: "none", "@media (min-width:992px)": { display: "block" } }} className="article-toc-aside">
                       <div className="article-toc-title">Article preview</div>
-                      <nav className="d-flex flex-column gap-2">
+                      <MuiBox component="nav" sx={{ display: "flex", flexDirection: "column", gap: "0.5rem" }} >
                         {article.semantic_tldr && <Button variant="link" onClick={() => smoothScrollTo('tldr')} className="article-toc-link">TL;DR</Button>}
                         <Button variant="link" onClick={() => smoothScrollTo('abstract')} className="article-toc-link is-active">Abstract</Button>
                         <Button variant="link" onClick={() => smoothScrollTo('section-snippets')} className="article-toc-link">Section snippets</Button>
-                      </nav>
-                    </aside>
+                      </MuiBox>
+                    </MuiBox>
                   </div> : activeTab === 'keywords_topics' ? <div className="keywords-topics-tab-panel">
-                    <section className="mb-5">
-                      <h2 className="article-section-title mb-4">{t("article.keywords")}</h2>
-                      {(article.keywords || []).length > 0 ? <div className="row g-4">
+                    <MuiBox component="section" sx={{ marginBottom: "3rem" }} >
+                      <MuiBox component="h2" sx={{ marginBottom: "1.5rem" }} className="article-section-title">{t("article.keywords")}</MuiBox>
+                      {(article.keywords || []).length > 0 ? <MuiBox component="div" sx={{ display: "grid", gridTemplateColumns: "repeat(12,minmax(0,1fr))", width: "100%", gap: "1.5rem" }} >
                           {article.keywords.map((keyword, index) => {                    const label = keyword.display_name || keyword.name || keyword.keyword;
                     const keywordId = keyword.keyword_id || keyword.id;
-                    return <div key={keywordId || `${label}-${index}`} className="col-12 col-md-6 col-lg-4">
-                                <div className="keyword-card d-flex flex-column justify-content-between h-100">
-                                  <div className="d-flex align-items-start justify-content-between gap-3 mb-3">
+                    return <MuiBox component="div" sx={{ gridColumn: "span 12", "@media (min-width:768px)": { gridColumn: "span 6" }, "@media (min-width:992px)": { gridColumn: "span 4" } }} key={keywordId || `${label}-${index}`} >
+                                <MuiBox component="div" sx={{ display: "flex", flexDirection: "column", justifyContent: "space-between", height: "100%" }} className="keyword-card">
+                                  <MuiBox component="div" sx={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: "1rem", marginBottom: "1rem" }} >
                                     <div>
                                       <div className="keyword-card-label">Research keyword</div>
                                       <h3 className="keyword-card-title">{label}</h3>
                                     </div>
                                     <Icon icon="lucide:tags" width="18" className="keyword-card-icon" />
-                                  </div>
-                                  <Button id={`keyword-view-${keywordId || label}`} type="button" onClick={() => handleKeywordClick(keyword)} className="keyword-card-action d-inline-flex align-items-center gap-2 mt-3" style={{
+                                  </MuiBox>
+                                  <Button sx={{ display: "inline-flex", alignItems: "center", gap: "0.5rem", marginTop: "1rem" }} id={`keyword-view-${keywordId || label}`} type="button" onClick={() => handleKeywordClick(keyword)} className="keyword-card-action" style={{
                           width: 'fit-content'
                         }}>
                                     <span>{t("article.xemBaiBaoLienQuan")}</span>
                                     <Icon icon="lucide:arrow-up-right" width="16" />
                                   </Button>
-                                </div>
-                              </div>;
+                                </MuiBox>
+                              </MuiBox>;
                   })}
-                        </div> : <div className="article-reference-card-empty text-center py-5">
-                          <Icon icon="lucide:tags" width="48" className="text-muted mb-3" />
-                          <p className="mb-0">{keywordsText}</p>
-                        </div>}
-                    </section>
+                        </MuiBox> : <MuiBox component="div" sx={{ textAlign: "center", paddingTop: "3rem", paddingBottom: "3rem" }} className="article-reference-card-empty">
+                          <Icon sx={{ color: "text.secondary", marginBottom: "1rem" }} icon="lucide:tags" width="48"  />
+                          <MuiBox component="p" sx={{ marginBottom: "0" }} >{keywordsText}</MuiBox>
+                        </MuiBox>}
+                    </MuiBox>
 
-                    {article.topics?.length > 0 && <section className="mt-5">
-                        <h2 className="article-section-title mb-3">Topics</h2>
-                        <div className="d-flex gap-2 flex-wrap">
+                    {article.topics?.length > 0 && <MuiBox component="section" sx={{ marginTop: "3rem" }} >
+                        <MuiBox component="h2" sx={{ marginBottom: "1rem" }} className="article-section-title">Topics</MuiBox>
+                        <MuiBox component="div" sx={{ display: "flex", gap: "0.5rem", flexWrap: "wrap" }} >
                           {article.topics.map(topic => <Button key={topic.topic_id || topic.display_name} variant="light" onClick={() => handleTopicClick(topic)} className="article-topic-chip" style={topicKeywordChipStyle}>
                               {topic.display_name}
                             </Button>)}
-                        </div>
-                      </section>}
+                        </MuiBox>
+                      </MuiBox>}
                   </div> : activeTab === 'references' ? <div className="references-tab-panel">
-                    <h2 className="article-section-title mb-4">{t("article.references")}</h2>
-                    <p className="article-section-text mb-4" style={{
+                    <MuiBox component="h2" sx={{ marginBottom: "1.5rem" }} className="article-section-title">{t("article.references")}</MuiBox>
+                    <MuiBox component="p" sx={{ marginBottom: "1.5rem" }} className="article-section-text" style={{
                 fontSize: '0.98rem'
               }}>{t("article.baiBaoHienCo")}{" "}<strong>{(article.references || []).length}</strong>{" "}{t("article.taiLieuThamKhaoDuocDongBoTrong")}{" "}<strong>{article.semantic_citation_count ?? article.citations ?? 0}</strong>.
-                    </p>
+                    </MuiBox>
 
-                    {(article.references || []).length > 0 ? <div className="d-grid gap-3">
+                    {(article.references || []).length > 0 ? <MuiBox component="div" sx={{ display: "grid", gap: "1rem" }} >
                         {(article.references || []).map((referenceUrl, index) => {                  return <a key={`${referenceUrl}-${index}`} href={referenceUrl} target="_blank" rel="noreferrer" className="article-reference-card">
-                              <div className="d-flex align-items-start justify-content-between gap-3 flex-wrap">
+                              <MuiBox component="div" sx={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: "1rem", flexWrap: "wrap" }} >
                                 <div className="min-w-0">
                                   <div className="article-reference-label">
                                     {t("article.referenceLabel")} {index + 1}
@@ -463,10 +466,10 @@ export default function ArticleDetailPage() {
                                 </div>
                                 <span className="article-reference-action">
                                   <Icon icon="lucide:external-link" width="16" />{t("article.moNguon")}</span>
-                              </div>
+                              </MuiBox>
                             </a>;
                 })}
-                      </div> : <div className="article-reference-card-empty text-center py-5">{t("article.chuaCoDanhSachReferenceChiTiet")}</div>}
+                      </MuiBox> : <MuiBox component="div" sx={{ textAlign: "center", paddingTop: "3rem", paddingBottom: "3rem" }} className="article-reference-card-empty">{t("article.chuaCoDanhSachReferenceChiTiet")}</MuiBox>}
                   </div> : <ArticlesTabContent recentArticles={recommendedArticles} loading={isRecommendedLoading} onArticleClick={articleId => navigate(`/articles/${articleId}/visual`)} />}
               </section>
             </div>
@@ -476,33 +479,33 @@ export default function ArticleDetailPage() {
 
       <Modal show={showCitationsModal} onHide={() => setShowCitationsModal(false)} centered>
         <Modal.Header closeButton>
-          <Modal.Title className="font-display fw-bold">{t("article.citationsCitedBy")}</Modal.Title>
+          <Modal.Title sx={{ fontWeight: 700 }} className="font-display">{t("article.citationsCitedBy")}</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <div className="article-modal-stat-box">
-            <div className="text-muted-custom text-xs fw-bold text-uppercase mb-1">{t("article.tongLuotTrichDan")}</div>
-            <div className="font-display fw-bold" style={{
+            <MuiBox component="div" sx={{ fontWeight: 700, textTransform: "uppercase", marginBottom: "0.25rem" }} className="text-muted-custom text-xs">{t("article.tongLuotTrichDan")}</MuiBox>
+            <MuiBox component="div" sx={{ fontWeight: 700 }} className="font-display" style={{
             fontSize: '2rem',
             color: 'var(--text-main)'
           }}>
               {(article?.citations ?? 0).toLocaleString('en-US')}
-            </div>
+            </MuiBox>
           </div>
 
-          <p className="text-muted-custom mb-3" style={{
+          <MuiBox component="p" sx={{ marginBottom: "1rem" }} className="text-muted-custom" style={{
           lineHeight: 1.7
         }}>
             <strong style={{
             color: 'var(--text-main)'
-          }}>Citations</strong>{t("article.laSoLuongBaiBaoHoacCongTrinhKh")}</p>
+          }}>Citations</strong>{t("article.laSoLuongBaiBaoHoacCongTrinhKh")}</MuiBox>
 
-          <div className="d-grid gap-2" style={{
+          <MuiBox component="div" sx={{ display: "grid", gap: "0.5rem" }}  style={{
           fontSize: '0.94rem'
         }}>
             <div><strong>DOI:</strong>{t("article.maDinhDanhCoDinhCuaBaiBao")}</div>
             <div><strong>References:</strong>{t("article.danhSachTaiLieuMaBaiBaoNayTric")}</div>
             <div><strong>Citations / Cited by:</strong>{t("article.soCongTrinhKhacTrichDanLaiBaiB")}</div>
-          </div>
+          </MuiBox>
         </Modal.Body>
         <Modal.Footer>
           <Button variant="outline-secondary" onClick={() => setShowCitationsModal(false)}>{t("article.dong")}</Button>
@@ -511,29 +514,29 @@ export default function ArticleDetailPage() {
 
       <Modal show={showPremiumModal} onHide={() => setShowPremiumModal(false)} centered>
         <Modal.Header closeButton>
-          <Modal.Title className="font-display fw-bold text-main d-flex align-items-center">
-            <Icon icon="lucide:star" className="me-2" style={{ color: 'var(--primary)' }} />
+          <Modal.Title sx={{ fontWeight: 700, display: "flex", alignItems: "center" }} className="font-display text-main">
+            <Icon sx={{ marginInlineEnd: "0.5rem" }} icon="lucide:star"  style={{ color: 'var(--primary)' }} />
             {t("article.taiPdfPremium")}
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <p className="text-muted-custom mb-3" style={{ lineHeight: 1.7 }}>
+          <MuiBox component="p" sx={{ marginBottom: "1rem" }} className="text-muted-custom" style={{ lineHeight: 1.7 }}>
             {t("article.banCoChacChanMuonDung2Xu")}
-          </p>
-          <div className="article-modal-stat-box d-flex align-items-center justify-content-between p-2 px-3" style={{ background: 'var(--bg-main)', borderRadius: '8px', border: '1px solid var(--border)' }}>
-            <span className="fw-semibold text-main d-flex align-items-center">
-              <Icon icon="lucide:file-text" className="me-2 text-muted-custom" /> {t("article.premiumPdf")}
-            </span>
-            <span className="font-display fw-bold d-flex align-items-center" style={{ fontSize: '1.25rem', color: 'var(--primary)' }}>
-              -2 <Icon icon="lucide:coins" className="ms-1" width="18" />
-            </span>
-          </div>
+          </MuiBox>
+          <MuiBox component="div" sx={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "0.5rem", paddingLeft: "1rem", paddingRight: "1rem" }} className="article-modal-stat-box" style={{ background: 'var(--bg-main)', borderRadius: '8px', border: '1px solid var(--border)' }}>
+            <MuiBox component="span" sx={{ fontWeight: 600, display: "flex", alignItems: "center" }} className="text-main">
+              <Icon sx={{ marginInlineEnd: "0.5rem" }} icon="lucide:file-text" className="text-muted-custom" /> {t("article.premiumPdf")}
+            </MuiBox>
+            <MuiBox component="span" sx={{ fontWeight: 700, display: "flex", alignItems: "center" }} className="font-display" style={{ fontSize: '1.25rem', color: 'var(--primary)' }}>
+              -2 <Icon sx={{ marginInlineStart: "0.25rem" }} icon="lucide:coins"  width="18" />
+            </MuiBox>
+          </MuiBox>
         </Modal.Body>
-        <Modal.Footer className="border-0">
-          <Button variant="outline-secondary" onClick={() => setShowPremiumModal(false)} className="font-display px-3">
+        <Modal.Footer sx={{ border: 0 }} >
+          <Button sx={{ paddingLeft: "1rem", paddingRight: "1rem" }} variant="outline-secondary" onClick={() => setShowPremiumModal(false)} className="font-display">
             {t("admin.huy")}
           </Button>
-          <Button onClick={handleConfirmPremiumDownload} className="font-display fw-bold px-3 d-flex align-items-center text-white border-0" style={{ backgroundColor: 'var(--primary)' }}>
+          <Button sx={{ fontWeight: 700, paddingLeft: "1rem", paddingRight: "1rem", display: "flex", alignItems: "center", color: "#fff", border: 0 }} onClick={handleConfirmPremiumDownload} className="font-display" style={{ backgroundColor: 'var(--primary)' }}>
              {t("article.dongY")}
           </Button>
         </Modal.Footer>

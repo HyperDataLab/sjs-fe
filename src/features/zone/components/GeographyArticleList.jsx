@@ -1,8 +1,12 @@
 import { useTranslation } from "react-i18next";
-import { Table, Card, Button } from 'react-bootstrap';
-import { Icon } from '@iconify/react';
+import { Table, Card, Button } from '@/shared/components/ui/muiAdapters';
+import Icon from '../../../shared/components/Icon.jsx';
 import AdminPagination from '../../../shared/components/Pagination';
 import LatexText from '../../../shared/components/LatexText/LatexText';
+
+
+import MuiBox from '@mui/material/Box';
+
 export default function GeographyArticleList({
   articles = [],
   loading = false,
@@ -63,16 +67,16 @@ export default function GeographyArticleList({
       {[1, 2, 3, 4, 5].map(i => <tr key={i} style={{
       borderBottom: '1px solid var(--border)'
     }}>
-          <td className="ps-3 py-3" style={{
+          <MuiBox component="td" sx={{ paddingInlineStart: "1rem", paddingTop: "1rem", paddingBottom: "1rem" }}  style={{
         width: '40px'
       }}>
             <div className="skeleton-shimmer" style={{
           width: '15px',
           height: '14px'
         }} />
-          </td>
-          <td className="py-3">
-            <div className="skeleton-shimmer mb-2" style={{
+          </MuiBox>
+          <MuiBox component="td" sx={{ paddingTop: "1rem", paddingBottom: "1rem" }} >
+            <MuiBox component="div" sx={{ marginBottom: "0.5rem" }} className="skeleton-shimmer" style={{
           width: '80%',
           height: '18px'
         }} />
@@ -80,93 +84,93 @@ export default function GeographyArticleList({
           width: '45%',
           height: '12px'
         }} />
-          </td>
-          <td className="py-3">
+          </MuiBox>
+          <MuiBox component="td" sx={{ paddingTop: "1rem", paddingBottom: "1rem" }} >
             <div className="skeleton-shimmer" style={{
           width: '120px',
           height: '14px'
         }} />
-          </td>
-          <td className="py-3 text-center">
-            <div className="skeleton-shimmer mx-auto" style={{
+          </MuiBox>
+          <MuiBox component="td" sx={{ paddingTop: "1rem", paddingBottom: "1rem", textAlign: "center" }} >
+            <MuiBox component="div" sx={{ mx: "auto" }} className="skeleton-shimmer" style={{
           width: '40px',
           height: '14px'
         }} />
-          </td>
-          <td className="py-3">
+          </MuiBox>
+          <MuiBox component="td" sx={{ paddingTop: "1rem", paddingBottom: "1rem" }} >
             <div className="skeleton-shimmer" style={{
           width: '100px',
           height: '12px'
         }} />
-          </td>
-          <td className="py-3">
+          </MuiBox>
+          <MuiBox component="td" sx={{ paddingTop: "1rem", paddingBottom: "1rem" }} >
             <div className="skeleton-shimmer" style={{
           width: '90px',
           height: '20px',
           borderRadius: '4px'
         }} />
-          </td>
-          <td className="py-3 text-center">
-            <div className="skeleton-shimmer mx-auto" style={{
+          </MuiBox>
+          <MuiBox component="td" sx={{ paddingTop: "1rem", paddingBottom: "1rem", textAlign: "center" }} >
+            <MuiBox component="div" sx={{ mx: "auto" }} className="skeleton-shimmer" style={{
           width: '25px',
           height: '16px',
           borderRadius: '3px'
         }} />
-          </td>
-          <td className="pe-3 text-end py-3">
-            <div className="skeleton-shimmer ms-auto" style={{
+          </MuiBox>
+          <MuiBox component="td" sx={{ paddingInlineEnd: "1rem", textAlign: "right", paddingTop: "1rem", paddingBottom: "1rem" }} >
+            <MuiBox component="div" sx={{ ml: "auto" }} className="skeleton-shimmer" style={{
           width: '50px',
           height: '16px'
         }} />
-          </td>
+          </MuiBox>
         </tr>)}
     </tbody>;
-  return <div className="mt-4 p-4 journal-dark-card">
+  return <MuiBox component="div" sx={{ marginTop: "1.5rem", padding: "1.5rem" }} className="journal-dark-card">
       {/* Title */}
-      <div className="d-flex align-items-center justify-content-between mb-3 flex-wrap gap-2">
+      <MuiBox component="div" sx={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "1rem", flexWrap: "wrap", gap: "0.5rem" }} >
         <div>
-          <h3 className="font-display fw-bold text-main mb-1" style={{
+          <MuiBox component="h3" sx={{ fontWeight: 700, marginBottom: "0.25rem" }} className="font-display text-main" style={{
           fontSize: '1.25rem'
         }}>{t("zone.danhSachBaiBaoKhoaHocTai")} {countryName}
-          </h3>
-          {!loading && articles.length > 0 && <p className="text-muted-custom mb-0 text-xs font-display">{t("zone.hienThiBaiBaoThu")} <span className="fw-semibold text-main">{(page - 1) * 10 + 1}</span> - <span className="fw-semibold text-main">{Math.min(page * 10, total)}</span> {t("zone.trongTongSo")} <span className="fw-semibold text-main">{total}</span> {t("zone.baiBao")}</p>}
+          </MuiBox>
+          {!loading && articles.length > 0 && <MuiBox component="p" sx={{ marginBottom: "0" }} className="text-muted-custom text-xs font-display">{t("zone.hienThiBaiBaoThu")} <MuiBox component="span" sx={{ fontWeight: 600 }} className="text-main">{(page - 1) * 10 + 1}</MuiBox> - <MuiBox component="span" sx={{ fontWeight: 600 }} className="text-main">{Math.min(page * 10, total)}</MuiBox> {t("zone.trongTongSo")} <MuiBox component="span" sx={{ fontWeight: 600 }} className="text-main">{total}</MuiBox> {t("zone.baiBao")}</MuiBox>}
         </div>
-      </div>
+      </MuiBox>
 
-      {loading && articles.length === 0 ? <div className="w-100 rounded-3 overflow-hidden" style={{
+      {loading && articles.length === 0 ? <MuiBox component="div" sx={{ width: "100%", borderRadius: "0.5rem", overflow: "hidden" }}  style={{
       border: '1px solid var(--border)'
     }}>
-          <Table responsive hover className="m-0 bg-transparent text-main border-0 geography-table" style={{
+          <Table sx={{ margin: "0", bgcolor: "transparent", border: 0 }} responsive hover className="text-main geography-table" style={{
         fontSize: '0.85rem'
       }}>
             <thead>
               <tr style={{
             borderBottom: '1px solid var(--border)'
           }}>
-                <th className="bg-transparent text-muted-custom py-3 ps-3 text-xs" style={{
+                <MuiBox component="th" sx={{ bgcolor: "transparent", paddingTop: "1rem", paddingBottom: "1rem", paddingInlineStart: "1rem" }} className="text-muted-custom text-xs" style={{
               width: '40px'
-            }}>#</th>
-                <th className="bg-transparent text-muted-custom py-3 text-xs">{t("article.tenBaiBao")}</th>
-                <th className="bg-transparent text-muted-custom py-3 text-xs">JOURNAL</th>
-                <th className="bg-transparent text-muted-custom py-3 text-xs text-center" style={{
+            }}>#</MuiBox>
+                <MuiBox component="th" sx={{ bgcolor: "transparent", paddingTop: "1rem", paddingBottom: "1rem" }} className="text-muted-custom text-xs">{t("article.tenBaiBao")}</MuiBox>
+                <MuiBox component="th" sx={{ bgcolor: "transparent", paddingTop: "1rem", paddingBottom: "1rem" }} className="text-muted-custom text-xs">JOURNAL</MuiBox>
+                <MuiBox component="th" sx={{ bgcolor: "transparent", paddingTop: "1rem", paddingBottom: "1rem", textAlign: "center" }} className="text-muted-custom text-xs" style={{
               width: '80px'
-            }}>{t("article.nam1")}</th>
-                <th className="bg-transparent text-muted-custom py-3 text-xs">DOI</th>
-                <th className="bg-transparent text-muted-custom py-3 text-xs">TOPIC</th>
-                <th className="bg-transparent text-muted-custom py-3 text-xs text-center" style={{
+            }}>{t("article.nam1")}</MuiBox>
+                <MuiBox component="th" sx={{ bgcolor: "transparent", paddingTop: "1rem", paddingBottom: "1rem" }} className="text-muted-custom text-xs">DOI</MuiBox>
+                <MuiBox component="th" sx={{ bgcolor: "transparent", paddingTop: "1rem", paddingBottom: "1rem" }} className="text-muted-custom text-xs">TOPIC</MuiBox>
+                <MuiBox component="th" sx={{ bgcolor: "transparent", paddingTop: "1rem", paddingBottom: "1rem", textAlign: "center" }} className="text-muted-custom text-xs" style={{
               width: '60px'
-            }}>OA</th>
-                <th className="bg-transparent text-muted-custom py-3 text-xs text-end pe-3">{t("article.chiTiet")}</th>
+            }}>OA</MuiBox>
+                <MuiBox component="th" sx={{ bgcolor: "transparent", paddingTop: "1rem", paddingBottom: "1rem", textAlign: "right", paddingInlineEnd: "1rem" }} className="text-muted-custom text-xs">{t("article.chiTiet")}</MuiBox>
               </tr>
             </thead>
             {renderSkeletons()}
           </Table>
-        </div> : articles.length === 0 ? <div className="text-center p-5 rounded-3 d-flex flex-column align-items-center justify-content-center" style={{
+        </MuiBox> : articles.length === 0 ? <MuiBox component="div" sx={{ textAlign: "center", padding: "3rem", borderRadius: "0.5rem", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center" }}  style={{
       backgroundColor: 'var(--bg-card)',
       border: '1px solid var(--border)',
       minHeight: '220px'
     }}>
-          <div className="d-inline-flex align-items-center justify-content-center mb-3" style={{
+          <MuiBox component="div" sx={{ display: "inline-flex", alignItems: "center", justifyContent: "center", marginBottom: "1rem" }}  style={{
         width: '48px',
         height: '48px',
         borderRadius: '50%',
@@ -174,99 +178,99 @@ export default function GeographyArticleList({
         color: '#ef4444'
       }}>
             <Icon icon="lucide:file-x" width="24" height="24" />
-          </div>
-          <h5 className="text-main font-weight-bold mb-1 font-display" style={{
+          </MuiBox>
+          <MuiBox component="h5" sx={{ marginBottom: "0.25rem" }} className="text-main font-weight-bold font-display" style={{
         fontSize: '1rem'
-      }}>{t("zone.khongCoBaiBaoNao")}</h5>
-          <p className="text-muted-custom mb-0 text-xs max-w-md font-display">{t("zone.hienTaiChuaCoBaiBaoKhoaHocNaoT")}</p>
-        </div> : <>
+      }}>{t("zone.khongCoBaiBaoNao")}</MuiBox>
+          <MuiBox component="p" sx={{ marginBottom: "0" }} className="text-muted-custom text-xs max-w-md font-display">{t("zone.hienTaiChuaCoBaiBaoKhoaHocNaoT")}</MuiBox>
+        </MuiBox> : <>
           {/* Table for Desktop & Tablet */}
-          <div className="w-100 rounded-3 overflow-hidden d-none d-md-block shadow-sm" style={{
+          <MuiBox component="div" sx={{ width: "100%", borderRadius: "0.5rem", overflow: "hidden", display: "none", "@media (min-width:768px)": { display: "block" }, boxShadow: "0 .125rem .25rem rgba(0,0,0,.075)" }}  style={{
         backgroundColor: 'var(--bg-card)',
         border: '1px solid var(--border)'
       }}>
-            <Table responsive hover className="m-0 bg-transparent text-main border-0 geography-table" style={{
+            <Table sx={{ margin: "0", bgcolor: "transparent", border: 0 }} responsive hover className="text-main geography-table" style={{
           fontSize: '0.85rem'
         }}>
               <thead>
                 <tr style={{
               borderBottom: '1px solid var(--border)'
             }}>
-                  <th className="bg-transparent text-muted-custom py-3 ps-3 text-xs" style={{
+                  <MuiBox component="th" sx={{ bgcolor: "transparent", paddingTop: "1rem", paddingBottom: "1rem", paddingInlineStart: "1rem" }} className="text-muted-custom text-xs" style={{
                 width: '40px',
                 letterSpacing: '0.05em'
-              }}>#</th>
-                  <th className="bg-transparent text-muted-custom py-3 text-xs" style={{
+              }}>#</MuiBox>
+                  <MuiBox component="th" sx={{ bgcolor: "transparent", paddingTop: "1rem", paddingBottom: "1rem" }} className="text-muted-custom text-xs" style={{
                 letterSpacing: '0.05em'
-              }}>{t("article.tenBaiBao")}</th>
-                  <th className="bg-transparent text-muted-custom py-3 text-xs" style={{
+              }}>{t("article.tenBaiBao")}</MuiBox>
+                  <MuiBox component="th" sx={{ bgcolor: "transparent", paddingTop: "1rem", paddingBottom: "1rem" }} className="text-muted-custom text-xs" style={{
                 letterSpacing: '0.05em'
-              }}>JOURNAL</th>
-                  <th className="bg-transparent text-muted-custom py-3 text-xs text-center" style={{
+              }}>JOURNAL</MuiBox>
+                  <MuiBox component="th" sx={{ bgcolor: "transparent", paddingTop: "1rem", paddingBottom: "1rem", textAlign: "center" }} className="text-muted-custom text-xs" style={{
                 width: '80px',
                 letterSpacing: '0.05em'
-              }}>{t("article.nam1")}</th>
-                  <th className="bg-transparent text-muted-custom py-3 text-xs" style={{
+              }}>{t("article.nam1")}</MuiBox>
+                  <MuiBox component="th" sx={{ bgcolor: "transparent", paddingTop: "1rem", paddingBottom: "1rem" }} className="text-muted-custom text-xs" style={{
                 letterSpacing: '0.05em'
-              }}>DOI</th>
-                  <th className="bg-transparent text-muted-custom py-3 text-xs" style={{
+              }}>DOI</MuiBox>
+                  <MuiBox component="th" sx={{ bgcolor: "transparent", paddingTop: "1rem", paddingBottom: "1rem" }} className="text-muted-custom text-xs" style={{
                 letterSpacing: '0.05em'
-              }}>TOPIC</th>
-                  <th className="bg-transparent text-muted-custom py-3 text-xs text-center" style={{
+              }}>TOPIC</MuiBox>
+                  <MuiBox component="th" sx={{ bgcolor: "transparent", paddingTop: "1rem", paddingBottom: "1rem", textAlign: "center" }} className="text-muted-custom text-xs" style={{
                 width: '60px',
                 letterSpacing: '0.05em'
-              }}>OA</th>
-                  <th className="bg-transparent text-muted-custom py-3 text-xs text-end pe-3" style={{
+              }}>OA</MuiBox>
+                  <MuiBox component="th" sx={{ bgcolor: "transparent", paddingTop: "1rem", paddingBottom: "1rem", textAlign: "right", paddingInlineEnd: "1rem" }} className="text-muted-custom text-xs" style={{
                 width: '80px',
                 letterSpacing: '0.05em'
-              }}>{t("article.chiTiet")}</th>
+              }}>{t("article.chiTiet")}</MuiBox>
                 </tr>
               </thead>
               <tbody>
                 {articles.map((article, index) => {              const topicStyle = getTopicStyle(article.topic_name);
-              return <tr key={article.article_id} onClick={() => onDetailClick(article.article_id)} className="align-middle geography-article-row">
-                      <td className="text-muted-custom ps-3 font-display" style={{
+              return <MuiBox component="tr" sx={{ verticalAlign: "middle" }} key={article.article_id} onClick={() => onDetailClick(article.article_id)} className="geography-article-row">
+                      <MuiBox component="td" sx={{ paddingInlineStart: "1rem" }} className="text-muted-custom font-display" style={{
                   fontSize: '0.8rem'
                 }}>
                         {(page - 1) * 10 + index + 1}
-                      </td>
-                      <td style={{
+                      </MuiBox>
+                      <MuiBox component="td" sx={{ paddingTop: "1rem", paddingBottom: "1rem" }} style={{
                   maxWidth: '380px'
-                }} className="py-3">
+                }} >
                         <div className="geography-article-title line-clamp-2">
                           <LatexText text={article.title} />
                         </div>
-                        {article.abstract && <div className="text-muted-custom mt-1 text-xs text-truncate font-display">
+                        {article.abstract && <MuiBox component="div" sx={{ marginTop: "0.25rem", overflow: "hidden", whiteSpace: "nowrap", textOverflow: "ellipsis" }} className="text-muted-custom text-xs font-display">
                             <LatexText text={article.abstract} />
-                          </div>}
-                      </td>
+                          </MuiBox>}
+                      </MuiBox>
                       <td style={{
                   maxWidth: '180px'
                 }}>
-                        <div className="text-main text-sm text-truncate font-display" style={{
+                        <MuiBox component="div" sx={{ overflow: "hidden", whiteSpace: "nowrap", textOverflow: "ellipsis" }} className="text-main text-sm font-display" style={{
                     fontWeight: 500
                   }}>
                           {article.journal_name}
-                        </div>
+                        </MuiBox>
                       </td>
-                      <td className="text-center font-display" style={{
+                      <MuiBox component="td" sx={{ textAlign: "center" }} className="font-display" style={{
                   color: 'var(--text-muted)'
                 }}>
                         {article.publication_year}
-                      </td>
+                      </MuiBox>
                       <td style={{
                   maxWidth: '140px'
                 }}>
-                        {article.doi ? <div className="d-flex align-items-center gap-1 font-display">
-                            <span className="text-muted-custom text-xs text-truncate" style={{
+                        {article.doi ? <MuiBox component="div" sx={{ display: "flex", alignItems: "center", gap: "0.25rem" }} className="font-display">
+                            <MuiBox component="span" sx={{ overflow: "hidden", whiteSpace: "nowrap", textOverflow: "ellipsis" }} className="text-muted-custom text-xs" style={{
                       fontSize: '0.75rem'
                     }}>
                               {article.doi}
-                            </span>
-                            <Button variant="link" className="p-0 text-muted-custom hover:text-dark d-flex align-items-center" onClick={e => handleCopyDoi(e, article.doi)} title="Copy DOI">
+                            </MuiBox>
+                            <Button sx={{ padding: "0", display: "flex", alignItems: "center" }} variant="link" className="text-muted-custom hover:text-dark" onClick={e => handleCopyDoi(e, article.doi)} title="Copy DOI">
                               <Icon icon="lucide:copy" width="12" />
                             </Button>
-                          </div> : <span className="text-muted text-xs font-display">—</span>}
+                          </MuiBox> : <MuiBox component="span" sx={{ color: "text.secondary" }} className="text-xs font-display">—</MuiBox>}
                       </td>
                       <td>
                         <span className="geography-topic-badge" style={{
@@ -277,30 +281,30 @@ export default function GeographyArticleList({
                           {article.topic_name || t("article.chuaPhanLoai")}
                         </span>
                       </td>
-                      <td className="text-center">
+                      <MuiBox component="td" sx={{ textAlign: "center" }} >
                         {article.is_open_access ? <span className="geography-oa-badge">
                             OA
                           </span> : <span className="text-muted-custom text-xs">—</span>}
-                      </td>
-                      <td className="text-end pe-3">
+                      </MuiBox>
+                      <MuiBox component="td" sx={{ textAlign: "right", paddingInlineEnd: "1rem" }} >
                         <span className="geography-link-accent">{t("article.chiTiet1")}<Icon icon="lucide:arrow-right" width="12" />
                         </span>
-                      </td>
-                    </tr>;
+                      </MuiBox>
+                    </MuiBox>;
             })}
               </tbody>
             </Table>
-          </div>
+          </MuiBox>
 
           {/* Cards list for Mobile */}
-          <div className="d-block d-md-none">
-            <div className="d-flex flex-column gap-3">
+          <MuiBox component="div" sx={{ display: "block", "@media (min-width:768px)": { display: "none" } }} >
+            <MuiBox component="div" sx={{ display: "flex", flexDirection: "column", gap: "1rem" }} >
               {articles.map((article, index) => {            const topicStyle = getTopicStyle(article.topic_name);
-            return <Card key={article.article_id} onClick={() => onDetailClick(article.article_id)} className="journal-dark-card shadow-sm geography-article-row border-0">
-                    <Card.Body className="p-3">
-                      <div className="d-flex align-items-center justify-content-between mb-2">
+            return <Card sx={{ boxShadow: "0 .125rem .25rem rgba(0,0,0,.075)", border: 0 }} key={article.article_id} onClick={() => onDetailClick(article.article_id)} className="journal-dark-card geography-article-row">
+                    <Card.Body sx={{ padding: "1rem" }} >
+                      <MuiBox component="div" sx={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "0.5rem" }} >
                         <span className="text-muted-custom text-xs font-display">#{(page - 1) * 10 + index + 1}</span>
-                        <div className="d-flex gap-1.5 align-items-center">
+                        <MuiBox component="div" sx={{ display: "flex", alignItems: "center" }} className="gap-1.5">
                           <span className="geography-topic-badge" style={{
                       fontSize: '0.65rem',
                       padding: '0.15rem 0.45rem',
@@ -316,23 +320,23 @@ export default function GeographyArticleList({
                     }}>
                               OA
                             </span>}
-                        </div>
-                      </div>
+                        </MuiBox>
+                      </MuiBox>
 
-                      <h6 className="geography-article-title mb-2" style={{
+                      <MuiBox component="h6" sx={{ marginBottom: "0.5rem" }} className="geography-article-title" style={{
                   lineHeight: '1.4',
                   fontSize: '0.9rem'
                 }}>
                         <LatexText text={article.title} />
-                      </h6>
+                      </MuiBox>
 
-                      <div className="pt-2 border-top border-light d-flex align-items-center justify-content-between flex-wrap gap-2">
+                      <MuiBox component="div" sx={{ paddingTop: "0.5rem", borderTop: "1px solid #dee2e6", borderColor: "#dee2e6", display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: "0.5rem" }} >
                         <div>
-                          <div className="text-primary text-xs font-weight-semibold font-display" style={{
+                          <MuiBox component="div" sx={{ color: "primary.main" }} className="text-xs font-weight-semibold font-display" style={{
                       fontSize: '0.75rem'
                     }}>
                             {article.journal_name}
-                          </div>
+                          </MuiBox>
                           <div className="text-muted-custom text-xs font-display mt-0.5" style={{
                       fontSize: '0.7rem'
                     }}>{t("article.nam2")}{article.publication_year} {article.doi ? ` · DOI: ${article.doi}` : ''}
@@ -342,14 +346,14 @@ export default function GeographyArticleList({
                     fontSize: '0.75rem'
                   }}>{t("article.chiTiet1")}<Icon icon="lucide:arrow-right" width="12" />
                         </span>
-                      </div>
+                      </MuiBox>
                     </Card.Body>
                   </Card>;
           })}
-            </div>
-          </div>
+            </MuiBox>
+          </MuiBox>
 
           {total > 0 && totalPages > 1 && <AdminPagination totalItems={total} currentPage={page} limit={10} onPageChange={onPageChange} entityName="bài báo" />}
         </>}
-    </div>;
+    </MuiBox>;
 }

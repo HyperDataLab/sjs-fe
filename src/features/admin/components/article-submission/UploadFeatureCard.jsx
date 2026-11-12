@@ -1,25 +1,29 @@
-import { Card } from 'react-bootstrap';
+import { Card } from '@/shared/components/ui/muiAdapters';
 import Icon from '../../../../shared/components/Icon';
+
+
+import MuiBox from '@mui/material/Box';
+
 
 /**
  * UploadFeatureCard Component
  * Displays a feature highlight badge card used below upload file zone.
- * 
+ *
  * @param {Object} props - Props
  * @param {string} props.title - Feature title
  * @param {string} props.description - Feature details text
- * @param {string} props.icon - Lucide iconify name
+ * @param {string} props.icon - Heroicons bridge name
  */
 export default function UploadFeatureCard({ title, description, icon }) {
   return (
-    <Card 
-      className="p-3 border rounded-3 bg-white h-100"
+    <Card sx={{ padding: "1rem", border: "1px solid #dee2e6", borderRadius: "0.5rem", bgcolor: "background.paper", height: "100%" }}
+
       style={{ boxShadow: 'none' }}
     >
-      <div className="d-flex flex-column gap-2">
+      <MuiBox component="div" sx={{ display: "flex", flexDirection: "column", gap: "0.5rem" }} >
         {/* Bullet Icon indicator */}
-        <div 
-          className="rounded-circle d-flex align-items-center justify-content-center"
+        <MuiBox component="div" sx={{ borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center" }}
+
           style={{
             width: '32px',
             height: '32px',
@@ -28,16 +32,16 @@ export default function UploadFeatureCard({ title, description, icon }) {
           }}
         >
           <Icon icon={icon} width="16" />
-        </div>
+        </MuiBox>
 
         {/* Feature title & description details */}
         <div>
-          <h6 className="fw-bold text-main mb-1" style={{ fontSize: '0.88rem' }}>{title}</h6>
-          <p className="text-muted-custom small mb-0 lh-sm" style={{ fontSize: '0.78rem' }}>
+          <MuiBox component="h6" sx={{ fontWeight: 700, marginBottom: "0.25rem" }} className="text-main" style={{ fontSize: '0.88rem' }}>{title}</MuiBox>
+          <MuiBox component="p" sx={{ fontSize: "0.875em", marginBottom: "0", lineHeight: 1.25 }} className="text-muted-custom" style={{ fontSize: '0.78rem' }}>
             {description}
-          </p>
+          </MuiBox>
         </div>
-      </div>
+      </MuiBox>
     </Card>
   );
 }

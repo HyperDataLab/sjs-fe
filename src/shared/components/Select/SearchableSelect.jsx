@@ -1,6 +1,10 @@
 import { useTranslation } from "react-i18next";
 import { useState, useEffect, useRef } from 'react';
-import { Icon } from '@iconify/react';
+import Icon from '../Icon.jsx';
+import { getClassNameSx, stripMappedClassNames } from '../../theme/classNameSx';
+
+import MuiBox from '@mui/material/Box';
+
 export default function SearchableSelect({
   options = [],
   value = '',
@@ -60,51 +64,51 @@ export default function SearchableSelect({
     e.stopPropagation();
     onChange('');
   };
-  return <div className="position-relative" ref={wrapperRef}>
-      <div className={`form-control form-control-lg d-flex align-items-center gap-2 ${disabled ? 'bg-light text-muted' : ''}`} style={{
+  return <MuiBox component="div" sx={{ position: "relative" }}  ref={wrapperRef}>
+      <MuiBox component="div" sx={getClassNameSx(`form-control form-control-lg d-flex align-items-center gap-2 ${disabled ? 'bg-light text-muted' : ''}`)} className={stripMappedClassNames(`form-control form-control-lg d-flex align-items-center gap-2 ${disabled ? 'bg-light text-muted' : ''}`)} style={{
       cursor: disabled ? 'not-allowed' : 'pointer',
       backgroundColor: 'var(--bg-main)',
       color: 'var(--text-main)',
       borderColor: 'var(--border)'
     }} onClick={() => !disabled && setIsOpen(!isOpen)}>
-        <span className="text-truncate flex-grow-1" style={{
+        <MuiBox component="span" sx={{ overflow: "hidden", whiteSpace: "nowrap", textOverflow: "ellipsis", flexGrow: 1 }}  style={{
         color: selectedOption ? 'inherit' : 'var(--text-muted)'
       }}>
           {selectedOption ? selectedOption.label : resolvedPlaceholder}
-        </span>
-        
-        <div className="d-flex align-items-center gap-2 flex-shrink-0">
-          {(loading || isSearching) && <span className="spinner-border spinner-border-sm text-primary" role="status"></span>}
-          {selectedOption && !disabled && <Icon icon="lucide:x" width="16" className="text-muted hover-danger cursor-pointer" onClick={handleClear} />}
-          <Icon icon="lucide:chevron-down" width="18" className="text-muted" />
-        </div>
-      </div>
+        </MuiBox>
 
-      {isOpen && <div className="position-absolute w-100 bg-white border rounded-3 shadow mt-1 z-3" style={{
+        <MuiBox component="div" sx={{ display: "flex", alignItems: "center", gap: "0.5rem", flexShrink: 0 }} >
+          {(loading || isSearching) && <MuiBox component="span" sx={{ display: "inline-block", width: "1rem", height: "1rem", verticalAlign: "-0.125em", border: "0.25em solid currentColor", borderRightColor: "transparent", borderRadius: "50%", animation: "spin .75s linear infinite", borderWidth: "0.2em", color: "primary.main" }}  role="status"></MuiBox>}
+          {selectedOption && !disabled && <Icon sx={{ color: "text.secondary" }} icon="lucide:x" width="16" className="hover-danger cursor-pointer" onClick={handleClear} />}
+          <Icon sx={{ color: "text.secondary" }} icon="lucide:chevron-down" width="18"  />
+        </MuiBox>
+      </MuiBox>
+
+      {isOpen && <MuiBox component="div" sx={{ position: "absolute", width: "100%", bgcolor: "background.paper", border: "1px solid #dee2e6", borderRadius: "0.5rem", boxShadow: "0 .5rem 1rem rgba(0,0,0,.15)", marginTop: "0.25rem", zIndex: 3 }}  style={{
       maxHeight: '300px',
       display: 'flex',
       flexDirection: 'column'
     }}>
-          <div className="p-2 border-bottom">
-            <div className="input-group input-group-sm">
-              <span className="input-group-text bg-transparent border-end-0">
-                <Icon icon="lucide:search" width="14" className="text-muted" />
-              </span>
-              <input type="text" className="form-control border-start-0 ps-0 shadow-none" placeholder={t("common.timKiem")} value={searchTerm} onChange={e => setSearchTerm(e.target.value)} onClick={e => e.stopPropagation()} autoFocus />
-            </div>
-          </div>
-          
-          <div className="overflow-auto py-1" style={{
+          <MuiBox component="div" sx={{ padding: "0.5rem", borderBottom: "1px solid #dee2e6" }} >
+            <MuiBox component="div" sx={{ display: "flex", flexWrap: "wrap", alignItems: "stretch", width: "100%", "& input, & select, & button": { minHeight: 31, fontSize: "0.875rem" } }} >
+              <MuiBox component="span" sx={{ display: "flex", alignItems: "center", px: "0.75rem", py: "0.375rem", color: "#212529", textAlign: "center", whiteSpace: "nowrap", bgcolor: "transparent", border: "1px solid #dee2e6", borderRadius: "0.375rem", borderInlineEnd: 0 }} >
+                <Icon sx={{ color: "text.secondary" }} icon="lucide:search" width="14"  />
+              </MuiBox>
+              <MuiBox component="input" sx={{ display: "block", width: "100%", px: "0.75rem", py: "0.375rem", fontSize: "1rem", lineHeight: 1.5, color: "text.primary", bgcolor: "background.paper", border: "1px solid #dee2e6", borderRadius: "0.375rem", borderInlineStart: 0, paddingInlineStart: "0", boxShadow: "none" }} type="text"  placeholder={t("common.timKiem")} value={searchTerm} onChange={e => setSearchTerm(e.target.value)} onClick={e => e.stopPropagation()} autoFocus />
+            </MuiBox>
+          </MuiBox>
+
+          <MuiBox component="div" sx={{ overflow: "auto", paddingTop: "0.25rem", paddingBottom: "0.25rem" }}  style={{
         maxHeight: '250px'
       }}>
-            {filteredOptions.length === 0 ? <div className="p-3 text-center text-muted small">
+            {filteredOptions.length === 0 ? <MuiBox component="div" sx={{ padding: "1rem", textAlign: "center", color: "text.secondary", fontSize: "0.875em" }} >
                 {isSearching ? t("common.dangTimKiem") : t("common.khongTimThayKetQuaPhuHop1")}
-              </div> : filteredOptions.map(opt => <div key={opt.value} className={`dropdown-item px-3 py-2 d-flex align-items-center gap-2 cursor-pointer ${String(opt.value) === String(value) ? 'bg-light text-primary fw-medium' : 'text-dark'}`} onClick={() => selectOption(opt.value)}>
-                  <span className="text-truncate" title={opt.label || ''}>{opt.label || ''}</span>
-                  {String(opt.value) === String(value) && <Icon icon="lucide:check" width="16" className="ms-auto text-primary" />}
-                </div>)}
-            {!fetchOptions && allFiltered.length > limit && <div className="px-3 py-2 text-muted small fst-italic text-center bg-light border-top mt-1">{t("common.dangHienThi")}{limit}{t("common.ketQuaHayNhapThemDeLoc")}</div>}
-          </div>
-        </div>}
-    </div>;
+              </MuiBox> : filteredOptions.map(opt => <MuiBox component="div" sx={getClassNameSx(`dropdown-item px-3 py-2 d-flex align-items-center gap-2 cursor-pointer ${String(opt.value) === String(value) ? 'bg-light text-primary fw-medium' : 'text-dark'}`)} key={opt.value} className={stripMappedClassNames(`dropdown-item px-3 py-2 d-flex align-items-center gap-2 cursor-pointer ${String(opt.value) === String(value) ? 'bg-light text-primary fw-medium' : 'text-dark'}`)} onClick={() => selectOption(opt.value)}>
+                  <MuiBox component="span" sx={{ overflow: "hidden", whiteSpace: "nowrap", textOverflow: "ellipsis" }}  title={opt.label || ''}>{opt.label || ''}</MuiBox>
+                  {String(opt.value) === String(value) && <Icon sx={{ ml: "auto", color: "primary.main" }} icon="lucide:check" width="16"  />}
+                </MuiBox>)}
+            {!fetchOptions && allFiltered.length > limit && <MuiBox component="div" sx={{ paddingLeft: "1rem", paddingRight: "1rem", paddingTop: "0.5rem", paddingBottom: "0.5rem", color: "text.secondary", fontSize: "0.875em", fontStyle: "italic", textAlign: "center", bgcolor: "#f8f9fa", borderTop: "1px solid #dee2e6", marginTop: "0.25rem" }} >{t("common.dangHienThi")}{limit}{t("common.ketQuaHayNhapThemDeLoc")}</MuiBox>}
+          </MuiBox>
+        </MuiBox>}
+    </MuiBox>;
 }

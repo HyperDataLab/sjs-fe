@@ -5,10 +5,12 @@ import { t } from "i18next";
  * File: features\catalog\components\FilterPanel.jsx
  */
 import { useMemo, useState } from 'react';
-import { Dropdown, Form } from 'react-bootstrap';
-import { Icon } from '@iconify/react';
+import { Dropdown, Form } from '@/shared/components/ui/muiAdapters';
+import Icon from '../../../shared/components/Icon.jsx';
 import { FilterCard } from '../../../shared/components/Card';
 import { FilterSearch } from '../../../shared/components/Input';
+
+
 export default function FilterPanel({
   searchInput = '',
   setSearchInput,
@@ -205,7 +207,7 @@ export default function FilterPanel({
         </Dropdown.Menu>
       </Dropdown>;
   };
-  return <FilterCard className="catalog-filter-card text-start mb-4">
+  return <FilterCard sx={{ textAlign: "left", marginBottom: "1.5rem" }} className="catalog-filter-card">
       <div className="catalog-filter-layout">
         <div className="catalog-filter-toolbar" aria-label="Catalog filters">
           {filterConfigs.map(renderDropdown)}
@@ -221,12 +223,12 @@ export default function FilterPanel({
               </div>
 
               <button type="button" onClick={() => onAccessSelect(accessValue === 'open_access' ? 'all' : 'open_access')} className={`catalog-toggle-row ${accessValue === 'open_access' ? 'is-active' : ''}`}>
-                <Form.Check type="switch" checked={accessValue === 'open_access'} readOnly className="m-0" />
+                <Form.Check sx={{ margin: "0" }} type="switch" checked={accessValue === 'open_access'} readOnly  />
                 <span>Only Open Access Journals</span>
               </button>
 
               <button type="button" onClick={() => onOaDiamondToggle && onOaDiamondToggle(!isOaDiamond)} className={`catalog-toggle-row ${isOaDiamond ? 'is-active' : ''}`}>
-                <Form.Check type="switch" checked={isOaDiamond} readOnly className="m-0" />
+                <Form.Check sx={{ margin: "0" }} type="switch" checked={isOaDiamond} readOnly  />
                 <span>Only OA Diamond</span>
               </button>
             </Dropdown.Menu>

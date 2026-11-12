@@ -1,9 +1,13 @@
 import { useTranslation } from "react-i18next";
 import { t } from "i18next";
-import { Table, Button } from 'react-bootstrap';
+import { Table, Button } from '@/shared/components/ui/muiAdapters';
 import { useNavigate } from 'react-router-dom';
-import { Icon } from '@iconify/react';
+import Icon from '../../../shared/components/Icon.jsx';
 import { StateCard } from '../../../shared/components/Card';
+import { getClassNameSx, stripMappedClassNames } from '../../../shared/theme/classNameSx';
+
+import MuiBox from '@mui/material/Box';
+
 
 /**
  * Component JournalTableAdmin - Bảng hiển thị danh sách tạp chí phục vụ mục đích quản trị (Admin View).
@@ -22,20 +26,20 @@ export default function JournalTableAdmin({
 
   // Trạng thái trống nếu không tìm thấy dữ liệu phù hợp với bộ lọc
   if (!journals || journals.length === 0) {
-    return <StateCard variant="neutral" icon="lucide:search-x" title={t("admin.khongTimThayTapChiNao")} description={t("admin.hayThuThayDoiTuKhoaTimKiemHoac")} className="my-4 border-dashed" />;
+    return <StateCard sx={{ marginTop: "1.5rem", marginBottom: "1.5rem" }} variant="neutral" icon="lucide:search-x" title={t("admin.khongTimThayTapChiNao")} description={t("admin.hayThuThayDoiTuKhoaTimKiemHoac")} className="border-dashed" />;
   }
-  return <div className="journal-table-shell table-responsive shadow-sm rounded-3 overflow-hidden">
-      <Table hover className="journal-table align-middle mb-0 text-start bg-white">
-        <thead className="border-bottom" style={{
+  return <MuiBox component="div" sx={{ width: "100%", overflowX: "auto", WebkitOverflowScrolling: "touch", boxShadow: "0 .125rem .25rem rgba(0,0,0,.075)", borderRadius: "0.5rem", overflow: "hidden" }} className="journal-table-shell">
+      <Table sx={{ verticalAlign: "middle", marginBottom: "0", textAlign: "left", bgcolor: "background.paper" }} hover className="journal-table">
+        <MuiBox component="thead" sx={{ borderBottom: "1px solid #dee2e6" }}  style={{
         fontSize: '0.75rem',
         letterSpacing: '0.05em'
       }}>
           <tr>
-            <th className="py-3.5 ps-4" style={{
+            <MuiBox component="th" sx={{ paddingInlineStart: "1.5rem" }} className="py-3.5" style={{
             width: '60px',
             backgroundColor: '#f8fafc',
             color: '#64748b'
-          }}>#</th>
+          }}>#</MuiBox>
             <th className="py-3.5" style={{
             backgroundColor: '#f8fafc',
             color: '#64748b'
@@ -60,13 +64,13 @@ export default function JournalTableAdmin({
             backgroundColor: '#f8fafc',
             color: '#64748b'
           }}>Status</th>
-            <th className="py-3.5 pe-4 text-end" style={{
+            <MuiBox component="th" sx={{ paddingInlineEnd: "1.5rem", textAlign: "right" }} className="py-3.5" style={{
             width: '140px',
             backgroundColor: '#f8fafc',
             color: '#64748b'
-          }}>{t("journal.hanhDong")}</th>
+          }}>{t("journal.hanhDong")}</MuiBox>
           </tr>
-        </thead>
+        </MuiBox>
         <tbody>
           {journals.map((journal, index) => {
           // Tính toán số thứ tự hiển thị liên tục theo phân trang hệ thống
@@ -74,73 +78,73 @@ export default function JournalTableAdmin({
           const id = journal.id || journal.journal_id;
           return <tr key={id} className="journal-table-row transition-hover">
                 {/* Số thứ tự dòng */}
-                <td className="ps-4 fw-medium text-muted-custom">
+                <MuiBox component="td" sx={{ paddingInlineStart: "1.5rem", fontWeight: 500 }} className="text-muted-custom">
                   {displayIndex}
-                </td>
+                </MuiBox>
 
                 {/* Tên tạp chí và nhà xuất bản */}
-                <td className="py-3">
-                  <div className="fw-bold text-main line-clamp-1">
+                <MuiBox component="td" sx={{ paddingTop: "1rem", paddingBottom: "1rem" }} >
+                  <MuiBox component="div" sx={{ fontWeight: 700 }} className="text-main line-clamp-1">
                     {journal.title || journal.display_name}
-                  </div>
-                  <div className="text-muted-custom small d-flex align-items-center gap-1 mt-0.5">
+                  </MuiBox>
+                  <MuiBox component="div" sx={{ fontSize: "0.875em", display: "flex", alignItems: "center", gap: "0.25rem" }} className="text-muted-custom mt-0.5">
                     <Icon icon="lucide:building" width="12" />
                     <span>{journal.publisher || t("journal.chuaCapNhatNhaXuatBan")}</span>
-                  </div>
-                </td>
+                  </MuiBox>
+                </MuiBox>
 
                 {/* Mã số định danh ISSN quốc tế */}
-                <td className="font-monospace small">
+                <MuiBox component="td" sx={{ fontFamily: "monospace", fontSize: "0.875em" }} >
                   <div>P: {journal.issn || '—'}</div>
                   <div className="text-muted-custom">E: {journal.onlineIssn || '—'}</div>
-                </td>
+                </MuiBox>
 
                 {/* Lĩnh vực và chuyên mục phân loại nghiên cứu */}
                 <td>
-                  <span className="badge bg-light text-dark border font-display px-2 py-1">
+                  <MuiBox component="span" sx={{ display: "inline-block", px: "0.65em", py: "0.35em", fontSize: "0.75em", fontWeight: 700, lineHeight: 1, color: "#212529", textAlign: "center", whiteSpace: "nowrap", verticalAlign: "baseline", borderRadius: "0.375rem", bgcolor: "#f8f9fa", border: "1px solid #dee2e6", paddingLeft: "0.5rem", paddingRight: "0.5rem", paddingTop: "0.25rem", paddingBottom: "0.25rem" }} className="font-display">
                     {journal.subjectCategory || t("journal.phanLoaiChung")}
-                  </span>
-                  <div className="small text-muted-custom mt-1 text-truncate" style={{
+                  </MuiBox>
+                  <MuiBox component="div" sx={{ fontSize: "0.875em", marginTop: "0.25rem", overflow: "hidden", whiteSpace: "nowrap", textOverflow: "ellipsis" }} className="text-muted-custom" style={{
                 maxWidth: '180px'
               }}>
                     {journal.subjectArea || t("journal.chuyenNganhHep")}
-                  </div>
+                  </MuiBox>
                 </td>
 
                 {/* Tên giáo sư / tổng biên tập chịu trách nhiệm nội dung */}
-                <td className="text-main fw-medium">
+                <MuiBox component="td" sx={{ fontWeight: 500 }} className="text-main">
                   {journal.publisher || t("admin.chuaChiDinh")}
-                </td>
+                </MuiBox>
 
                 {/* Ngày cập nhật dữ liệu cấu trúc gần nhất */}
-                <td className="text-muted-custom small font-monospace">
+                <MuiBox component="td" sx={{ fontSize: "0.875em", fontFamily: "monospace" }} className="text-muted-custom">
                   {journal.lastUpdated || '—'}
-                </td>
+                </MuiBox>
 
                 {/* Badge trạng thái hoạt động ứng với các token màu của Design System */}
                 <td>
-                  <span className={`badge px-2 py-1.5 rounded ${journal.status === 'Active' ? 'bg-success-subtle text-success' : 'bg-warning-subtle text-warning'}`}>
+                  <MuiBox component="span" sx={getClassNameSx(`badge px-2 py-1.5 rounded ${journal.status === 'Active' ? 'bg-success-subtle text-success' : 'bg-warning-subtle text-warning'}`)} className={stripMappedClassNames(`badge px-2 py-1.5 rounded ${journal.status === 'Active' ? 'bg-success-subtle text-success' : 'bg-warning-subtle text-warning'}`)}>
                     {journal.status || 'Draft'}
-                  </span>
+                  </MuiBox>
                 </td>
 
                 {/* Các nút bấm thao tác phân quyền quản trị điều hướng dữ liệu */}
-                <td className="pe-4 text-end">
-                  <div className="d-flex justify-content-end gap-1.5">
+                <MuiBox component="td" sx={{ paddingInlineEnd: "1.5rem", textAlign: "right" }} >
+                  <MuiBox component="div" sx={{ display: "flex", justifyContent: "flex-end" }} className="gap-1.5">
                     {/* Nút vào quản lý kho cấu trúc Volume và Issue (Màn hình 4) */}
-                    <Button variant="light" size="sm" className="btn-custom-sm d-inline-flex align-items-center justify-content-center p-2 rounded-2" onClick={() => navigate('/admin/journals/repository')} title={t("admin.quanLyRepoVolumeIssue")}>
-                      <Icon icon="lucide:layers" width="16" className="text-dark" />
+                    <Button sx={{ display: "inline-flex", alignItems: "center", justifyContent: "center", padding: "0.5rem", borderRadius: "0.375rem" }} variant="light" size="sm" className="btn-custom-sm" onClick={() => navigate('/admin/journals/repository')} title={t("admin.quanLyRepoVolumeIssue")}>
+                      <Icon sx={{ color: "#212529" }} icon="lucide:layers" width="16"  />
                     </Button>
-                    
+
                     {/* Nút vào form chỉnh sửa chi tiết cấu hình Journal (Màn hình 12) */}
-                    <Button variant="outline-dark" size="sm" className="btn-custom-sm d-inline-flex align-items-center justify-content-center p-2 rounded-2" onClick={() => navigate(`/admin/journals/${id}/edit`)} title={t("admin.chinhSuaThongTinTapChi")}>
+                    <Button sx={{ display: "inline-flex", alignItems: "center", justifyContent: "center", padding: "0.5rem", borderRadius: "0.375rem" }} variant="outline-dark" size="sm" className="btn-custom-sm" onClick={() => navigate(`/admin/journals/${id}/edit`)} title={t("admin.chinhSuaThongTinTapChi")}>
                       <Icon icon="lucide:edit-3" width="16" />
                     </Button>
-                  </div>
-                </td>
+                  </MuiBox>
+                </MuiBox>
               </tr>;
         })}
         </tbody>
       </Table>
-    </div>;
+    </MuiBox>;
 }

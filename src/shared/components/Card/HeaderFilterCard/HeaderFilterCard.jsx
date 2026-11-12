@@ -1,23 +1,8 @@
-/**
- * File source thuộc hệ thống FE ResearchPulse.
- *
- * File: shared\components\Card\HeaderFilterCard\HeaderFilterCard.jsx
- */
-import './HeaderFilterCard.css';
+import Box from '@mui/material/Box';
+import Chip from '@mui/material/Chip';
+import Stack from '@mui/material/Stack';
+import Typography from '@mui/material/Typography';
 
-/**
- * Shared header/filter card for data pages that need a title, count badge,
- * and right-side filter/search controls.
- *
- * @param {Object} props - Component props
- * @param {string} props.title - Toolbar title, e.g. "All Contributors"
- * @param {number|string} [props.count] - Optional total count shown in the badge
- * @param {string} [props.singularLabel='Item'] - Label when count equals 1
- * @param {string} [props.pluralLabel='Items'] - Label when count is not 1
- * @param {React.ReactNode} props.children - Filter/search/action controls
- * @param {string} [props.className] - Additional wrapper classes
- * @returns {JSX.Element}
- */
 export default function HeaderFilterCard({
   title,
   count,
@@ -25,23 +10,32 @@ export default function HeaderFilterCard({
   pluralLabel = 'Items',
   children,
   className = '',
+  sx,
 }) {
   const hasCount = count !== undefined && count !== null;
-  const normalizedCount = Number(count);
-  const label = normalizedCount === 1 ? singularLabel : pluralLabel;
+  const label = Number(count) === 1 ? singularLabel : pluralLabel;
 
   return (
-    <div className={`header-filter-card ${className}`.trim()}>
-      <div className="header-filter-card__summary">
-        <span className="header-filter-card__title">{title}</span>
-        {hasCount && (
-          <span className="header-filter-card__count">
-            {count} {label}
-          </span>
-        )}
-      </div>
+    <Stack
+      className={className}
+      direction={{ xs: 'column', md: 'row' }}
+      alignItems={{ xs: 'stretch', md: 'center' }}
+      justifyContent="space-between"
+      spacing={1.5}
+      sx={[{ mb: 3, pb: 2, borderBottom: 1, borderColor: 'divider' }, sx]}
+    >
+      <Stack direction="row" alignItems="center" flexWrap="wrap" spacing={1.5}>
+        <Typography component="h2" variant="h6" sx={{ fontWeight: 700 }}>
+          {title}
+        </Typography>
+        {hasCount && <Chip label={`${count} ${label}`} color="primary" size="small" />}
+      </Stack>
 
-      {children && <div className="header-filter-card__controls">{children}</div>}
-    </div>
+      {children && (
+        <Box sx={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 1.25 }}>
+          {children}
+        </Box>
+      )}
+    </Stack>
   );
 }

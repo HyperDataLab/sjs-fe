@@ -4,19 +4,23 @@
  * File: features\landing\components\Features.jsx
  */
 import { useTranslation } from 'react-i18next';
-import Container from 'react-bootstrap/Container';
-import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
-import Card from 'react-bootstrap/Card';
+import { Container } from '@/shared/components/ui/muiAdapters';
+import { Row } from '@/shared/components/ui/muiAdapters';
+import { Col } from '@/shared/components/ui/muiAdapters';
+import { Card } from '@/shared/components/ui/muiAdapters';
 import Icon from '../../../shared/components/Icon';
+
+
+import MuiBox from '@mui/material/Box';
+
 
 /**
  * Reusable Feature Card Component
  */
 function FeatureCard({ icon, title, description }) {
   return (
-    <Card 
-      className="glass-card rounded-4 p-4 h-100 text-start position-relative overflow-hidden"
+    <Card sx={{ borderRadius: "0.75rem", padding: "1.5rem", height: "100%", textAlign: "left", position: "relative", overflow: "hidden" }}
+      className="glass-card"
       style={{
         backgroundColor: 'var(--bg-card)',
         borderColor: 'var(--border)',
@@ -24,8 +28,8 @@ function FeatureCard({ icon, title, description }) {
       }}
     >
       {/* Icon Wrapper */}
-      <div 
-        className="d-flex align-items-center justify-content-center mb-4"
+      <MuiBox component="div" sx={{ display: "flex", alignItems: "center", justifyContent: "center", marginBottom: "1.5rem" }}
+
         style={{
           width: '48px',
           height: '48px',
@@ -36,18 +40,18 @@ function FeatureCard({ icon, title, description }) {
           transition: 'all 0.3s ease'
         }}
       >
-        <Icon icon={icon} className="fs-4" />
-      </div>
+        <Icon sx={{ fontSize: "1.5rem" }} icon={icon}  />
+      </MuiBox>
 
       {/* Card Content */}
-      <Card.Title 
-        className="font-display text-main mb-2" 
+      <Card.Title sx={{ marginBottom: "0.5rem" }}
+        className="font-display text-main"
         style={{ fontWeight: 700, fontSize: '1.1rem', letterSpacing: '0.01em' }}
       >
         {title}
       </Card.Title>
-      <Card.Text 
-        className="text-muted-custom leading-relaxed mb-0" 
+      <Card.Text sx={{ marginBottom: "0" }}
+        className="text-muted-custom leading-relaxed"
         style={{ fontSize: '0.85rem', lineHeight: 1.6 }}
       >
         {description}
@@ -99,19 +103,19 @@ export default function Features() {
   ];
 
   return (
-    <section 
-      id="features" 
-      className="py-5 position-relative"
-      style={{ 
-        backgroundColor: 'var(--bg-main)', 
+    <MuiBox component="section" sx={{ paddingTop: "3rem", paddingBottom: "3rem", position: "relative" }}
+      id="features"
+
+      style={{
+        backgroundColor: 'var(--bg-main)',
         overflow: 'hidden',
         borderTop: '1px solid var(--border)',
         borderBottom: '1px solid var(--border)'
       }}
     >
       {/* Subtle glowing lights behind features */}
-      <div 
-        className="position-absolute pointer-events-none"
+      <MuiBox component="div" sx={{ position: "absolute", pointerEvents: "none" }}
+
         style={{
           top: '20%',
           left: '10%',
@@ -122,8 +126,8 @@ export default function Features() {
           filter: 'blur(100px)'
         }}
       />
-      <div 
-        className="position-absolute pointer-events-none"
+      <MuiBox component="div" sx={{ position: "absolute", pointerEvents: "none" }}
+
         style={{
           bottom: '20%',
           right: '10%',
@@ -135,27 +139,27 @@ export default function Features() {
         }}
       />
 
-      <Container className="position-relative z-3 py-5">
-        
+      <Container sx={{ position: "relative", zIndex: 3, paddingTop: "3rem", paddingBottom: "3rem" }} >
+
         {/* Section Header */}
-        <div className="text-center mb-5 reveal-on-scroll">
-          <div className="d-inline-flex align-items-center gap-2 mb-2 text-xs font-bold tracking-wider text-uppercase" style={{ fontSize: '0.75rem', color: 'var(--primary)' }}>
+        <MuiBox component="div" sx={{ textAlign: "center", marginBottom: "3rem" }} className="reveal-on-scroll">
+          <MuiBox component="div" sx={{ display: "inline-flex", alignItems: "center", gap: "0.5rem", marginBottom: "0.5rem", textTransform: "uppercase" }} className="text-xs font-bold tracking-wider" style={{ fontSize: '0.75rem', color: 'var(--primary)' }}>
             <span style={{ width: '24px', height: '1px', backgroundColor: 'var(--primary)' }} />
             <span>{t('featuresSubtitle')}</span>
-          </div>
-          <h2 
-            className="font-display text-main" 
+          </MuiBox>
+          <h2
+            className="font-display text-main"
             style={{ fontWeight: 800, fontSize: 'calc(1.5rem + 1.2vw)', letterSpacing: '-0.01em' }}
           >
             {t('featuresTitle')}
           </h2>
-          <p className="text-secondary fs-6 mx-auto mb-0" style={{ color: '#adb5bd', maxWidth: '36rem' }}>
+          <MuiBox component="p" sx={{ color: "#6c757d", fontSize: "1rem", mx: "auto", marginBottom: "0" }}  style={{ color: '#adb5bd', maxWidth: '36rem' }}>
             {t('featuresDesc')}
-          </p>
-        </div>
+          </MuiBox>
+        </MuiBox>
 
         {/* Grid of Feature Cards */}
-        <Row className="g-4">
+        <Row sx={{ gap: "1.5rem" }} >
           {featureList.map((feature, index) => (
             <Col xs={12} md={6} lg={4} key={index} className={`reveal-on-scroll delay-${(index + 1) * 100}`}>
               <FeatureCard
@@ -168,6 +172,6 @@ export default function Features() {
         </Row>
 
       </Container>
-    </section>
+    </MuiBox>
   );
 }

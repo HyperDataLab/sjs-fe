@@ -1,9 +1,13 @@
 import { useTranslation } from "react-i18next";
 import { useState, useEffect } from 'react';
-import { Button } from 'react-bootstrap';
+import { Button } from '@/shared/components/ui/muiAdapters';
 import { Link } from 'react-router-dom';
 import Icon from '../../../shared/components/Icon';
 import ROUTES from '../../../app/routes/routePaths';
+
+
+import MuiBox from '@mui/material/Box';
+
 export default function ForgotPasswordSuccess({
   onResend,
   isLoading
@@ -22,44 +26,44 @@ export default function ForgotPasswordSuccess({
     onResend();
     setCountdown(60); // Reset timer
   };
-  return <div className="text-center py-4 animate-fade-in">
-      <div className="d-inline-flex align-items-center justify-content-center rounded-circle mb-4" style={{
+  return <MuiBox component="div" sx={{ textAlign: "center", paddingTop: "1.5rem", paddingBottom: "1.5rem" }} className="animate-fade-in">
+      <MuiBox component="div" sx={{ display: "inline-flex", alignItems: "center", justifyContent: "center", borderRadius: "50%", marginBottom: "1.5rem" }}  style={{
       width: '4.5rem',
       height: '4.5rem',
       backgroundColor: 'var(--primary-light)',
       color: 'var(--primary)'
     }}>
         <Icon icon="lucide:check-circle" width="40" height="40" />
-      </div>
+      </MuiBox>
 
-      <h3 className="font-display fw-bold mb-3 text-main" style={{
+      <MuiBox component="h3" sx={{ fontWeight: 700, marginBottom: "1rem" }} className="font-display text-main" style={{
       fontSize: '1.75rem'
-    }}>{t("auth.kiemTraEmailCuaBan")}</h3>
-      
-      <p className="text-muted-custom text-sm mb-4 leading-relaxed" style={{
+    }}>{t("auth.kiemTraEmailCuaBan")}</MuiBox>
+
+      <MuiBox component="p" sx={{ marginBottom: "1.5rem" }} className="text-muted-custom text-sm leading-relaxed" style={{
       lineHeight: 1.6
-    }}>{t("auth.neuEmailTonTaiTrongHeThongLien")}</p>
+    }}>{t("auth.neuEmailTonTaiTrongHeThongLien")}</MuiBox>
 
       {/* Actions */}
-      <div className="d-flex flex-column gap-3">
-        <Button variant="link" onClick={handleResendClick} disabled={countdown > 0 || isLoading} className="text-decoration-none text-sm font-semibold p-0 border-0" style={{
+      <MuiBox component="div" sx={{ display: "flex", flexDirection: "column", gap: "1rem" }} >
+        <Button sx={{ textDecoration: "none", padding: "0", border: 0 }} variant="link" onClick={handleResendClick} disabled={countdown > 0 || isLoading} className="text-sm font-semibold" style={{
         color: countdown > 0 ? 'var(--text-muted)' : 'var(--primary)',
         cursor: countdown > 0 ? 'not-allowed' : 'pointer'
       }}>
           {countdown > 0 ? `Gửi lại email (${countdown}s)` : t("auth.guiLaiEmail")}
         </Button>
 
-        <div className="w-100" style={{
+        <MuiBox component="div" sx={{ width: "100%" }}  style={{
         height: '1px',
         background: 'var(--border)'
       }} />
 
-        <Link to={ROUTES.LOGIN} className="text-decoration-none text-sm font-semibold py-2 d-inline-flex align-items-center justify-content-center gap-1.5 transition-all" style={{
+        <MuiBox component={Link} sx={{ textDecoration: "none", paddingTop: "0.5rem", paddingBottom: "0.5rem", display: "inline-flex", alignItems: "center", justifyContent: "center" }} to={ROUTES.LOGIN} className="text-sm font-semibold gap-1.5 transition-all" style={{
         color: 'var(--btn-dark)'
       }}>
           <Icon icon="lucide:arrow-left" width="16" />
           <span>{t("auth.quayLaiDangNhap")}</span>
-        </Link>
-      </div>
-    </div>;
+        </MuiBox>
+      </MuiBox>
+    </MuiBox>;
 }

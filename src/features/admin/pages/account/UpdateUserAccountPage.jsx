@@ -1,12 +1,16 @@
 import { useTranslation } from "react-i18next";
 import { t } from "i18next";
 import { useEffect, useState } from 'react';
-import { Alert, Card } from 'react-bootstrap';
+import { Alert, Card } from '@/shared/components/ui/muiAdapters';
 import { useNavigate, useParams, Link } from 'react-router-dom';
 import UserAccountForm from '../../components/account/UserAccountForm';
 import { getAdminUserById, updateAdminUser } from '../../api/adminUsers.api';
 import Icon from '../../../../shared/components/Icon';
 import ROUTES from '../../../../app/routes/routePaths';
+
+
+import MuiBox from '@mui/material/Box';
+
 const getApiErrorMessage = (error, fallback) => {
   if (error.response?.status === 403) {
     return t("admin.backendTuChoiQuyenAdminTokenHi");
@@ -90,50 +94,50 @@ export default function UpdateUserAccountPage() {
     }
   };
   if (loading) {
-    return <div className="container-fluid py-4 text-center text-muted-custom">{t("admin.dangTaiThongTinNguoiDung")}</div>;
+    return <MuiBox component="div" sx={{ width: "100%", px: "0.75rem", mx: "auto", paddingTop: "1.5rem", paddingBottom: "1.5rem", textAlign: "center" }} className="text-muted-custom">{t("admin.dangTaiThongTinNguoiDung")}</MuiBox>;
   }
   if (!userItem) {
-    return <div className="container-fluid py-4 text-center">
-        <div className="alert alert-danger border-0 rounded-4 p-4 shadow-sm mx-auto" style={{
+    return <MuiBox component="div" sx={{ width: "100%", px: "0.75rem", mx: "auto", paddingTop: "1.5rem", paddingBottom: "1.5rem", textAlign: "center" }} >
+        <MuiBox component="div" sx={{ position: "relative", p: "1rem", mb: "1rem", border: 0, borderRadius: "0.75rem", bgcolor: "#f8d7da", borderColor: "#f5c2c7", color: "#842029", padding: "1.5rem", boxShadow: "0 .125rem .25rem rgba(0,0,0,.075)", mx: "auto" }}  style={{
         maxWidth: '600px'
       }}>
-          <Icon icon="lucide:alert-triangle" width="32" className="text-danger mb-2" />
-          <h5 className="fw-bold mb-1">{t("admin.khongTimThayNguoiDung")}</h5>
-          <p className="mb-3 small">{loadingError || t("admin.taiKhoanNayCoTheDaBiXoaHoacKho")}</p>
-          <button onClick={() => navigate(ROUTES.ADMIN_USERS)} className="btn btn-outline-danger btn-sm rounded-pill px-4">{t("admin.quayLaiDanhSach")}</button>
-        </div>
-      </div>;
+          <Icon sx={{ color: "error.main", marginBottom: "0.5rem" }} icon="lucide:alert-triangle" width="32"  />
+          <MuiBox component="h5" sx={{ fontWeight: 700, marginBottom: "0.25rem" }} >{t("admin.khongTimThayNguoiDung")}</MuiBox>
+          <MuiBox component="p" sx={{ marginBottom: "1rem", fontSize: "0.875em" }} >{loadingError || t("admin.taiKhoanNayCoTheDaBiXoaHoacKho")}</MuiBox>
+          <MuiBox component="button" sx={{ display: "inline-flex", alignItems: "center", justifyContent: "center", px: "0.5rem", py: "0.25rem", border: "1px solid", borderRadius: "50rem", fontSize: "0.875rem", fontWeight: 400, lineHeight: 1.5, cursor: "pointer", textDecoration: "none", borderColor: "error.main", bgcolor: "transparent", color: "error.main", paddingLeft: "1.5rem", paddingRight: "1.5rem" }} onClick={() => navigate(ROUTES.ADMIN_USERS)} >{t("admin.quayLaiDanhSach")}</MuiBox>
+        </MuiBox>
+      </MuiBox>;
   }
-  return <div className="container-fluid py-2">
-      <nav aria-label="breadcrumb" className="mb-3">
-        <ol className="breadcrumb text-muted-custom small mb-0">
-          <li className="breadcrumb-item"><Link to={ROUTES.ADMIN_USERS} className="text-decoration-none text-muted-custom hover-primary">Account</Link></li>
-          <li className="breadcrumb-item"><Link to={ROUTES.ADMIN_USERS} className="text-decoration-none text-muted-custom hover-primary">User Directory</Link></li>
-          <li className="breadcrumb-item active" aria-current="page">Update User</li>
-        </ol>
-      </nav>
+  return <MuiBox component="div" sx={{ width: "100%", px: "0.75rem", mx: "auto", paddingTop: "0.5rem", paddingBottom: "0.5rem" }} >
+      <MuiBox component="nav" sx={{ marginBottom: "1rem" }} aria-label="breadcrumb" >
+        <MuiBox component="ol" sx={{ display: "flex", flexWrap: "wrap", padding: 0, marginBottom: "0", listStyle: "none", fontSize: "0.875em" }} className="text-muted-custom">
+          <MuiBox component="li" sx={{ display: "flex", alignItems: "center", "&:not(:last-child)::after": { content: "\"/\"", px: "0.5rem", color: "text.secondary" } }} ><MuiBox component={Link} sx={{ textDecoration: "none" }} to={ROUTES.ADMIN_USERS} className="text-muted-custom hover-primary">Account</MuiBox></MuiBox>
+          <MuiBox component="li" sx={{ display: "flex", alignItems: "center", "&:not(:last-child)::after": { content: "\"/\"", px: "0.5rem", color: "text.secondary" } }} ><MuiBox component={Link} sx={{ textDecoration: "none" }} to={ROUTES.ADMIN_USERS} className="text-muted-custom hover-primary">User Directory</MuiBox></MuiBox>
+          <MuiBox component="li" sx={{ display: "flex", alignItems: "center", "&:not(:last-child)::after": { content: "\"/\"", px: "0.5rem", color: "text.secondary" } }} className="active" aria-current="page">Update User</MuiBox>
+        </MuiBox>
+      </MuiBox>
 
-      <div className="mb-4">
-        <h1 className="font-display fw-bold text-main mb-1" style={{
+      <MuiBox component="div" sx={{ marginBottom: "1.5rem" }} >
+        <MuiBox component="h1" sx={{ fontWeight: 700, marginBottom: "0.25rem" }} className="font-display text-main" style={{
         fontSize: '1.8rem'
-      }}>{t("admin.capNhatThongTinNguoiDung")}</h1>
-        <p className="text-muted-custom small mb-0" style={{
+      }}>{t("admin.capNhatThongTinNguoiDung")}</MuiBox>
+        <MuiBox component="p" sx={{ fontSize: "0.875em", marginBottom: "0" }} className="text-muted-custom" style={{
         maxWidth: '750px'
       }}>
           Modify profile settings, adjust organizational roles, and update security credentials for this platform contributor.
-        </p>
-      </div>
+        </MuiBox>
+      </MuiBox>
 
-      <div className="mx-auto" style={{
+      <MuiBox component="div" sx={{ mx: "auto" }}  style={{
       maxWidth: '800px'
     }}>
-        <Card className="p-4 p-md-5 rounded-4 border bg-white shadow-sm mb-5">
-          {submitError && <Alert variant="danger" className="border-0 rounded-3 small">
+        <Card sx={{ padding: "1.5rem", "@media (min-width:768px)": { padding: "3rem" }, borderRadius: "0.75rem", border: "1px solid #dee2e6", bgcolor: "background.paper", boxShadow: "0 .125rem .25rem rgba(0,0,0,.075)", marginBottom: "3rem" }} >
+          {submitError && <Alert sx={{ border: 0, borderRadius: "0.5rem", fontSize: "0.875em" }} variant="danger" >
               {submitError}
             </Alert>}
 
           <UserAccountForm isEdit={true} initialData={userItem} onSubmit={handleFormSubmit} onCancel={() => navigate(ROUTES.ADMIN_USERS)} submitting={submitting} />
         </Card>
-      </div>
-    </div>;
+      </MuiBox>
+    </MuiBox>;
 }

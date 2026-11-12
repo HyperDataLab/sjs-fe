@@ -1,6 +1,8 @@
 import PaginationControls from './PaginationControls';
-import './Pagination.css';
 import { useTranslation } from 'react-i18next';
+import Box from '@mui/material/Box';
+import Stack from '@mui/material/Stack';
+import Typography from '@mui/material/Typography';
 
 /**
  * Reusable Pagination Component for data lists.
@@ -54,27 +56,31 @@ export default function Pagination({
   const displayEntity = getEntityLabel(entityName, totalItems);
 
   return (
-    <div className="admin-pagination-bar">
-      <div className="text-muted-custom small">
+    <Stack
+      direction={{ xs: 'column', sm: 'row' }}
+      alignItems={{ xs: 'flex-start', sm: 'center' }}
+      spacing={2}
+      sx={{ pt: 2 }}
+    >
+      <Typography variant="body2" color="text.secondary" sx={{ flex: 1 }}>
         {t('pagination.showing', 'Showing')}{' '}
-        <span className="fw-semibold text-main">{formatNum(startItem)}</span>{' '}
+        <Box component="span" sx={{ color: 'text.primary', fontWeight: 600 }}>{formatNum(startItem)}</Box>{' '}
         {t('pagination.to', 'to')}{' '}
-        <span className="fw-semibold text-main">{formatNum(endItem)}</span>{' '}
+        <Box component="span" sx={{ color: 'text.primary', fontWeight: 600 }}>{formatNum(endItem)}</Box>{' '}
         {t('pagination.of', 'of')}{' '}
-        <span className="fw-semibold text-main">{formatNum(totalItems)}</span>{' '}
+        <Box component="span" sx={{ color: 'text.primary', fontWeight: 600 }}>{formatNum(totalItems)}</Box>{' '}
         {displayEntity}
-      </div>
+      </Typography>
 
-      <div className="admin-pagination-bar__center">
+      <Box sx={{ flex: 1, display: 'flex', justifyContent: 'center', width: { xs: '100%', sm: 'auto' } }}>
         <PaginationControls
           currentPage={currentPage}
           totalPages={totalPages}
           onPageChange={onPageChange}
         />
-      </div>
+      </Box>
 
-      {/* Placeholder to balance the 3-column grid layout and center the pagination */}
-      <div className="admin-pagination-bar__right-placeholder" />
-    </div>
+      <Box aria-hidden="true" sx={{ flex: 1, display: { xs: 'none', sm: 'block' } }} />
+    </Stack>
   );
 }

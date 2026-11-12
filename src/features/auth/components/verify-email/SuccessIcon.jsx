@@ -1,10 +1,12 @@
+
+import MuiBox from '@mui/material/Box';
 // SuccessIcon.jsx
 // Icon checkmark màu xanh lá — hiển thị khi kích hoạt thành công.
 // Tách riêng để dễ thay icon sau này.
 
 const SuccessIcon = () => {
   return (
-    <div className="d-flex justify-content-center mb-4">
+    <MuiBox component="div" sx={{ display: "flex", justifyContent: "center", marginBottom: "1.5rem" }} >
       <div
         style={{
           width: '80px',
@@ -34,7 +36,7 @@ const SuccessIcon = () => {
           />
         </svg>
       </div>
-    </div>
+    </MuiBox>
   );
 };
 

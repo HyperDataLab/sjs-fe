@@ -1,11 +1,15 @@
 import { useTranslation } from "react-i18next";
 import { useState, useEffect } from 'react';
-import { Row, Col, Card, Button, Form, InputGroup } from 'react-bootstrap';
+import { Row, Col, Card, Button, Form, InputGroup } from '@/shared/components/ui/muiAdapters';
 import { useNavigate } from 'react-router-dom';
-import { Icon } from '@iconify/react';
+import Icon from '../../../shared/components/Icon.jsx';
 import { useJournalManagement } from '../../journal/hooks/useJournalManagement';
 import Pagination from '../../../shared/components/Pagination';
 import SwitchJournalModal from '../components/modals/SwitchJournalModal';
+
+
+import MuiBox from '@mui/material/Box';
+
 
 /**
  * VolumeArchivePage - Màn hình Lưu trữ các Tập (Volume Archive) của Tạp chí đang chọn (Figma Screen Page 10).
@@ -71,41 +75,41 @@ export default function VolumeArchivePage() {
     setSelectedVolume(volumeId);
     navigate(`${basePath}/journals/repository`);
   };
-  return <div className="d-flex flex-column gap-3 text-start">
+  return <MuiBox component="div" sx={{ display: "flex", flexDirection: "column", gap: "1rem", textAlign: "left" }} >
         {/* Breadcrumb */}
         <div>
-          <div className="admin-breadcrumb mb-2">
+          <MuiBox component="div" sx={{ marginBottom: "0.5rem" }} className="admin-breadcrumb">
             <span className="cursor-pointer text-muted-custom" onClick={() => navigate(`${basePath}/journals/repository`)}>
               Repository
             </span>
-            <Icon icon="lucide:chevron-right" className="mx-1" />
+            <Icon sx={{ marginLeft: "0.25rem", marginRight: "0.25rem" }} icon="lucide:chevron-right"  />
             <span className="admin-breadcrumb__current">Volume Archive</span>
-          </div>
-          
-          <div className="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3">
+          </MuiBox>
+
+          <MuiBox component="div" sx={{ display: "flex", flexDirection: "column", "@media (min-width:768px)": { flexDirection: "row", alignItems: "center" }, justifyContent: "space-between", gap: "1rem" }} >
             <div>
-              <h2 className="font-display fw-bold text-main mb-1">Volume Archive</h2>
-              <p className="text-muted-custom small mb-0">
+              <MuiBox component="h2" sx={{ fontWeight: 700, marginBottom: "0.25rem" }} className="font-display text-main">Volume Archive</MuiBox>
+              <MuiBox component="p" sx={{ fontSize: "0.875em", marginBottom: "0" }} className="text-muted-custom">
                 Explore the historical collection of published volumes and issue logs for{' '}
-                <span className="fw-semibold text-main">{currentJournal?.title}</span>.
-              </p>
+                <MuiBox component="span" sx={{ fontWeight: 600 }} className="text-main">{currentJournal?.title}</MuiBox>.
+              </MuiBox>
             </div>
-            <Button variant="outline-dark" className="d-flex align-items-center gap-1.5 py-2 px-3 btn-custom-sm font-display" onClick={() => setShowSwitchModal(true)}>
+            <Button sx={{ display: "flex", alignItems: "center", paddingTop: "0.5rem", paddingBottom: "0.5rem", paddingLeft: "1rem", paddingRight: "1rem" }} variant="outline-dark" className="gap-1.5 btn-custom-sm font-display" onClick={() => setShowSwitchModal(true)}>
               <Icon icon="lucide:refresh-cw" width="14" />
               <span>Change Journal</span>
             </Button>
-          </div>
+          </MuiBox>
         </div>
 
         {/* Filter Bar */}
-        <div className="bg-white p-4 rounded-3 border mb-2 mt-2" style={{
+        <MuiBox component="div" sx={{ bgcolor: "background.paper", padding: "1.5rem", borderRadius: "0.5rem", border: "1px solid #dee2e6", marginBottom: "0.5rem", marginTop: "0.5rem" }}  style={{
       borderColor: 'var(--border)'
     }}>
-          <Row className="align-items-end g-3">
+          <Row sx={{ alignItems: "flex-end", gap: "1rem" }} >
             {/* Search by Volume number */}
             <Col xs={12} md={5}>
               <Form.Group>
-                <Form.Label className="fw-medium small text-main text-uppercase mb-2" style={{
+                <Form.Label sx={{ fontWeight: 500, fontSize: "0.875em", textTransform: "uppercase", marginBottom: "0.5rem" }} className="text-main" style={{
               letterSpacing: '0.05em'
             }}>
                   Search Volumes
@@ -115,7 +119,7 @@ export default function VolumeArchivePage() {
                 backgroundColor: 'var(--bg-chip)',
                 borderColor: 'var(--border)'
               }}>
-                    <Icon icon="lucide:search" width="16" className="text-muted" />
+                    <Icon sx={{ color: "text.secondary" }} icon="lucide:search" width="16"  />
                   </InputGroup.Text>
                   <Form.Control type="text" placeholder={t("admin.searchByVolumeNumberEgVolume1")} value={search} onChange={e => setSearch(e.target.value)} style={{
                 backgroundColor: 'var(--bg-chip)',
@@ -129,7 +133,7 @@ export default function VolumeArchivePage() {
             {/* Filter by Frequency */}
             <Col xs={12} sm={6} md={3.5}>
               <Form.Group>
-                <Form.Label className="fw-medium small text-main text-uppercase mb-2" style={{
+                <Form.Label sx={{ fontWeight: 500, fontSize: "0.875em", textTransform: "uppercase", marginBottom: "0.5rem" }} className="text-main" style={{
               letterSpacing: '0.05em'
             }}>
                   Publication Period
@@ -151,7 +155,7 @@ export default function VolumeArchivePage() {
             {/* Sort by Year */}
             <Col xs={12} sm={6} md={3.5}>
               <Form.Group>
-                <Form.Label className="fw-medium small text-main text-uppercase mb-2" style={{
+                <Form.Label sx={{ fontWeight: 500, fontSize: "0.875em", textTransform: "uppercase", marginBottom: "0.5rem" }} className="text-main" style={{
               letterSpacing: '0.05em'
             }}>
                   Sort Order
@@ -168,71 +172,71 @@ export default function VolumeArchivePage() {
               </Form.Group>
             </Col>
           </Row>
-        </div>
+        </MuiBox>
 
         {/* Volumes Grid */}
-        {filteredVolumes.length === 0 ? <div className="text-center py-5 bg-white rounded-3 border" style={{
+        {filteredVolumes.length === 0 ? <MuiBox component="div" sx={{ textAlign: "center", paddingTop: "3rem", paddingBottom: "3rem", bgcolor: "background.paper", borderRadius: "0.5rem", border: "1px solid #dee2e6" }}  style={{
       borderColor: 'var(--border)'
     }}>
-            <Icon icon="lucide:archive-x" width="48" className="text-muted-custom mb-3" />
-            <p className="text-muted-custom mb-0">No volumes found matching the search criteria.</p>
-          </div> : <div>
-            <Row className="g-4 mb-4">
+            <Icon sx={{ marginBottom: "1rem" }} icon="lucide:archive-x" width="48" className="text-muted-custom" />
+            <MuiBox component="p" sx={{ marginBottom: "0" }} className="text-muted-custom">No volumes found matching the search criteria.</MuiBox>
+          </MuiBox> : <div>
+            <Row sx={{ gap: "1.5rem", marginBottom: "1.5rem" }} >
               {paginatedVolumes.map(vol => <Col xs={12} md={6} lg={4} key={vol.id}>
-                  <Card className="bg-white h-100 border rounded-3 transition-hover shadow-sm" style={{
+                  <Card sx={{ bgcolor: "background.paper", height: "100%", border: "1px solid #dee2e6", borderRadius: "0.5rem", boxShadow: "0 .125rem .25rem rgba(0,0,0,.075)" }} className="transition-hover" style={{
             borderColor: 'var(--border)'
           }}>
-                    <Card.Body className="d-flex flex-column p-4">
-                      
+                    <Card.Body sx={{ display: "flex", flexDirection: "column", padding: "1.5rem" }} >
+
                       {/* Top row: Status & Page badge */}
-                      <div className="d-flex justify-content-between align-items-center mb-3">
-                        <span className="badge bg-light text-muted border px-2.5 py-1 text-uppercase text-xs font-semibold">
+                      <MuiBox component="div" sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1rem" }} >
+                        <MuiBox component="span" sx={{ display: "inline-block", px: "0.65em", py: "0.35em", fontSize: "0.75em", fontWeight: 700, lineHeight: 1, color: "text.secondary", textAlign: "center", whiteSpace: "nowrap", verticalAlign: "baseline", borderRadius: "0.375rem", bgcolor: "#f8f9fa", border: "1px solid #dee2e6", paddingTop: "0.25rem", paddingBottom: "0.25rem", textTransform: "uppercase" }} className="px-2.5 text-xs font-semibold">
                           ARCHIVED
-                        </span>
-                        <div className="d-flex align-items-center gap-1 bg-light px-2.5 py-1 rounded text-muted font-monospace text-xs border" style={{
+                        </MuiBox>
+                        <MuiBox component="div" sx={{ display: "flex", alignItems: "center", gap: "0.25rem", bgcolor: "#f8f9fa", paddingTop: "0.25rem", paddingBottom: "0.25rem", borderRadius: "0.375rem", color: "text.secondary", fontFamily: "monospace", border: "1px solid #dee2e6" }} className="px-2.5 text-xs" style={{
                   borderColor: 'var(--border)'
                 }}>
                           <Icon icon="lucide:book-open" width="12" />
                           <span>V{vol.volumeNumber ? vol.volumeNumber.replace(/\D/g, '') : '13'}</span>
-                        </div>
-                      </div>
+                        </MuiBox>
+                      </MuiBox>
 
                       {/* Title */}
-                      <Card.Title className="font-display fw-bold text-main mb-4 h5">
+                      <Card.Title sx={{ fontWeight: 500, marginBottom: "1.5rem", fontSize: "1.25rem", lineHeight: 1.2 }} className="font-display text-main">
                         {vol.volumeNumber} ({vol.publicationYear})
                       </Card.Title>
 
                       {/* Detail list rows */}
-                      <div className="d-flex flex-column gap-2 mb-4 mt-auto">
-                        <div className="d-flex justify-content-between align-items-center border-bottom pb-2" style={{
+                      <MuiBox component="div" sx={{ display: "flex", flexDirection: "column", gap: "0.5rem", marginBottom: "1.5rem", mt: "auto" }} >
+                        <MuiBox component="div" sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", borderBottom: "1px solid #dee2e6", paddingBottom: "0.5rem" }}  style={{
                   borderColor: 'var(--border)'
                 }}>
-                          <span className="text-muted-custom small">Total Issues</span>
-                          <span className="fw-bold text-main font-monospace">0{vol.totalIssues || 4}</span>
-                        </div>
-                        <div className="d-flex justify-content-between align-items-center border-bottom pb-2" style={{
+                          <MuiBox component="span" sx={{ fontSize: "0.875em" }} className="text-muted-custom">Total Issues</MuiBox>
+                          <MuiBox component="span" sx={{ fontWeight: 700, fontFamily: "monospace" }} className="text-main">0{vol.totalIssues || 4}</MuiBox>
+                        </MuiBox>
+                        <MuiBox component="div" sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", borderBottom: "1px solid #dee2e6", paddingBottom: "0.5rem" }}  style={{
                   borderColor: 'var(--border)'
                 }}>
-                          <span className="text-muted-custom small">Total Articles</span>
-                          <span className="fw-bold text-main font-monospace">{vol.totalArticles || 128}</span>
-                        </div>
-                        <div className="d-flex justify-content-between align-items-center pb-1">
-                          <span className="text-muted-custom small">Period</span>
-                          <span className="fw-bold text-main small font-display">{vol.period || `Jan — Dec ${vol.publicationYear}`}</span>
-                        </div>
-                      </div>
+                          <MuiBox component="span" sx={{ fontSize: "0.875em" }} className="text-muted-custom">Total Articles</MuiBox>
+                          <MuiBox component="span" sx={{ fontWeight: 700, fontFamily: "monospace" }} className="text-main">{vol.totalArticles || 128}</MuiBox>
+                        </MuiBox>
+                        <MuiBox component="div" sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", paddingBottom: "0.25rem" }} >
+                          <MuiBox component="span" sx={{ fontSize: "0.875em" }} className="text-muted-custom">Period</MuiBox>
+                          <MuiBox component="span" sx={{ fontWeight: 700, fontSize: "0.875em" }} className="text-main font-display">{vol.period || `Jan — Dec ${vol.publicationYear}`}</MuiBox>
+                        </MuiBox>
+                      </MuiBox>
 
                       {/* Actions */}
-                      <div className="d-flex gap-2 w-100 mt-auto pt-3 border-top" style={{
+                      <MuiBox component="div" sx={{ display: "flex", gap: "0.5rem", width: "100%", mt: "auto", paddingTop: "1rem", borderTop: "1px solid #dee2e6" }}  style={{
                 borderColor: 'var(--border)'
               }}>
-                        <Button className="w-100 font-display fw-semibold btn-custom-sm admin-btn-outline-accent d-flex align-items-center justify-content-center gap-1.5 py-2" onClick={() => handleViewDetails(vol.id)}>
+                        <Button sx={{ width: "100%", fontWeight: 600, display: "flex", alignItems: "center", justifyContent: "center", paddingTop: "0.5rem", paddingBottom: "0.5rem" }} className="font-display btn-custom-sm admin-btn-outline-accent gap-1.5" onClick={() => handleViewDetails(vol.id)}>
                           <span>View Details</span>
                         </Button>
-                        <Button variant="outline-dark" className="btn-custom-sm d-flex align-items-center justify-content-center p-2 rounded-2" title="Restore/History" onClick={() => alert(`Showing history for ${vol.volumeNumber}...`)}>
+                        <Button sx={{ display: "flex", alignItems: "center", justifyContent: "center", padding: "0.5rem", borderRadius: "0.375rem" }} variant="outline-dark" className="btn-custom-sm" title="Restore/History" onClick={() => alert(`Showing history for ${vol.volumeNumber}...`)}>
                           <Icon icon="lucide:history" width="16" />
                         </Button>
-                      </div>
+                      </MuiBox>
 
                     </Card.Body>
                   </Card>
@@ -245,5 +249,5 @@ export default function VolumeArchivePage() {
 
         {/* Switch Journal Modal */}
         <SwitchJournalModal show={showSwitchModal} handleClose={() => setShowSwitchModal(false)} />
-      </div>;
+      </MuiBox>;
 }

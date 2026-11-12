@@ -4,10 +4,14 @@ import { useTranslation } from "react-i18next";
  *
  * File: features\keywords\components\KeywordArticleList.jsx
  */
-import { Icon } from '@iconify/react';
+import Icon from '../../../shared/components/Icon.jsx';
 import LoadingSkeleton from '../../../shared/components/LoadingSkeleton';
 import AdminPagination from '../../../shared/components/Pagination';
 import KeywordArticleItem from './KeywordArticleItem';
+
+
+import MuiBox from '@mui/material/Box';
+
 
 /**
  * Danh sách bài báo theo keyword với trạng thái và phân trang.
@@ -30,26 +34,26 @@ export default function KeywordArticleList({
   if (loading) {
     return <div className="keyword-article-list">
         {[1, 2, 3].map(item => <div key={item} className="keyword-article-skeleton">
-            <LoadingSkeleton width="160px" height="18px" className="mb-3" />
-            <LoadingSkeleton width="80%" height="28px" className="mb-3" />
-            <LoadingSkeleton width="100%" height="44px" className="mb-4" />
+            <LoadingSkeleton sx={{ marginBottom: "1rem" }} width="160px" height="18px"  />
+            <LoadingSkeleton sx={{ marginBottom: "1rem" }} width="80%" height="28px"  />
+            <LoadingSkeleton sx={{ marginBottom: "1.5rem" }} width="100%" height="44px"  />
             <LoadingSkeleton width="140px" height="38px" />
           </div>)}
       </div>;
   }
   if (error) {
     return <div className="keyword-article-state">
-        <Icon icon="lucide:alert-triangle" width="42" className="keyword-article-state-icon mb-3" />
+        <Icon sx={{ marginBottom: "1rem" }} icon="lucide:alert-triangle" width="42" className="keyword-article-state-icon" />
         <h3 className="keyword-article-state-title">{t("keywords.khongTheTaiDanhSachBaiBao")}</h3>
-        <p className="text-muted-custom mb-4">{error}</p>
-        <button type="button" className="btn keyword-article-retry px-4" onClick={onRetry}>{t("article.thuLai")}</button>
+        <MuiBox component="p" sx={{ marginBottom: "1.5rem" }} className="text-muted-custom">{error}</MuiBox>
+        <MuiBox component="button" sx={{ display: "inline-flex", alignItems: "center", justifyContent: "center", px: "0.75rem", py: "0.375rem", border: "1px solid transparent", borderRadius: "0.375rem", fontSize: "1rem", fontWeight: 400, lineHeight: 1.5, cursor: "pointer", textDecoration: "none", paddingLeft: "1.5rem", paddingRight: "1.5rem" }} type="button" className="keyword-article-retry" onClick={onRetry}>{t("article.thuLai")}</MuiBox>
       </div>;
   }
   if (!articles || articles.length === 0) {
     return <div className="keyword-article-state">
-        <Icon icon="lucide:file-x" width="42" className="text-muted-custom mb-3" />
+        <Icon sx={{ marginBottom: "1rem" }} icon="lucide:file-x" width="42" className="text-muted-custom" />
         <h3 className="keyword-article-state-title">{t("keywords.keywordNayChuaCoBaiBaoLienQuan")}</h3>
-        <p className="text-muted-custom mb-0">{t("keywords.hayThuKeywordKhacDeKhamPhaThem")}</p>
+        <MuiBox component="p" sx={{ marginBottom: "0" }} className="text-muted-custom">{t("keywords.hayThuKeywordKhacDeKhamPhaThem")}</MuiBox>
       </div>;
   }
   return <>

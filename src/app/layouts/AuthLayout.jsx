@@ -3,66 +3,45 @@
  *
  * File: app\layouts\AuthLayout.jsx
  */
-import { Row, Col } from 'react-bootstrap';
+import { Row, Col } from '@/shared/components/ui/muiAdapters';
+import { MotionBox } from '../../shared/components/ui/MotionBox';
+
+
+import MuiBox from '@mui/material/Box';
+
 
 export default function AuthLayout({ banner, children }) {
   return (
-    <div 
-      className="min-vh-100 w-100 overflow-x-hidden d-flex"
-      style={{ 
+    <MuiBox component="div" sx={{ minHeight: "100vh", width: "100%", overflowX: "hidden", display: "flex" }}
+
+      style={{
         backgroundColor: 'var(--bg-main)',
         color: 'var(--text-main)',
         fontFamily: 'var(--font-display)'
       }}
     >
-      <Row className="g-0 w-100 min-vh-100">
+      <Row sx={{ gap: "0", width: "100%", minHeight: "100vh" }} >
         {/* Left Column: Banner (Hidden on Mobile) */}
-        <Col 
-          md={6} 
-          className="d-none d-md-block h-100 min-vh-100 position-sticky top-0"
+        <Col sx={{ display: "none", "@media (min-width:768px)": { display: "block" }, height: "100%", minHeight: "100vh", position: "sticky", top: "0" }}
+          md={6}
+
         >
           {banner}
         </Col>
 
         {/* Right Column: Auth Forms */}
-        <Col 
-          xs={12} 
-          md={6} 
-          className="d-flex align-items-center justify-content-center py-5 px-3 px-sm-4 px-md-5 min-vh-100 overflow-y-auto"
+        <Col sx={{ display: "flex", alignItems: "center", justifyContent: "center", paddingTop: "3rem", paddingBottom: "3rem", paddingLeft: "1rem", paddingRight: "1rem", "@media (min-width:576px)": { paddingLeft: "1.5rem", paddingRight: "1.5rem" }, "@media (min-width:768px)": { paddingLeft: "3rem", paddingRight: "3rem" }, minHeight: "100vh", overflowY: "auto" }}
+          xs={12}
+          md={6}
+
           style={{ backgroundColor: 'var(--bg-main)' }}
         >
-          <div 
-            className="w-100" 
-            style={{ 
-              maxWidth: '440px',
-              animation: 'slide-up 0.4s ease-out'
-            }}
-          >
+          <MotionBox initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4, ease: 'easeOut' }} sx={{ width: "100%", maxWidth: 440 }}>
             {children}
-          </div>
+          </MotionBox>
         </Col>
       </Row>
 
-      {/* Animation Styles */}
-      <style>{`
-        @keyframes slide-up {
-          from {
-            opacity: 0;
-            transform: translateY(16px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-        @keyframes fade-in {
-          from { opacity: 0; }
-          to { opacity: 1; }
-        }
-        .animate-fade-in {
-          animation: fade-in 0.2s ease-out forwards;
-        }
-      `}</style>
-    </div>
+    </MuiBox>
   );
 }

@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import { Icon } from '@iconify/react';
+import Icon from '../../../shared/components/Icon.jsx';
 import {
   ArticleFilterBar,
   ArticleTable,
@@ -10,6 +10,10 @@ import Pagination from '../../../shared/components/Pagination';
 import useAdminArticleRepository from '../hooks/useAdminArticleRepository';
 import ROUTES from '../../../app/routes/routePaths';
 import PrimaryButton from '../../../shared/components/Button/PrimaryButton';
+
+
+import MuiBox from '@mui/material/Box';
+
 
 export default function ArticleRepositoryPage() {
   const navigate = useNavigate();
@@ -73,9 +77,9 @@ export default function ArticleRepositoryPage() {
       />
 
       {loading ? (
-        <div className="admin-card text-center py-5 text-muted-custom">Loading articles from API...</div>
+        <MuiBox component="div" sx={{ textAlign: "center", paddingTop: "3rem", paddingBottom: "3rem" }} className="admin-card text-muted-custom">Loading articles from API...</MuiBox>
       ) : error ? (
-        <div className="alert alert-danger border-0 rounded-3 small mb-4">{error}</div>
+        <MuiBox component="div" sx={{ position: "relative", p: "1rem", mb: "1rem", border: 0, borderRadius: "0.5rem", bgcolor: "#f8d7da", borderColor: "#f5c2c7", color: "#842029", fontSize: "0.875em", marginBottom: "1.5rem" }} >{error}</MuiBox>
       ) : (
         <>
           <ArticleTable

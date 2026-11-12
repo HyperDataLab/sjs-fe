@@ -1,12 +1,19 @@
 import { useTranslation } from "react-i18next";
 import { useEffect, useMemo, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { Icon } from '@iconify/react';
+import Alert from '@mui/material/Alert';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import CircularProgress from '@mui/material/CircularProgress';
+import Paper from '@mui/material/Paper';
+import Stack from '@mui/material/Stack';
+import Typography from '@mui/material/Typography';
+import { MotionBox } from '../../../shared/components/ui/MotionBox';
+import Icon from '../../../shared/components/Icon.jsx';
 import Header from '../../landing/components/Header';
 import ROUTES from '../../../app/routes/routePaths';
 import { useWalletStore } from '../../../app/store/walletStore';
 import { getPaymentByOrderCode, getMyWallet, getPaymentStatus } from '../api/walletApi';
-import './PaymentResultPage.css';
 export default function PaymentResultPage() {
   const { t } = useTranslation();
   const navigate = useNavigate();
@@ -141,101 +148,90 @@ export default function PaymentResultPage() {
     }
   };
   const currentStatus = statusUI[stage];
-  return <div className="payment-result-page">
+  const details = [
+    [t('wallet.maGiaoDich'), payment?.order_code || orderCode || payment?.transaction_id || transactionId || '?'],
+    [t('journal.phuongThuc'), payment?.payment_method === 'momo' ? 'MoMo' : 'PayOS (VietQR)'],
+    [t('wallet.goiCoin'), payment?.package_name || t('wallet.goiCoinDaChon')],
+    [t('wallet.soTien'), payment?.amount ? formatVND(payment.amount) : '?'],
+    [t('wallet.tongCoinNhan'), payment?.total_coin ? formatCoin(payment.total_coin) + ' Coins' : '?'],
+    [t('wallet.thoiGian'), payment?.paid_at || payment?.created_at || '?'],
+  ];
+  const statusColor = stage === 'success' ? 'success.main' : stage === 'failed' ? 'error.main' : 'primary.main';
+  const actions = stage === 'success'
+    ? [
+        { label: t('wallet.napThemCoin'), icon: 'lucide:wallet', onClick: () => navigate(ROUTES.WALLET_TOP_UP), primary: true },
+        { label: t('wallet.quayVeDashboard'), icon: 'lucide:layout-dashboard', onClick: () => navigate(ROUTES.DASHBOARD) },
+      ]
+    : stage === 'failed'
+      ? [
+          { label: t('article.thuLai'), icon: 'lucide:rotate-ccw', onClick: () => navigate(ROUTES.WALLET_TOP_UP), primary: true },
+          { label: t('auth.quayLai'), icon: 'lucide:arrow-left', onClick: () => navigate(-1) },
+        ]
+      : [
+          { label: t('wallet.kiemTraLaiTrangThai'), icon: 'lucide:refresh-cw', onClick: () => window.location.reload(), primary: true },
+          { label: t('wallet.veTrangNapCoin'), icon: 'lucide:wallet', onClick: () => navigate(ROUTES.WALLET_TOP_UP) },
+        ];
+
+  return (
+    <Box component="main" sx={{ minHeight: '100vh', pt: '80px', color: 'text.primary', background: 'radial-gradient(circle at top, rgba(255, 122, 51, 0.055), transparent 34%), #f8fafc' }}>
       <Header />
-      <div className="payment-result-inner">
-        <div className="payment-result-shell">
-          <div className={`payment-result-icon ${currentStatus.iconClass}`}>
-            {loading ? <span className="spinner-border spinner-border-sm" role="status" /> : <Icon icon={currentStatus.icon} width={38} />}
-          </div>
+      <MotionBox initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.3 }} sx={{ maxWidth: 980, mx: 'auto', px: 2, py: { xs: 4, sm: 5, md: 7 } }}>
+        <Stack alignItems="center" textAlign="center" spacing={2} sx={{ maxWidth: 620, mx: 'auto' }}>
+          <Box sx={{ width: 84, height: 84, borderRadius: '50%', display: 'grid', placeItems: 'center', color: statusColor, bgcolor: stage === 'success' ? 'success.light' : stage === 'failed' ? 'error.light' : 'primary.light' }}>
+            {loading ? <CircularProgress size={30} color="inherit" /> : <Icon icon={currentStatus.icon} width={38} />}
+          </Box>
+          <Typography component="h1" variant="h4" fontWeight={900} letterSpacing="-0.04em">
+            {loading ? t('wallet.dangKiemTraGiaoDich') : currentStatus.title}
+          </Typography>
+          <Typography color="text.secondary" sx={{ maxWidth: 520, lineHeight: 1.65 }}>
+            {loading ? t('wallet.heThongDangDongBoTrangThaiThan') : currentStatus.subtitle}
+          </Typography>
 
-          <h1 className="payment-result-title">{loading ? t("wallet.dangKiemTraGiaoDich") : currentStatus.title}</h1>
-          <p className="payment-result-subtitle">
-            {loading ? t("wallet.heThongDangDongBoTrangThaiThan") : currentStatus.subtitle}
-          </p>
+          <Paper elevation={0} sx={{ width: '100%', p: { xs: 2.5, sm: 3 }, mt: 1, border: '1px solid', borderColor: 'divider', borderRadius: 3, textAlign: 'left', boxShadow: '0 12px 30px rgba(15, 23, 42, 0.06)' }}>
+            <Stack direction={{ xs: 'column', sm: 'row' }} justifyContent="space-between" alignItems={{ xs: 'flex-start', sm: 'flex-end' }} spacing={2} sx={{ pb: 2, mb: 1.5, borderBottom: '1px dashed', borderColor: 'divider' }}>
+              <Box>
+                <Typography variant="body2" color="text.secondary" fontWeight={700}>{t('wallet.soDuViHienTai')}</Typography>
+                <Typography variant="h5" color="primary.main" fontWeight={900}>{walletBalance == null ? '?' : formatCoin(walletBalance)} Coins</Typography>
+              </Box>
+              {payment?.payment_status && <Box sx={{ minWidth: 150 }}><Typography variant="caption" color="text.secondary" fontWeight={800} display="block">{t('wallet.trangThai')}</Typography><Typography fontWeight={800}>{payment.payment_status}</Typography></Box>}
+            </Stack>
 
-          <div className="payment-result-card">
-            <div className="payment-result-balance">
-              <div>
-                <div className="payment-result-balance__label">{t("wallet.soDuViHienTai")}</div>
-                <div className="payment-result-balance__value">
-                  {walletBalance == null ? '—' : formatCoin(walletBalance)} Coins
-                </div>
-              </div>
-              {payment?.payment_status && <div className="payment-result-info" style={{
-              minWidth: 150
-            }}>
-                  <div className="payment-result-info__label">{t("wallet.trangThai")}</div>
-                  <div className="payment-result-info__value">{payment.payment_status}</div>
-                </div>}
-            </div>
+            <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, minmax(0, 1fr))' }, gap: 1.5 }}>
+              {details.map(([label, value]) => (
+                <Box key={label} sx={{ p: 1.5, borderRadius: 1.75, bgcolor: 'action.hover', minWidth: 0 }}>
+                  <Typography variant="caption" color="text.secondary" fontWeight={800} display="block" sx={{ mb: 0.5, letterSpacing: '0.04em', textTransform: 'uppercase' }}>{label}</Typography>
+                  <Typography variant="body2" fontWeight={800} sx={{ overflowWrap: 'anywhere' }}>{value}</Typography>
+                </Box>
+              ))}
+            </Box>
+          </Paper>
 
-            <div className="payment-result-grid">
-              <div className="payment-result-info">
-                <div className="payment-result-info__label">{t("wallet.maGiaoDich")}</div>
-                <div className="payment-result-info__value">{payment?.order_code || orderCode || payment?.transaction_id || transactionId || '—'}</div>
-              </div>
-              <div className="payment-result-info">
-                <div className="payment-result-info__label">{t("journal.phuongThuc")}</div>
-                <div className="payment-result-info__value">{payment?.payment_method === 'momo' ? 'MoMo' : 'PayOS (VietQR)'}</div>
-              </div>
-              <div className="payment-result-info">
-                <div className="payment-result-info__label">{t("wallet.goiCoin")}</div>
-                <div className="payment-result-info__value">{payment?.package_name || t("wallet.goiCoinDaChon")}</div>
-              </div>
-              <div className="payment-result-info">
-                <div className="payment-result-info__label">{t("wallet.soTien")}</div>
-                <div className="payment-result-info__value">{payment?.amount ? formatVND(payment.amount) : '—'}</div>
-              </div>
-              <div className="payment-result-info">
-                <div className="payment-result-info__label">{t("wallet.tongCoinNhan")}</div>
-                <div className="payment-result-info__value">{payment?.total_coin ? `${formatCoin(payment.total_coin)} Coins` : '—'}</div>
-              </div>
-              <div className="payment-result-info">
-                <div className="payment-result-info__label">{t("wallet.thoiGian")}</div>
-                <div className="payment-result-info__value">{payment?.paid_at || payment?.created_at || '—'}</div>
-              </div>
-            </div>
-          </div>
+          {!loading && errorMessage && (
+            <Alert severity={stage === 'failed' ? 'error' : 'warning'} icon={<Icon icon={stage === 'failed' ? 'lucide:triangle-alert' : 'lucide:info'} width={18} />} sx={{ width: '100%', mt: 0.5, textAlign: 'left', borderRadius: 2 }}>
+              {errorMessage}
+            </Alert>
+          )}
 
-          {!loading && stage === 'failed' && errorMessage && <div className="payment-result-alert failed">
-              <Icon icon="lucide:triangle-alert" width={16} style={{
-            marginTop: 2,
-            flexShrink: 0
-          }} />
-              <span>{errorMessage}</span>
-            </div>}
+          <Stack direction={{ xs: 'column', sm: 'row' }} justifyContent="center" flexWrap="wrap" spacing={1.5} sx={{ pt: 1, width: '100%' }}>
+            {actions.map((action) => (
+              <Button
+                key={action.label}
+                variant={action.primary ? 'contained' : 'outlined'}
+                startIcon={<Icon icon={action.icon} width={16} />}
+                onClick={action.onClick}
+                sx={{ minHeight: 44, px: 2.5, borderRadius: 99, fontWeight: 800, ...(action.primary ? { boxShadow: '0 8px 18px rgba(255, 122, 51, 0.18)' } : {}) }}
+              >
+                {action.label}
+              </Button>
+            ))}
+          </Stack>
+          <Typography variant="caption" color="text.secondary" sx={{ mt: 1 }}>
+            <Icon icon="lucide:shield-check" width={14} style={{ verticalAlign: 'middle', marginRight: 6 }} />
+            {t('wallet.ketQuaDuocDongBoTuVnpayVaHeTho')}
+          </Typography>
+        </Stack>
+      </MotionBox>
+    </Box>
+  );
 
-          {!loading && stage === 'pending' && errorMessage && <div className="payment-result-alert pending">
-              <Icon icon="lucide:info" width={16} style={{
-            marginTop: 2,
-            flexShrink: 0
-          }} />
-              <span>{errorMessage}</span>
-            </div>}
-
-          <div className="payment-result-actions">
-            {stage === 'success' ? <>
-                <button type="button" className="payment-result-btn primary" onClick={() => navigate(ROUTES.WALLET_TOP_UP)}>
-                  <Icon icon="lucide:wallet" width={16} />{t("wallet.napThemCoin")}</button>
-                <button type="button" className="payment-result-btn" onClick={() => navigate(ROUTES.DASHBOARD)}>
-                  <Icon icon="lucide:layout-dashboard" width={16} />{t("wallet.quayVeDashboard")}</button>
-              </> : stage === 'failed' ? <>
-                <button type="button" className="payment-result-btn primary" onClick={() => navigate(ROUTES.WALLET_TOP_UP)}>
-                  <Icon icon="lucide:rotate-ccw" width={16} />{t("article.thuLai")}</button>
-                <button type="button" className="payment-result-btn" onClick={() => navigate(-1)}>
-                  <Icon icon="lucide:arrow-left" width={16} />{t("auth.quayLai")}</button>
-              </> : <>
-                <button type="button" className="payment-result-btn primary" onClick={() => window.location.reload()}>
-                  <Icon icon="lucide:refresh-cw" width={16} />{t("wallet.kiemTraLaiTrangThai")}</button>
-                <button type="button" className="payment-result-btn" onClick={() => navigate(ROUTES.WALLET_TOP_UP)}>
-                  <Icon icon="lucide:wallet" width={16} />{t("wallet.veTrangNapCoin")}</button>
-              </>}
-          </div>
-
-          <div className="payment-result-footer-note">
-            <Icon icon="lucide:shield-check" width={14} />{t("wallet.ketQuaDuocDongBoTuVnpayVaHeTho")}</div>
-        </div>
-      </div>
-    </div>;
 }

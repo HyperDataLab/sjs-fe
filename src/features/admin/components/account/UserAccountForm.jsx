@@ -1,10 +1,14 @@
 import { useTranslation } from "react-i18next";
 import { t } from "i18next";
 import { useState, useEffect } from 'react';
-import { Form, Row, Col } from 'react-bootstrap';
+import { Form, Row, Col } from '@/shared/components/ui/muiAdapters';
 import Icon from '../../../../shared/components/Icon';
 import PrimaryButton from '../../../../shared/components/Button/PrimaryButton';
 import { SYSTEM_ROLES } from '../../../../shared/constants/systemConstants';
+
+
+import MuiBox from '@mui/material/Box';
+
 const getUserInitial = (name = '', email = '') => {
   const source = String(name || email || 'U').trim();
   return source.charAt(0).toUpperCase() || 'U';
@@ -132,14 +136,14 @@ export default function UserAccountForm({
   };
   const displayName = isEdit ? fullName : `${firstName} ${lastName}`.trim();
   const avatarInitial = getUserInitial(displayName, email);
-  return <Form onSubmit={handleSubmit} className="d-flex flex-column gap-4">
-      {error && <div className="alert alert-danger py-2.5 px-3.5 small border-0 rounded-3">
+  return <Form sx={{ display: "flex", flexDirection: "column", gap: "1.5rem" }} onSubmit={handleSubmit} >
+      {error && <MuiBox component="div" sx={{ position: "relative", p: "1rem", mb: "1rem", border: 0, borderRadius: "0.5rem", bgcolor: "#f8d7da", borderColor: "#f5c2c7", color: "#842029", fontSize: "0.875em" }} className="py-2.5 px-3.5">
           {error}
-        </div>}
+        </MuiBox>}
 
       {/* Profile identity section */}
-      {isEdit && <div className="d-flex align-items-center gap-4 py-3 border-bottom">
-          <div className="rounded-4 d-flex align-items-center justify-content-center text-white fw-bold flex-shrink-0" style={{
+      {isEdit && <MuiBox component="div" sx={{ display: "flex", alignItems: "center", gap: "1.5rem", paddingTop: "1rem", paddingBottom: "1rem", borderBottom: "1px solid #dee2e6" }} >
+          <MuiBox component="div" sx={{ borderRadius: "0.75rem", display: "flex", alignItems: "center", justifyContent: "center", color: "#fff", fontWeight: 700, flexShrink: 0 }}  style={{
         width: '80px',
         height: '80px',
         background: 'linear-gradient(135deg, #fb923c 0%, #ea580c 100%)',
@@ -147,32 +151,32 @@ export default function UserAccountForm({
         boxShadow: '0 12px 24px rgba(234, 88, 12, 0.18)'
       }} aria-label={`Avatar chữ cái đầu của ${displayName || email || t("admin.nguoiDung")}`}>
             {avatarInitial}
-          </div>
+          </MuiBox>
           <div>
-            <div className="fw-bold text-main mb-1" style={{
+            <MuiBox component="div" sx={{ fontWeight: 700, marginBottom: "0.25rem" }} className="text-main" style={{
           fontSize: '1rem'
-        }}>{fullName || t("admin.chuaCoTenNguoiDung")}</div>
-            <div className="text-muted-custom small mb-0">{t("admin.hienThiAvatarBangChuCaiDauCuaN")}</div>
+        }}>{fullName || t("admin.chuaCoTenNguoiDung")}</MuiBox>
+            <MuiBox component="div" sx={{ fontSize: "0.875em", marginBottom: "0" }} className="text-muted-custom">{t("admin.hienThiAvatarBangChuCaiDauCuaN")}</MuiBox>
           </div>
-        </div>}
+        </MuiBox>}
 
       {/* Section 1: Personal Information */}
       <div>
-        <h6 className="fw-bold d-flex align-items-center gap-2 mb-3.5 tracking-wider text-uppercase" style={{
+        <MuiBox component="h6" sx={{ fontWeight: 700, display: "flex", alignItems: "center", gap: "0.5rem", textTransform: "uppercase" }} className="mb-3.5 tracking-wider" style={{
         fontSize: '0.85rem',
         color: '#ea580c',
         letterSpacing: '0.03em'
       }}>
           <Icon icon="lucide:user" width="16" style={{
           color: '#ea580c'
-        }} />{t("admin.thongTinCaNhan")}</h6>
-        
-        <Row className="g-3">
+        }} />{t("admin.thongTinCaNhan")}</MuiBox>
+
+        <Row sx={{ gap: "1rem" }} >
           {isEdit ?
         // Full Name input for edit screen
         <Col xs={12} md={6}>
               <Form.Group controlId="fullName">
-                <Form.Label className="account-form-label">{t("admin.hoVaTen")}<span className="text-danger">*</span>
+                <Form.Label className="account-form-label">{t("admin.hoVaTen")}<MuiBox component="span" sx={{ color: "error.main" }} >*</MuiBox>
                 </Form.Label>
                 <Form.Control type="text" placeholder={t("admin.viDuNguyenVanA")} value={fullName} onChange={e => setFullName(e.target.value)} required className="account-form-input" />
               </Form.Group>
@@ -181,14 +185,14 @@ export default function UserAccountForm({
         <>
               <Col xs={12} md={6}>
                 <Form.Group controlId="firstName">
-                  <Form.Label className="account-form-label">{t("admin.ho")}<span className="text-danger">*</span>
+                  <Form.Label className="account-form-label">{t("admin.ho")}<MuiBox component="span" sx={{ color: "error.main" }} >*</MuiBox>
                   </Form.Label>
                   <Form.Control type="text" placeholder={t("admin.viDuNguyen")} value={firstName} onChange={e => setFirstName(e.target.value)} required className="account-form-input" />
                 </Form.Group>
               </Col>
               <Col xs={12} md={6}>
                 <Form.Group controlId="lastName">
-                  <Form.Label className="account-form-label">{t("admin.ten")}<span className="text-danger">*</span>
+                  <Form.Label className="account-form-label">{t("admin.ten")}<MuiBox component="span" sx={{ color: "error.main" }} >*</MuiBox>
                   </Form.Label>
                   <Form.Control type="text" placeholder={t("admin.viDuVanA")} value={lastName} onChange={e => setLastName(e.target.value)} required className="account-form-input" />
                 </Form.Group>
@@ -198,7 +202,7 @@ export default function UserAccountForm({
           {/* Email field */}
           <Col xs={12} md={6}>
             <Form.Group controlId="emailAddress">
-              <Form.Label className="account-form-label">{t("admin.diaChiEmail")}<span className="text-danger">*</span>
+              <Form.Label className="account-form-label">{t("admin.diaChiEmail")}<MuiBox component="span" sx={{ color: "error.main" }} >*</MuiBox>
               </Form.Label>
               <Form.Control type="email" placeholder={t("admin.nameuniversityeduvn")} value={email} onChange={e => setEmail(e.target.value)} required className="account-form-input" />
             </Form.Group>
@@ -223,21 +227,21 @@ export default function UserAccountForm({
       </div>
 
       {/* Section 2: Role & Status */}
-      <div className="py-3 border-top">
-        <h6 className="fw-bold d-flex align-items-center gap-2 mb-3.5 tracking-wider text-uppercase" style={{
+      <MuiBox component="div" sx={{ paddingTop: "1rem", paddingBottom: "1rem", borderTop: "1px solid #dee2e6" }} >
+        <MuiBox component="h6" sx={{ fontWeight: 700, display: "flex", alignItems: "center", gap: "0.5rem", textTransform: "uppercase" }} className="mb-3.5 tracking-wider" style={{
         fontSize: '0.85rem',
         color: '#ea580c',
         letterSpacing: '0.03em'
       }}>
           <Icon icon="lucide:shield" width="16" style={{
           color: '#ea580c'
-        }} />{t("admin.vaiTroTrangThai")}</h6>
+        }} />{t("admin.vaiTroTrangThai")}</MuiBox>
 
-        <Row className="g-3 align-items-center">
+        <Row sx={{ gap: "1rem", alignItems: "center" }} >
           {/* Role select */}
           <Col xs={12} md={6}>
             <Form.Group controlId="platformRole">
-              <Form.Label className="account-form-label">{t("admin.vaiTroTrenNenTang")}<span className="text-danger">*</span>
+              <Form.Label className="account-form-label">{t("admin.vaiTroTrenNenTang")}<MuiBox component="span" sx={{ color: "error.main" }} >*</MuiBox>
               </Form.Label>
               <Form.Select value={role} onChange={e => setRole(e.target.value)} className="account-form-input" style={{
               cursor: 'pointer'
@@ -252,37 +256,37 @@ export default function UserAccountForm({
 
           {/* Status switch toggle container - mockup high fidelity styling */}
           <Col xs={12} md={6}>
-            <div className="d-flex align-items-center justify-content-between px-3 rounded-3" style={{
+            <MuiBox component="div" sx={{ display: "flex", alignItems: "center", justifyContent: "space-between", paddingLeft: "1rem", paddingRight: "1rem", borderRadius: "0.5rem" }}  style={{
             height: '46px',
             backgroundColor: '#f1f5f9',
             marginTop: '28px' // Align vertical alignment with label spacing
           }}>
-              <span className="small fw-semibold text-muted-custom" style={{
+              <MuiBox component="span" sx={{ fontSize: "0.875em", fontWeight: 600 }} className="text-muted-custom" style={{
               fontSize: '0.85rem'
-            }}>{t("admin.trangThaiTaiKhoan")}</span>
-              <div className="d-flex align-items-center gap-2.5 orange-switch-toggle">
+            }}>{t("admin.trangThaiTaiKhoan")}</MuiBox>
+              <MuiBox component="div" sx={{ display: "flex", alignItems: "center" }} className="gap-2.5 orange-switch-toggle">
                 <Form.Check type="switch" id="status-toggle" checked={status === 'Active'} onChange={e => setStatus(e.target.checked ? 'Active' : 'Inactive')} />
-                <span className="small fw-bold text-main" style={{
+                <MuiBox component="span" sx={{ fontSize: "0.875em", fontWeight: 700 }} className="text-main" style={{
                 fontSize: '0.85rem'
-              }}>{status === 'Active' ? t("admin.hoatDong") : t("admin.voHieuHoa")}</span>
-              </div>
-            </div>
+              }}>{status === 'Active' ? t("admin.hoatDong") : t("admin.voHieuHoa")}</MuiBox>
+              </MuiBox>
+            </MuiBox>
           </Col>
         </Row>
-      </div>
+      </MuiBox>
 
       {/* Section 3: Identity & Password */}
-      <div className="py-3 border-top">
-        <h6 className="fw-bold d-flex align-items-center gap-2 mb-3.5 tracking-wider text-uppercase" style={{
+      <MuiBox component="div" sx={{ paddingTop: "1rem", paddingBottom: "1rem", borderTop: "1px solid #dee2e6" }} >
+        <MuiBox component="h6" sx={{ fontWeight: 700, display: "flex", alignItems: "center", gap: "0.5rem", textTransform: "uppercase" }} className="mb-3.5 tracking-wider" style={{
         fontSize: '0.85rem',
         color: '#ea580c',
         letterSpacing: '0.03em'
       }}>
           <Icon icon="lucide:lock" width="16" style={{
           color: '#ea580c'
-        }} />{t("admin.thongTinDangNhap")}</h6>
-        
-        <Row className="g-3">
+        }} />{t("admin.thongTinDangNhap")}</MuiBox>
+
+        <Row sx={{ gap: "1rem" }} >
           {/* Current Password - Only required for updating existing profile */}
           {isEdit && <Col xs={12} md={4}>
               <Form.Group controlId="currentPassword">
@@ -313,18 +317,18 @@ export default function UserAccountForm({
         </Row>
 
         {/* Password complexity helper note */}
-        <div className="form-text text-muted-custom mt-2.5 small" style={{
+        <MuiBox component="div" sx={{ display: "block", marginTop: "0.25rem", fontSize: "0.875em", color: "text.secondary" }} className="text-muted-custom mt-2.5" style={{
         fontSize: '0.78rem'
-      }}>{t("admin.matKhauPhaiChuaItNhat8KyTuBaoG")}</div>
-      </div>
+      }}>{t("admin.matKhauPhaiChuaItNhat8KyTuBaoG")}</MuiBox>
+      </MuiBox>
 
       {/* Form Action buttons */}
-      <div className="d-flex justify-content-end gap-3 mt-4 pt-4 border-top">
-        <PrimaryButton type="button" variant="outline" onClick={onCancel} className="px-4 py-2" style={{
+      <MuiBox component="div" sx={{ display: "flex", justifyContent: "flex-end", gap: "1rem", marginTop: "1.5rem", paddingTop: "1.5rem", borderTop: "1px solid #dee2e6" }} >
+        <PrimaryButton sx={{ paddingLeft: "1.5rem", paddingRight: "1.5rem", paddingTop: "0.5rem", paddingBottom: "0.5rem" }} type="button" variant="outline" onClick={onCancel}  style={{
         fontSize: '0.88rem'
       }}>{t("admin.huy")}</PrimaryButton>
-        
-        <PrimaryButton type="submit" className="px-4 py-2" style={{
+
+        <PrimaryButton sx={{ paddingLeft: "1.5rem", paddingRight: "1.5rem", paddingTop: "0.5rem", paddingBottom: "0.5rem" }} type="submit"  style={{
         fontSize: '0.88rem'
       }} disabled={submitting}>
           {submitting ? <>
@@ -338,6 +342,6 @@ export default function UserAccountForm({
               <span>{t("admin.themTaiKhoan")}</span>
             </>}
         </PrimaryButton>
-      </div>
+      </MuiBox>
     </Form>;
 }

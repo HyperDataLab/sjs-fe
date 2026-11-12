@@ -1,7 +1,7 @@
 import { useTranslation } from "react-i18next";
 import { t } from "i18next";
 import { useState } from 'react';
-import { Card, Button, Row, Col, Modal, Form } from 'react-bootstrap';
+import { Card, Button, Row, Col, Modal, Form } from '@/shared/components/ui/muiAdapters';
 import { useNavigate, Link } from 'react-router-dom';
 import Icon from '../../../../shared/components/Icon';
 import SubmissionTabs from '../../components/article-submission/SubmissionTabs';
@@ -10,6 +10,10 @@ import PdfDropzone from '../../components/article-submission/PdfDropzone';
 import UploadFeatureCard from '../../components/article-submission/UploadFeatureCard';
 import { useAdminStore } from '../../../../app/store/adminStore';
 import PrimaryButton from '../../../../shared/components/Button/PrimaryButton';
+
+
+import MuiBox from '@mui/material/Box';
+
 
 /**
  * SubmitArticlePage Component
@@ -154,51 +158,51 @@ export default function SubmitArticlePage() {
     setSelectedFile(null);
     setShowSuccessModal(false);
   };
-  return <div className="container-fluid py-2">
+  return <MuiBox component="div" sx={{ width: "100%", px: "0.75rem", mx: "auto", paddingTop: "0.5rem", paddingBottom: "0.5rem" }} >
       {/* Page Breadcrumbs */}
-      <nav aria-label="breadcrumb" className="mb-3">
-        <ol className="breadcrumb text-muted-custom small mb-0">
-          <li className="breadcrumb-item"><Link to="/dashboard" className="text-decoration-none text-muted-custom hover-primary">Articles</Link></li>
-          <li className="breadcrumb-item active" aria-current="page">New Submission</li>
-        </ol>
-      </nav>
+      <MuiBox component="nav" sx={{ marginBottom: "1rem" }} aria-label="breadcrumb" >
+        <MuiBox component="ol" sx={{ display: "flex", flexWrap: "wrap", padding: 0, marginBottom: "0", listStyle: "none", fontSize: "0.875em" }} className="text-muted-custom">
+          <MuiBox component="li" sx={{ display: "flex", alignItems: "center", "&:not(:last-child)::after": { content: "\"/\"", px: "0.5rem", color: "text.secondary" } }} ><MuiBox component={Link} sx={{ textDecoration: "none" }} to="/dashboard" className="text-muted-custom hover-primary">Articles</MuiBox></MuiBox>
+          <MuiBox component="li" sx={{ display: "flex", alignItems: "center", "&:not(:last-child)::after": { content: "\"/\"", px: "0.5rem", color: "text.secondary" } }} className="active" aria-current="page">New Submission</MuiBox>
+        </MuiBox>
+      </MuiBox>
 
       {/* Main Header banner with Save Draft */}
-      <div className="d-flex justify-content-between align-items-center mb-4">
+      <MuiBox component="div" sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1.5rem" }} >
         <div>
-          <h1 className="font-display fw-bold text-main mb-1" style={{
+          <MuiBox component="h1" sx={{ fontWeight: 700, marginBottom: "0.25rem" }} className="font-display text-main" style={{
           fontSize: '1.8rem'
-        }}>Submit Article</h1>
+        }}>Submit Article</MuiBox>
         </div>
-        
+
         {/* Top Aligned Save Draft Button */}
-        <Button variant="light" onClick={handleSaveDraft} className="border rounded-3 py-2 px-3 fw-semibold text-main hover-primary-light" style={{
+        <Button sx={{ border: "1px solid #dee2e6", borderRadius: "0.5rem", paddingTop: "0.5rem", paddingBottom: "0.5rem", paddingLeft: "1rem", paddingRight: "1rem", fontWeight: 600 }} variant="light" onClick={handleSaveDraft} className="text-main hover-primary-light" style={{
         fontSize: '0.85rem'
       }}>
           Save Draft
         </Button>
-      </div>
+      </MuiBox>
 
-      <div className="mx-auto" style={{
+      <MuiBox component="div" sx={{ mx: "auto" }}  style={{
       maxWidth: '850px'
     }}>
         {/* Primary submission wrapper card */}
-        <Card className="p-4 rounded-4 border bg-white shadow-sm mb-5">
+        <Card sx={{ padding: "1.5rem", borderRadius: "0.75rem", border: "1px solid #dee2e6", bgcolor: "background.paper", boxShadow: "0 .125rem .25rem rgba(0,0,0,.075)", marginBottom: "3rem" }} >
           {/* Tab nav selectors */}
           <SubmissionTabs activeTab={activeTab} onTabChange={setActiveTab} />
 
           <Form onSubmit={handleSubmitArticle}>
             {/* Conditional Tab Body Rendering */}
-            <div className="py-2 mb-4">
+            <MuiBox component="div" sx={{ paddingTop: "0.5rem", paddingBottom: "0.5rem", marginBottom: "1.5rem" }} >
               {activeTab === 'manual' ?
             // Tab 1: Manual Form Fields
             <ManualArticleForm formData={manualFormData} onChange={setManualFormData} /> :
             // Tab 2: PDF dropzone upload area
-            <div className="d-flex flex-column gap-4">
+            <MuiBox component="div" sx={{ display: "flex", flexDirection: "column", gap: "1.5rem" }} >
                   <PdfDropzone selectedFile={selectedFile} onFileSelect={setSelectedFile} onFileRemove={() => setSelectedFile(null)} />
 
                   {/* Highlight feature cards rendered at the bottom of upload view (Page 16) */}
-                  <Row className="g-3 mt-1">
+                  <Row sx={{ gap: "1rem", marginTop: "0.25rem" }} >
                     <Col xs={12} md={4}>
                       <UploadFeatureCard title="OCR Processing" description="System automatically extracts metadata from your uploaded PDF." icon="lucide:scan-eye" />
                     </Col>
@@ -209,72 +213,72 @@ export default function SubmitArticlePage() {
                       <UploadFeatureCard title="Fast Review" description="Uploaded PDFs enter the review queue immediately." icon="lucide:zap" />
                     </Col>
                   </Row>
-                </div>}
-            </div>
+                </MuiBox>}
+            </MuiBox>
 
             {/* Bottom-right alignment Submit Action Button */}
-            <div className="d-flex justify-content-end pt-3 border-top">
-              <PrimaryButton type="submit" disabled={isSubmitting} className="px-4.5 py-2" style={{
+            <MuiBox component="div" sx={{ display: "flex", justifyContent: "flex-end", paddingTop: "1rem", borderTop: "1px solid #dee2e6" }} >
+              <PrimaryButton sx={{ paddingTop: "0.5rem", paddingBottom: "0.5rem" }} type="submit" disabled={isSubmitting} className="px-4.5" style={{
               minWidth: '150px'
             }}>
                 {isSubmitting ? <>
-                    <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                    <MuiBox component="span" sx={{ display: "inline-block", width: "1rem", height: "1rem", verticalAlign: "-0.125em", border: "0.25em solid currentColor", borderRightColor: "transparent", borderRadius: "50%", animation: "spin .75s linear infinite", borderWidth: "0.2em", marginInlineEnd: "0.5rem" }}  role="status" aria-hidden="true"></MuiBox>
                     Submitting...
                   </> : 'Submit Article'}
               </PrimaryButton>
-            </div>
+            </MuiBox>
           </Form>
         </Card>
-      </div>
+      </MuiBox>
 
       {/* Success modal */}
       <Modal show={showSuccessModal} onHide={() => setShowSuccessModal(false)} centered backdrop="static" contentClassName="border-0 rounded-4 shadow-lg">
-        <Modal.Body className="p-4 p-md-5 text-center">
+        <Modal.Body sx={{ padding: "1.5rem", "@media (min-width:768px)": { padding: "3rem" }, textAlign: "center" }} >
           {/* Animated/Glowing Check Icon */}
-          <div className="rounded-circle d-inline-flex align-items-center justify-content-center mb-4 success-glow" style={{
+          <MuiBox component="div" sx={{ borderRadius: "50%", display: "inline-flex", alignItems: "center", justifyContent: "center", marginBottom: "1.5rem" }} className="success-glow" style={{
           width: '72px',
           height: '72px',
           backgroundColor: 'var(--primary-light)',
           color: 'var(--primary)'
         }}>
             <Icon icon="lucide:check-circle" width="36" />
-          </div>
+          </MuiBox>
 
-          <h3 className="font-display fw-bold text-main mb-2">Submission Successful!</h3>
-          <p className="text-muted-custom small mb-4">
+          <MuiBox component="h3" sx={{ fontWeight: 700, marginBottom: "0.5rem" }} className="font-display text-main">Submission Successful!</MuiBox>
+          <MuiBox component="p" sx={{ fontSize: "0.875em", marginBottom: "1.5rem" }} className="text-muted-custom">
             Your manuscript has been safely received. The review board and OCR pipelines will evaluate this entry.
-          </p>
+          </MuiBox>
 
-          {successInfo && <div className="p-3.5 rounded-3 border mb-4 text-start" style={{
+          {successInfo && <MuiBox component="div" sx={{ borderRadius: "0.5rem", border: "1px solid #dee2e6", marginBottom: "1.5rem", textAlign: "left" }} className="p-3.5" style={{
           backgroundColor: '#f8fafc',
           fontSize: '0.85rem'
         }}>
-              <div className="mb-2">
+              <MuiBox component="div" sx={{ marginBottom: "0.5rem" }} >
                 <span className="text-muted-custom">Mode: </span>
-                <strong className="text-main text-capitalize">{successInfo.mode} Entry</strong>
-              </div>
-              <div className="mb-2 text-truncate">
+                <MuiBox component="strong" sx={{ textTransform: "capitalize" }} className="text-main">{successInfo.mode} Entry</MuiBox>
+              </MuiBox>
+              <MuiBox component="div" sx={{ marginBottom: "0.5rem", overflow: "hidden", whiteSpace: "nowrap", textOverflow: "ellipsis" }} >
                 <span className="text-muted-custom">Identifier: </span>
                 <strong className="text-main">{successInfo.title}</strong>
-              </div>
-              <div className="text-truncate">
+              </MuiBox>
+              <MuiBox component="div" sx={{ overflow: "hidden", whiteSpace: "nowrap", textOverflow: "ellipsis" }} >
                 <span className="text-muted-custom">Author: </span>
                 <strong className="text-main">{successInfo.author}</strong>
-              </div>
-            </div>}
+              </MuiBox>
+            </MuiBox>}
 
-          <div className="d-flex flex-column gap-2">
+          <MuiBox component="div" sx={{ display: "flex", flexDirection: "column", gap: "0.5rem" }} >
             <PrimaryButton className="py-2.5" onClick={() => {
             setShowSuccessModal(false);
             navigate('/dashboard');
           }}>
               Go to Dashboard
             </PrimaryButton>
-            <PrimaryButton variant="outline" className="py-2" onClick={resetSubmissionForm}>
+            <PrimaryButton sx={{ paddingTop: "0.5rem", paddingBottom: "0.5rem" }} variant="outline"  onClick={resetSubmissionForm}>
               Submit Another Article
             </PrimaryButton>
-          </div>
+          </MuiBox>
         </Modal.Body>
       </Modal>
-    </div>;
+    </MuiBox>;
 }

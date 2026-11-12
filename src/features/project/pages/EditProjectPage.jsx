@@ -5,13 +5,17 @@ import { useNavigate, Link, useParams } from 'react-router-dom';
 import { useQueryClient } from '@tanstack/react-query';
 import ROUTES from '../../../app/routes/routePaths';
 import projectService from '../services/projectService';
-import { Icon } from '@iconify/react';
+import Icon from '../../../shared/components/Icon.jsx';
 import { getSubjectAreasApi } from '../../catalog/api/catalogApi';
 import keywordApi from '../../keywords/api/keywordApi';
 import keywordService from '../../keyword/services/keywordService';
 import SearchableKeywordInput from '../../../shared/components/Input/SearchableKeywordInput';
 import Header from '../../landing/components/Header';
 import PrimaryButton from '../../../shared/components/Button/PrimaryButton';
+
+
+import MuiBox from '@mui/material/Box';
+
 const EditProjectPage = () => {
   const { t: _t } = useTranslation();
   const {
@@ -141,75 +145,75 @@ const EditProjectPage = () => {
     }
   };
   if (loadingData) {
-    return <div className="container-fluid py-4 grid-bg min-vh-100 d-flex justify-content-center align-items-center">
-        <div className="spinner-border text-primary" role="status"></div>
-      </div>;
+    return <MuiBox component="div" sx={{ width: "100%", px: "0.75rem", mx: "auto", paddingTop: "1.5rem", paddingBottom: "1.5rem", minHeight: "100vh", display: "flex", justifyContent: "center", alignItems: "center" }} className="grid-bg">
+        <MuiBox component="div" sx={{ display: "inline-block", width: "2rem", height: "2rem", verticalAlign: "-0.125em", border: "0.25em solid currentColor", borderRightColor: "transparent", borderRadius: "50%", animation: "spin .75s linear infinite", color: "primary.main" }}  role="status"></MuiBox>
+      </MuiBox>;
   }
-  return <div className="container-fluid pb-4 grid-bg min-vh-100 position-relative overflow-hidden" style={{
+  return <MuiBox component="div" sx={{ width: "100%", px: "0.75rem", mx: "auto", paddingBottom: "1.5rem", minHeight: "100vh", position: "relative", overflow: "hidden" }} className="grid-bg" style={{
     paddingTop: '80px'
   }}>
-      <div className="position-absolute w-100 h-100 radial-fade pe-none" style={{
+      <MuiBox component="div" sx={{ position: "absolute", width: "100%", height: "100%", pointerEvents: "none" }} className="radial-fade" style={{
       top: 0,
       left: 0,
       zIndex: 0
     }} />
       <Header />
-      <div className="container mx-auto position-relative z-1" style={{
+      <MuiBox component="div" sx={{ width: "100%", mx: "auto", px: "0.75rem", "@media (min-width:576px)": { maxWidth: 540 }, "@media (min-width:768px)": { maxWidth: 720 }, "@media (min-width:992px)": { maxWidth: 960 }, "@media (min-width:1200px)": { maxWidth: 1140 }, "@media (min-width:1400px)": { maxWidth: 1320 }, position: "relative", zIndex: 1 }}  style={{
       maxWidth: '650px',
       marginTop: '40px'
     }}>
-        <nav aria-label="breadcrumb" className="mb-4">
-          <ol className="breadcrumb mb-2 text-muted-custom small">
-            <li className="breadcrumb-item"><Link to="/dashboard" className="text-decoration-none text-muted-custom hover-primary">{t("author.tongQuan")}</Link></li>
-            <li className="breadcrumb-item"><Link to="/projects" className="text-decoration-none text-muted-custom hover-primary">{t("project.duAnTheoDoi")}</Link></li>
-            <li className="breadcrumb-item"><Link to={`/projects/${id}`} className="text-decoration-none text-muted-custom hover-primary">{title || t("landing.duAn")}</Link></li>
-            <li className="breadcrumb-item active" aria-current="page">{t("project.quanLyTuKhoa")}</li>
-          </ol>
-        </nav>
+        <MuiBox component="nav" sx={{ marginBottom: "1.5rem" }} aria-label="breadcrumb" >
+          <MuiBox component="ol" sx={{ display: "flex", flexWrap: "wrap", padding: 0, marginBottom: "0.5rem", listStyle: "none", fontSize: "0.875em" }} className="text-muted-custom">
+            <MuiBox component="li" sx={{ display: "flex", alignItems: "center", "&:not(:last-child)::after": { content: "\"/\"", px: "0.5rem", color: "text.secondary" } }} ><MuiBox component={Link} sx={{ textDecoration: "none" }} to="/dashboard" className="text-muted-custom hover-primary">{t("author.tongQuan")}</MuiBox></MuiBox>
+            <MuiBox component="li" sx={{ display: "flex", alignItems: "center", "&:not(:last-child)::after": { content: "\"/\"", px: "0.5rem", color: "text.secondary" } }} ><MuiBox component={Link} sx={{ textDecoration: "none" }} to="/projects" className="text-muted-custom hover-primary">{t("project.duAnTheoDoi")}</MuiBox></MuiBox>
+            <MuiBox component="li" sx={{ display: "flex", alignItems: "center", "&:not(:last-child)::after": { content: "\"/\"", px: "0.5rem", color: "text.secondary" } }} ><MuiBox component={Link} sx={{ textDecoration: "none" }} to={`/projects/${id}`} className="text-muted-custom hover-primary">{title || t("landing.duAn")}</MuiBox></MuiBox>
+            <MuiBox component="li" sx={{ display: "flex", alignItems: "center", "&:not(:last-child)::after": { content: "\"/\"", px: "0.5rem", color: "text.secondary" } }} className="active" aria-current="page">{t("project.quanLyTuKhoa")}</MuiBox>
+          </MuiBox>
+        </MuiBox>
 
-        <div className="glass-card p-4 p-md-5 rounded-4 shadow-sm border bg-white">
-          <div className="mb-4">
-            <h2 className="font-display fw-bold text-main mb-2" style={{
+        <MuiBox component="div" sx={{ padding: "1.5rem", "@media (min-width:768px)": { padding: "3rem" }, borderRadius: "0.75rem", boxShadow: "0 .125rem .25rem rgba(0,0,0,.075)", border: "1px solid #dee2e6", bgcolor: "background.paper" }} className="glass-card">
+          <MuiBox component="div" sx={{ marginBottom: "1.5rem" }} >
+            <MuiBox component="h2" sx={{ fontWeight: 700, marginBottom: "0.5rem" }} className="font-display text-main" style={{
             fontSize: '1.75rem'
-          }}>{t("project.quanLyTuKhoaTheoDoi")}</h2>
-            <p className="text-muted-custom small mb-0">{t("project.themHoacXoaCacCumTuKhoaNghienC")}</p>
-          </div>
+          }}>{t("project.quanLyTuKhoaTheoDoi")}</MuiBox>
+            <MuiBox component="p" sx={{ fontSize: "0.875em", marginBottom: "0" }} className="text-muted-custom">{t("project.themHoacXoaCacCumTuKhoaNghienC")}</MuiBox>
+          </MuiBox>
 
-          {error && <div className="alert alert-danger border-0 rounded-3 small py-2 d-flex align-items-center gap-2">
+          {error && <MuiBox component="div" sx={{ position: "relative", p: "1rem", mb: "1rem", border: 0, borderRadius: "0.5rem", bgcolor: "#f8d7da", borderColor: "#f5c2c7", color: "#842029", fontSize: "0.875em", paddingTop: "0.5rem", paddingBottom: "0.5rem", display: "flex", alignItems: "center", gap: "0.5rem" }} >
               <Icon icon="lucide:alert-circle" width="18" />
               {error}
-            </div>}
+            </MuiBox>}
 
           <form onSubmit={handleSubmit}>
-            <div className="mb-5">
-              <label className="form-label fw-semibold text-muted-custom mb-2 small text-uppercase tracking-wider">{t("project.tuKhoaDangTheoDoi")}</label>
+            <MuiBox component="div" sx={{ marginBottom: "3rem" }} >
+              <MuiBox component="label" sx={{ display: "inline-block", marginBottom: "0.5rem", fontWeight: 600, fontSize: "0.875em", textTransform: "uppercase" }} className="text-muted-custom tracking-wider">{t("project.tuKhoaDangTheoDoi")}</MuiBox>
               <SearchableKeywordInput keywords={keywords} subjectAreaId={subjectAreaId} placeholder={t("project.chonTuKhoaTheoDoi")} disabled={loading} onAddKeyword={val => {
               if (val && !keywords.includes(val)) {
                 setKeywords([...keywords, val]);
               }
             }} onRemoveKeyword={removeKeyword} />
 
-              {subjectAreaId && suggestedKeywords.length > 0 && <div className="mt-3 small">
+              {subjectAreaId && suggestedKeywords.length > 0 && <MuiBox component="div" sx={{ marginTop: "1rem", fontSize: "0.875em" }} >
                   <span className="text-muted-custom">{t("project.goiYTuKhoaNoiBat")}</span>
-                  {loadingSuggestions ? <span className="text-muted-custom ms-2">{t("common.dangTai")}</span> : <div className="d-flex flex-wrap gap-2 mt-2">
-                      {suggestedKeywords.filter(k => !keywords.includes(k)).map(sugg => <span key={sugg} className="badge rounded-pill bg-light text-dark border cursor-pointer hover-primary" onClick={() => addSuggestedKeyword(sugg)}>
+                  {loadingSuggestions ? <MuiBox component="span" sx={{ marginInlineStart: "0.5rem" }} className="text-muted-custom">{t("common.dangTai")}</MuiBox> : <MuiBox component="div" sx={{ display: "flex", flexWrap: "wrap", gap: "0.5rem", marginTop: "0.5rem" }} >
+                      {suggestedKeywords.filter(k => !keywords.includes(k)).map(sugg => <MuiBox component="span" sx={{ display: "inline-block", px: "0.65em", py: "0.35em", fontSize: "0.75em", fontWeight: 700, lineHeight: 1, color: "#212529", textAlign: "center", whiteSpace: "nowrap", verticalAlign: "baseline", borderRadius: "50rem", bgcolor: "#f8f9fa", border: "1px solid #dee2e6" }} key={sugg} className="cursor-pointer hover-primary" onClick={() => addSuggestedKeyword(sugg)}>
                           + {sugg}
-                        </span>)}
-                    </div>}
-                </div>}
-            </div>
+                        </MuiBox>)}
+                    </MuiBox>}
+                </MuiBox>}
+            </MuiBox>
 
-            <div className="d-flex gap-3 justify-content-end pt-4 mt-4 border-top">
-              <PrimaryButton type="button" variant="outline" className="px-4 py-2" onClick={() => navigate(-1)} disabled={loading}>{t("auth.quayLai")}</PrimaryButton>
-              <PrimaryButton type="submit" className="px-4 py-2" disabled={loading}>
+            <MuiBox component="div" sx={{ display: "flex", gap: "1rem", justifyContent: "flex-end", paddingTop: "1.5rem", marginTop: "1.5rem", borderTop: "1px solid #dee2e6" }} >
+              <PrimaryButton sx={{ paddingLeft: "1.5rem", paddingRight: "1.5rem", paddingTop: "0.5rem", paddingBottom: "0.5rem" }} type="button" variant="outline"  onClick={() => navigate(-1)} disabled={loading}>{t("auth.quayLai")}</PrimaryButton>
+              <PrimaryButton sx={{ paddingLeft: "1.5rem", paddingRight: "1.5rem", paddingTop: "0.5rem", paddingBottom: "0.5rem" }} type="submit"  disabled={loading}>
                 {loading ? <>
-                    <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>{t("project.dangLuu")}</> : <>
+                    <MuiBox component="span" sx={{ display: "inline-block", width: "1rem", height: "1rem", verticalAlign: "-0.125em", border: "0.25em solid currentColor", borderRightColor: "transparent", borderRadius: "50%", animation: "spin .75s linear infinite", borderWidth: "0.2em" }}  role="status" aria-hidden="true"></MuiBox>{t("project.dangLuu")}</> : <>
                     <Icon icon="lucide:save" width="18" />{t("admin.luuThayDoi")}</>}
               </PrimaryButton>
-            </div>
+            </MuiBox>
           </form>
-        </div>
-      </div>
-    </div>;
+        </MuiBox>
+      </MuiBox>
+    </MuiBox>;
 };
 export default EditProjectPage;

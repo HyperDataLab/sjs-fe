@@ -2,11 +2,14 @@ import { t } from "i18next";
 import { useTranslation } from "react-i18next";
 import { useEffect, useMemo, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { Icon } from '@iconify/react';
+import Icon from '../../../shared/components/Icon.jsx';
 import Header from '../../landing/components/Header';
 import ROUTES from '../../../app/routes/routePaths';
 import { getCoinPackages, createPayment } from '../api/walletApi';
-import './WalletCheckoutPage.css';
+import { getClassNameSx, stripMappedClassNames } from '../../../shared/theme/classNameSx';
+
+import MuiBox from '@mui/material/Box';
+
 const METHOD_UI = {
   payos: {
     name: 'PayOS (VietQR)',
@@ -126,7 +129,7 @@ export default function WalletCheckoutPage() {
 
         {loading ? <div className="checkout-state">
             <div>
-              <div className="spinner-border spinner-border-sm" role="status" style={{
+              <MuiBox component="div" sx={{ display: "inline-block", width: "1rem", height: "1rem", verticalAlign: "-0.125em", border: "0.25em solid currentColor", borderRightColor: "transparent", borderRadius: "50%", animation: "spin .75s linear infinite", borderWidth: "0.2em" }}  role="status" style={{
             color: '#ff7a33'
           }} />
               <div style={{
@@ -176,7 +179,7 @@ export default function WalletCheckoutPage() {
                   </span>{t("wallet.phuongThucThanhToan")}</div>
 
                 <div className="checkout-method-list">
-                  <div className="checkout-method-item active">
+                  <MuiBox component="div" className="checkout-method-item active">
                     <div className="checkout-method-left">
                       <span className="checkout-method-icon">
                         <Icon icon={methodMeta.icon} width={20} color={methodMeta.iconColor} />
@@ -187,7 +190,7 @@ export default function WalletCheckoutPage() {
                       </div>
                     </div>
                     <Icon icon="lucide:badge-check" width={20} color="#ff7a33" />
-                  </div>
+                  </MuiBox>
 
                   <div className="checkout-method-item" style={{
                 opacity: 0.55
@@ -257,7 +260,7 @@ export default function WalletCheckoutPage() {
 
               <button type="button" className="checkout-pay-btn" onClick={handleConfirmPayment} disabled={submitting}>
                 {submitting ? <>
-                    <span className="spinner-border spinner-border-sm text-white" role="status" />{t("wallet.dangChuyenHuong")}</> : <>{t("wallet.xacNhanThanhToan1")}<Icon icon="lucide:arrow-right" width={16} />
+                    <MuiBox component="span" sx={{ display: "inline-block", width: "1rem", height: "1rem", verticalAlign: "-0.125em", border: "0.25em solid currentColor", borderRightColor: "transparent", borderRadius: "50%", animation: "spin .75s linear infinite", borderWidth: "0.2em", color: "#fff" }}  role="status" />{t("wallet.dangChuyenHuong")}</> : <>{t("wallet.xacNhanThanhToan1")}<Icon icon="lucide:arrow-right" width={16} />
                   </>}
               </button>
 

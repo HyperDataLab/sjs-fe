@@ -1,6 +1,10 @@
 import { useTranslation } from "react-i18next";
 import { useMemo } from 'react';
-import { Icon } from '@iconify/react';
+import Icon from '../../../shared/components/Icon.jsx';
+
+
+import MuiBox from '@mui/material/Box';
+
 function SimpleSvgBarChart({
   data,
   labelKey = 'name',
@@ -13,14 +17,14 @@ function SimpleSvgBarChart({
   } = useTranslation();
   const resolvedEmptyMessage = emptyMessage || t("topic.khongCoDuLieu");
   if (!data || data.length === 0) {
-    return <div className="d-flex flex-column align-items-center justify-content-center gap-2 py-5 h-100">
+    return <MuiBox component="div" sx={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: "0.5rem", paddingTop: "3rem", paddingBottom: "3rem", height: "100%" }} >
         <Icon icon="lucide:bar-chart-2" width={36} style={{
         color: 'var(--text-muted)'
       }} />
-        <p className="text-muted-custom mb-0" style={{
+        <MuiBox component="p" sx={{ marginBottom: "0" }} className="text-muted-custom" style={{
         fontSize: '0.85rem'
-      }}>{resolvedEmptyMessage}</p>
-      </div>;
+      }}>{resolvedEmptyMessage}</MuiBox>
+      </MuiBox>;
   }
   const W = 600,
     H = 240,
@@ -104,35 +108,35 @@ export default function GeographyChart({
   }, [countryStats, regions, isRegionMode]);
   const title = isRegionMode ? `Top Khu vực tại ${selectedCountry?.name}` : t("zone.top15QuocGiaNhieuBaiBaoNhat");
   const color = isRegionMode ? '#6366f1' : 'var(--primary)';
-  return <div className="p-4 journal-dark-card d-flex flex-column" style={{
+  return <MuiBox component="div" sx={{ padding: "1.5rem", display: "flex", flexDirection: "column" }} className="journal-dark-card" style={{
     minHeight: '380px'
   }}>
-      <div className="d-flex align-items-center justify-content-between mb-4">
+      <MuiBox component="div" sx={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "1.5rem" }} >
         <div>
-          <div className="d-flex align-items-center gap-2 mb-1">
+          <MuiBox component="div" sx={{ display: "flex", alignItems: "center", gap: "0.5rem", marginBottom: "0.25rem" }} >
             <Icon icon={isRegionMode ? "lucide:map-pin" : "lucide:bar-chart-2"} width={18} style={{
             color
           }} />
-            <h3 className="font-display fw-bold text-main mb-0" style={{
+            <MuiBox component="h3" sx={{ fontWeight: 700, marginBottom: "0" }} className="font-display text-main" style={{
             fontSize: '1.1rem'
           }}>
               {title}
-            </h3>
-          </div>
-          <p className="text-muted-custom mb-0" style={{
+            </MuiBox>
+          </MuiBox>
+          <MuiBox component="p" sx={{ marginBottom: "0" }} className="text-muted-custom" style={{
           fontSize: '0.8rem'
-        }}>{t("zone.bieuDoTrucQuanHoaSanLuongBaiBa")}</p>
+        }}>{t("zone.bieuDoTrucQuanHoaSanLuongBaiBa")}</MuiBox>
         </div>
-      </div>
+      </MuiBox>
 
-      <div className="flex-grow-1 position-relative">
-        {loading ? <div className="d-flex align-items-end h-100 gap-2 pb-5 pt-3">
-            {[1, 2, 3, 4, 5, 6, 7, 8].map(i => <div key={i} className="skeleton-shimmer flex-grow-1" style={{
+      <MuiBox component="div" sx={{ flexGrow: 1, position: "relative" }} >
+        {loading ? <MuiBox component="div" sx={{ display: "flex", alignItems: "flex-end", height: "100%", gap: "0.5rem", paddingBottom: "3rem", paddingTop: "1rem" }} >
+            {[1, 2, 3, 4, 5, 6, 7, 8].map(i => <MuiBox component="div" sx={{ flexGrow: 1 }} key={i} className="skeleton-shimmer" style={{
           // eslint-disable-next-line react-hooks/purity
           height: `${Math.max(20, Math.random() * 80 + 20)}%`,
           borderRadius: '4px 4px 0 0'
         }} />)}
-          </div> : <SimpleSvgBarChart data={chartData} color={color} emptyMessage={isRegionMode ? `Không đủ dữ liệu khu vực cho ${selectedCountry.name}` : t("zone.khongCoDuLieuQuocGia")} />}
-      </div>
-    </div>;
+          </MuiBox> : <SimpleSvgBarChart data={chartData} color={color} emptyMessage={isRegionMode ? `Không đủ dữ liệu khu vực cho ${selectedCountry.name}` : t("zone.khongCoDuLieuQuocGia")} />}
+      </MuiBox>
+    </MuiBox>;
 }

@@ -1,13 +1,17 @@
 import { useTranslation } from "react-i18next";
 import { t } from "i18next";
 import { useState } from 'react';
-import { Form } from 'react-bootstrap';
+import { Form } from '@/shared/components/ui/muiAdapters';
 import { Link } from 'react-router-dom';
 import InputField from '../../../shared/components/InputField';
 import Icon from '../../../shared/components/Icon';
 import ROUTES from '../../../app/routes/routePaths';
 import SubmitButton from './SubmitButton';
 import FormErrorMessage from './FormErrorMessage';
+
+
+import MuiBox from '@mui/material/Box';
+
 export default function ForgotPasswordForm({
   onSubmit,
   isLoading,
@@ -48,19 +52,19 @@ export default function ForgotPasswordForm({
       <InputField label={t("auth.diaChiEmail")} name="email" type="email" value={email} onChange={handleChange} onBlur={handleBlur} placeholder={t("auth.nameemailcom")} error={error} icon="lucide:mail" required disabled={isLoading} />
 
       {/* Submit Button */}
-      <div className="mt-4">
+      <MuiBox component="div" sx={{ marginTop: "1.5rem" }} >
         <SubmitButton isLoading={isLoading} loadingText={t("auth.dangGuiYeuCau")} label={t("auth.guiLienKetDatLaiMatKhau")} />
-      </div>
+      </MuiBox>
 
       {/* Link back to Login */}
-      <div className="text-center mt-4 text-sm font-medium d-flex align-items-center justify-content-center gap-1 flex-wrap">
-        <Link to={ROUTES.LOGIN} className="text-decoration-none d-inline-flex align-items-center gap-1.5 transition-all" style={{
+      <MuiBox component="div" sx={{ textAlign: "center", marginTop: "1.5rem", display: "flex", alignItems: "center", justifyContent: "center", gap: "0.25rem", flexWrap: "wrap" }} className="text-sm font-medium">
+        <MuiBox component={Link} sx={{ textDecoration: "none", display: "inline-flex", alignItems: "center" }} to={ROUTES.LOGIN} className="gap-1.5 transition-all" style={{
         color: 'var(--primary)',
         fontWeight: 600
       }}>
           <Icon icon="lucide:arrow-left" width="16" />
           <span>{t("auth.quayLaiDangNhap")}</span>
-        </Link>
-      </div>
+        </MuiBox>
+      </MuiBox>
     </Form>;
 }

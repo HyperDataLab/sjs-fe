@@ -5,15 +5,19 @@
  * Modal thông báo đẹp mắt khi phiên đăng nhập hết hạn (do không tick Remember-me hoặc token hết hiệu lực).
  */
 import React, { useEffect } from 'react';
-import { Modal } from 'react-bootstrap';
+import { Modal } from '@/shared/components/ui/muiAdapters';
 import { useNavigate } from 'react-router-dom';
-import { Icon } from '@iconify/react';
+import Icon from './Icon.jsx';
 import { jwtDecode } from 'jwt-decode';
 import { useAuthStore } from '../../app/store/authStore';
 import { useUserStore } from '../../app/store/userStore';
 import { useWalletStore } from '../../app/store/walletStore';
 import { logoutSession } from '../../features/auth/services/authService';
 import PrimaryButton from './Button/PrimaryButton';
+
+
+import MuiBox from '@mui/material/Box';
+
 
 export default function SessionExpiredModal() {
   const navigate = useNavigate();
@@ -91,8 +95,8 @@ export default function SessionExpiredModal() {
         backgroundColor: 'rgba(15, 23, 42, 0.45)',
       }}
     >
-      <div
-        className="p-4 p-md-5 rounded-4"
+      <MuiBox component="div" sx={{ padding: "1.5rem", "@media (min-width:768px)": { padding: "3rem" }, borderRadius: "0.75rem" }}
+
         style={{
           backgroundColor: 'var(--bg-card, #ffffff)',
           color: 'var(--text-main, #0f172a)',
@@ -100,9 +104,9 @@ export default function SessionExpiredModal() {
         }}
       >
         {/* Glowing Icon Wrapper */}
-        <div className="d-flex justify-content-center mb-3">
-          <div
-            className="d-flex align-items-center justify-content-center rounded-circle"
+        <MuiBox component="div" sx={{ display: "flex", justifyContent: "center", marginBottom: "1rem" }} >
+          <MuiBox component="div" sx={{ display: "flex", alignItems: "center", justifyContent: "center", borderRadius: "50%" }}
+
             style={{
               width: '72px',
               height: '72px',
@@ -117,12 +121,12 @@ export default function SessionExpiredModal() {
               height="36"
               style={{ color: '#d97706' }}
             />
-          </div>
-        </div>
+          </MuiBox>
+        </MuiBox>
 
         {/* Title */}
-        <h4
-          className="font-display fw-bold mb-2"
+        <MuiBox component="h4" sx={{ fontWeight: 700, marginBottom: "0.5rem" }}
+          className="font-display"
           style={{
             fontSize: '1.35rem',
             letterSpacing: '-0.02em',
@@ -130,11 +134,11 @@ export default function SessionExpiredModal() {
           }}
         >
           Phiên đăng nhập đã hết hạn
-        </h4>
+        </MuiBox>
 
         {/* Message */}
-        <p
-          className="mb-4 text-muted"
+        <MuiBox component="p" sx={{ marginBottom: "1.5rem", color: "text.secondary" }}
+
           style={{
             fontSize: '0.925rem',
             lineHeight: '1.6',
@@ -144,14 +148,14 @@ export default function SessionExpiredModal() {
           }}
         >
           Phiên làm việc của bạn đã kết thúc vì bạn không chọn ghi nhớ đăng nhập (hoặc phiên làm việc đã quá hạn bảo mật). Vui lòng đăng nhập lại để tiếp tục làm việc.
-        </p>
+        </MuiBox>
 
         {/* Action Button */}
-        <div className="d-flex justify-content-center">
-          <PrimaryButton
+        <MuiBox component="div" sx={{ display: "flex", justifyContent: "center" }} >
+          <PrimaryButton sx={{ width: "100%", paddingTop: "0.5rem", paddingBottom: "0.5rem", paddingLeft: "1.5rem", paddingRight: "1.5rem", fontWeight: 600, boxShadow: "0 .125rem .25rem rgba(0,0,0,.075)", display: "flex", alignItems: "center", justifyContent: "center", gap: "0.5rem" }}
             onClick={handleConfirm}
             icon="lucide:log-in"
-            className="w-100 py-2 px-4 fw-semibold shadow-sm d-flex align-items-center justify-content-center gap-2"
+
             style={{
               fontSize: '1rem',
               borderRadius: '10px',
@@ -160,8 +164,8 @@ export default function SessionExpiredModal() {
           >
             Đăng nhập lại (OK)
           </PrimaryButton>
-        </div>
-      </div>
+        </MuiBox>
+      </MuiBox>
     </Modal>
   );
 }

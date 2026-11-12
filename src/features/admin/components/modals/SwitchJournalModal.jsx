@@ -1,9 +1,13 @@
 import { useTranslation } from "react-i18next";
 import { useState, useEffect } from 'react';
-import { Modal, Form, ListGroup } from 'react-bootstrap';
-import { Icon } from '@iconify/react';
+import { Modal, Form, ListGroup } from '@/shared/components/ui/muiAdapters';
+import Icon from '../../../../shared/components/Icon.jsx';
 import PrimaryButton from '../../../../shared/components/Button/PrimaryButton';
 import { useJournalManagement } from '../../../journal/hooks/useJournalManagement';
+import { getClassNameSx, stripMappedClassNames } from '../../../../shared/theme/classNameSx';
+
+import MuiBox from '@mui/material/Box';
+
 
 /**
  * Component SwitchJournalModal - Cửa sổ bật lên phục vụ Admin đổi nhanh Tạp chí đang làm việc.
@@ -41,38 +45,38 @@ export default function SwitchJournalModal({
     }
   };
   return <Modal show={show} onHide={handleClose} centered className="text-main">
-      <Modal.Header closeButton className="border-bottom-0 pb-0">
+      <Modal.Header sx={{ borderBottom: 0, paddingBottom: "0" }} closeButton >
         <div>
-          <Modal.Title className="font-display fw-bold h4 text-main mb-1">Switch Journal</Modal.Title>
+          <Modal.Title sx={{ fontWeight: 500, fontSize: "1.5rem", lineHeight: 1.2, marginBottom: "0.25rem" }} className="font-display text-main">Switch Journal</Modal.Title>
           <small className="text-muted-custom">
             Select which repository context you wish to manage.
           </small>
         </div>
       </Modal.Header>
-      
-      <Modal.Body className="py-3 text-start">
+
+      <Modal.Body sx={{ paddingTop: "1rem", paddingBottom: "1rem", textAlign: "left" }} >
         {/* Ô nhập từ khóa lọc nhanh */}
-        <Form.Group className="mb-3">
-          <div className="input-group">
-            <span className="input-group-text bg-light border-end-0">
-              <Icon icon="lucide:search" className="text-muted" width="16" />
-            </span>
-            <Form.Control type="text" placeholder={t("admin.filterJournalsByNameOrIssn")} value={searchTerm} onChange={e => setSearchTerm(e.target.value)} className="border-start-0" style={{
+        <Form.Group sx={{ marginBottom: "1rem" }} >
+          <MuiBox component="div" sx={{ display: "flex", flexWrap: "wrap", alignItems: "stretch", width: "100%" }} >
+            <MuiBox component="span" sx={{ display: "flex", alignItems: "center", px: "0.75rem", py: "0.375rem", color: "#212529", textAlign: "center", whiteSpace: "nowrap", bgcolor: "#f8f9fa", border: "1px solid #dee2e6", borderRadius: "0.375rem", borderInlineEnd: 0 }} >
+              <Icon sx={{ color: "text.secondary" }} icon="lucide:search"  width="16" />
+            </MuiBox>
+            <Form.Control sx={{ borderInlineStart: 0 }} type="text" placeholder={t("admin.filterJournalsByNameOrIssn")} value={searchTerm} onChange={e => setSearchTerm(e.target.value)}  style={{
             backgroundColor: '#ffffff',
             borderColor: 'var(--border)'
           }} />
-          </div>
+          </MuiBox>
         </Form.Group>
 
         {/* Danh sách kết quả hiển thị */}
-        <ListGroup className="overflow-y-auto gap-2" style={{
+        <ListGroup sx={{ overflowY: "auto", gap: "0.5rem" }}  style={{
         maxHeight: '320px',
         paddingRight: '4px'
       }}>
           {matchedJournals.map(j => {
           const isCurrent = j.id === currentJournal?.id;
           const isTempSelected = j.id === tempSelectedId;
-          return <ListGroup.Item key={j.id} onClick={() => setTempSelectedId(j.id)} className="admin-switch-journal-item rounded-3" style={{
+          return <ListGroup.Item sx={{ borderRadius: "0.5rem" }} key={j.id} onClick={() => setTempSelectedId(j.id)} className="admin-switch-journal-item" style={{
             border: isTempSelected ? '2px solid var(--primary)' : '1px solid var(--border)',
             margin: isTempSelected ? '-1px' : '0',
             backgroundColor: '#ffffff',
@@ -85,31 +89,31 @@ export default function SwitchJournalModal({
                   </div>
                   <div className="admin-switch-journal-item__content">
                     <div className="admin-switch-journal-item__title-row">
-                      <span className="fw-bold text-main">{j.title}</span>
-                      {isCurrent && <span className="badge admin-status-badge admin-status-badge--warning text-uppercase text-xs font-semibold px-2 py-0.5 rounded-pill">
+                      <MuiBox component="span" sx={{ fontWeight: 700 }} className="text-main">{j.title}</MuiBox>
+                      {isCurrent && <MuiBox component="span" sx={{ display: "inline-block", px: "0.65em", py: "0.35em", fontSize: "0.75em", fontWeight: 700, lineHeight: 1, color: "#fff", textAlign: "center", whiteSpace: "nowrap", verticalAlign: "baseline", borderRadius: "50rem", textTransform: "uppercase", paddingLeft: "0.5rem", paddingRight: "0.5rem" }} className="admin-status-badge admin-status-badge--warning text-xs font-semibold py-0.5">
                           Current
-                        </span>}
+                        </MuiBox>}
                     </div>
-                    <small className="text-muted-custom small d-block mt-0.5">
+                    <MuiBox component="small" sx={{ fontSize: "0.875em", display: "block" }} className="text-muted-custom mt-0.5">
                       {j.subjectCategory || 'General Science'} • ISSN: {j.issn}
-                    </small>
+                    </MuiBox>
                   </div>
                 </div>
 
                 <div className="admin-switch-journal-item__side">
-                  <span className={`badge px-2 py-1.5 rounded-pill text-uppercase text-xs ${j.status === 'Active' ? 'admin-status-badge admin-status-badge--accent' : 'admin-status-badge admin-status-badge--muted'}`}>
+                  <MuiBox component="span" sx={getClassNameSx(`badge px-2 py-1.5 rounded-pill text-uppercase text-xs ${j.status === 'Active' ? 'admin-status-badge admin-status-badge--accent' : 'admin-status-badge admin-status-badge--muted'}`)} className={stripMappedClassNames(`badge px-2 py-1.5 rounded-pill text-uppercase text-xs ${j.status === 'Active' ? 'admin-status-badge admin-status-badge--accent' : 'admin-status-badge admin-status-badge--muted'}`)}>
                     {j.status || 'Draft'}
-                  </span>
+                  </MuiBox>
                 </div>
               </ListGroup.Item>;
         })}
-          {matchedJournals.length === 0 && <div className="text-center py-4 text-muted-custom">
+          {matchedJournals.length === 0 && <MuiBox component="div" sx={{ textAlign: "center", paddingTop: "1.5rem", paddingBottom: "1.5rem" }} className="text-muted-custom">
               No journals match your filter criteria.
-            </div>}
+            </MuiBox>}
         </ListGroup>
       </Modal.Body>
 
-      <Modal.Footer className="border-top-0 pt-0 d-flex justify-content-end align-items-center gap-3">
+      <Modal.Footer sx={{ borderTop: 0, paddingTop: "0", display: "flex", justifyContent: "flex-end", alignItems: "center", gap: "1rem" }} >
         <PrimaryButton variant="outline" onClick={handleClose}>
           Cancel
         </PrimaryButton>

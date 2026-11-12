@@ -5,9 +5,12 @@ import { useTranslation } from "react-i18next";
  * File: features\dashboard\components\PublicationTrendChart.jsx
  */
 import { useState } from 'react';
-import { Icon } from '@iconify/react';
-import '../Dashboard.css';
+import Icon from '../../../shared/components/Icon.jsx';
 import ChartRangeDropdown from './ChartRangeDropdown';
+
+
+import MuiBox from '@mui/material/Box';
+
 
 /**
  * PublicationTrendChart — line chart xu hướng publication theo năm.
@@ -47,7 +50,7 @@ function SimpleSvgChart({
   const maxVal = Math.max(1, ...allVals);
   const xScale = i => PAD.left + i / (years.length - 1 || 1) * chartW;
   const yScale = v => PAD.top + chartH - (v - minVal) / (maxVal - minVal || 1) * chartH;
-  return <div className="position-relative w-100 h-100">
+  return <MuiBox component="div" sx={{ position: "relative", width: "100%", height: "100%" }} >
       <svg viewBox={`0 0 ${W} ${H}`} width="100%" height="100%" style={{
       overflow: 'visible'
     }}>
@@ -113,16 +116,16 @@ function SimpleSvgChart({
       top: `${hoveredPoint.y / H * 100}%`,
       transform: 'translate(-50%, -100%) translateY(-8px)'
     }}>
-          <div className="fw-semibold mb-0" style={{
+          <MuiBox component="div" sx={{ fontWeight: 600, marginBottom: "0" }}  style={{
         fontSize: '10px',
         color: 'var(--text-muted)'
-      }}>{t("article.nam")}{hoveredPoint.year}</div>
-          <div className="fw-bold" style={{
+      }}>{t("article.nam")}{hoveredPoint.year}</MuiBox>
+          <MuiBox component="div" sx={{ fontWeight: 700 }}  style={{
         fontSize: '12px',
         color: 'var(--primary)'
-      }}>{hoveredPoint.value}{t("author.baiBao")}</div>
+      }}>{hoveredPoint.value}{t("author.baiBao")}</MuiBox>
         </div>}
-    </div>;
+    </MuiBox>;
 }
 export default function PublicationTrendChart({
   analytics,
@@ -142,8 +145,8 @@ export default function PublicationTrendChart({
     label: t("articles"),
     data: analytics.data
   }] : []);
-  const legend = series.length > 0 ? <div className="d-flex flex-wrap gap-3 justify-content-end me-3">
-      {series.map((s, i) => <div key={i} className="d-flex align-items-center gap-1">
+  const legend = series.length > 0 ? <MuiBox component="div" sx={{ display: "flex", flexWrap: "wrap", gap: "1rem", justifyContent: "flex-end", marginInlineEnd: "1rem" }} >
+      {series.map((s, i) => <MuiBox component="div" sx={{ display: "flex", alignItems: "center", gap: "0.25rem" }} key={i} >
           <div style={{
         width: 10,
         height: 3,
@@ -153,44 +156,44 @@ export default function PublicationTrendChart({
           <span className="text-muted-custom" style={{
         fontSize: '0.65rem'
       }}>{s.label ? t(s.label, s.label) : `Series ${i + 1}`}</span>
-        </div>)}
-    </div> : null;
+        </MuiBox>)}
+    </MuiBox> : null;
   const description = <>
-      <div className="d-flex justify-content-between align-items-center mb-3">
-        <p className="text-muted-custom mb-0" style={{
+      <MuiBox component="div" sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1rem" }} >
+        <MuiBox component="p" sx={{ marginBottom: "0" }} className="text-muted-custom" style={{
           fontSize: '0.72rem'
-        }}>{t("dashboard.soBaiBaoTheoNamTrongProjectsCu")}</p>
+        }}>{t("dashboard.soBaiBaoTheoNamTrongProjectsCu")}</MuiBox>
         {isFetching && (
-          <span className="d-inline-flex align-items-center gap-1 text-muted-custom" style={{ fontSize: '0.7rem' }}>
+          <MuiBox component="span" sx={{ display: "inline-flex", alignItems: "center", gap: "0.25rem" }} className="text-muted-custom" style={{ fontSize: '0.7rem' }}>
             <Icon icon="lucide:loader" className="spin-animation" width={12} />
             <span>{t("common.dangCapNhat", "Đang cập nhật...")}</span>
-          </span>
+          </MuiBox>
         )}
-      </div>
+      </MuiBox>
       <div style={{
       minHeight: 160
     }}>
-        {loading && years.length === 0 ? <div className="skeleton-shimmer rounded-3 w-100" style={{
+        {loading && years.length === 0 ? <MuiBox component="div" sx={{ borderRadius: "0.5rem", width: "100%" }} className="skeleton-shimmer" style={{
         height: 160
-      }} /> : error && years.length === 0 ? <div className="d-flex flex-column align-items-center justify-content-center gap-2 py-5">
+      }} /> : error && years.length === 0 ? <MuiBox component="div" sx={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: "0.5rem", paddingTop: "3rem", paddingBottom: "3rem" }} >
             <Icon icon="lucide:alert-triangle" width={28} style={{
           color: '#ef4444'
         }} />
-            <p className="text-muted-custom mb-0" style={{
+            <MuiBox component="p" sx={{ marginBottom: "0" }} className="text-muted-custom" style={{
           fontSize: '0.8rem'
-        }}>{error}</p>
-            {onRetry && <button className="btn btn-sm btn-outline-primary mt-2" onClick={onRetry}>{t("article.thuLai")}</button>}
-          </div> : years.length === 0 ? <div className="d-flex flex-column align-items-center justify-content-center gap-2 py-5">
+        }}>{error}</MuiBox>
+            {onRetry && <MuiBox component="button" sx={{ display: "inline-flex", alignItems: "center", justifyContent: "center", px: "0.5rem", py: "0.25rem", border: "1px solid", borderRadius: "0.25rem", fontSize: "0.875rem", fontWeight: 400, lineHeight: 1.5, cursor: "pointer", textDecoration: "none", borderColor: "primary.main", bgcolor: "transparent", color: "primary.main", "&:hover": { bgcolor: "primary.main", color: "primary.contrastText" }, marginTop: "0.5rem" }}  onClick={onRetry}>{t("article.thuLai")}</MuiBox>}
+          </MuiBox> : years.length === 0 ? <MuiBox component="div" sx={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: "0.5rem", paddingTop: "3rem", paddingBottom: "3rem" }} >
             <Icon icon="lucide:bar-chart-2" width={36} style={{
           color: 'var(--text-muted)'
         }} />
-            <p className="text-main fw-semibold mb-1" style={{
+            <MuiBox component="p" sx={{ fontWeight: 600, marginBottom: "0.25rem" }} className="text-main" style={{
           fontSize: '0.85rem'
-        }}>{t("dashboard.chuaCoDuLieuXuHuongPublication")}</p>
-            <p className="text-muted-custom mb-0" style={{
+        }}>{t("dashboard.chuaCoDuLieuXuHuongPublication")}</MuiBox>
+            <MuiBox component="p" sx={{ marginBottom: "0" }} className="text-muted-custom" style={{
           fontSize: '0.75rem'
-        }}>{t("dashboard.taoProjectDauTienDeBatDauTheoD")}</p>
-          </div> : <div style={{
+        }}>{t("dashboard.taoProjectDauTienDeBatDauTheoD")}</MuiBox>
+          </MuiBox> : <div style={{
             opacity: isFetching ? 0.6 : 1,
             transition: 'opacity 0.25s ease',
             width: '100%',
@@ -200,7 +203,7 @@ export default function PublicationTrendChart({
           </div>}
       </div>
     </>;
-  return <div className="publication-trend-card h-100">
+  return <MuiBox component="div" sx={{ height: "100%" }} className="publication-trend-card">
       <div className="ptc-header">
         <div className="ptc-title">
           <Icon icon="lucide:trending-up" width={16} style={{
@@ -208,13 +211,13 @@ export default function PublicationTrendChart({
         }} />
           <span>{t("dashboard.xuHuongPublication")}</span>
         </div>
-        <div className="ptc-actions d-flex align-items-center">
+        <MuiBox component="div" sx={{ display: "flex", alignItems: "center" }} className="ptc-actions">
           {legend}
           {onRangeChange && <ChartRangeDropdown value={selectedRange} onChange={onRangeChange} />}
-        </div>
+        </MuiBox>
       </div>
       <div className="ptc-body">
         {description}
       </div>
-    </div>;
+    </MuiBox>;
 }

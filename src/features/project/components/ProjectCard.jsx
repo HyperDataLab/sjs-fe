@@ -1,7 +1,11 @@
 import { useTranslation } from "react-i18next";
 import { Link, useNavigate } from 'react-router-dom';
-import { Icon } from '@iconify/react';
+import Icon from '../../../shared/components/Icon.jsx';
 import { EntityCard } from '../../../shared/components/Card';
+
+
+import MuiBox from '@mui/material/Box';
+
 const ProjectCard = ({
   project,
   onDelete,
@@ -55,16 +59,16 @@ const ProjectCard = ({
     };
 
     return (
-      <div 
-        className="d-flex align-items-center" 
+      <MuiBox component="div" sx={{ display: "flex", alignItems: "center" }}
+
         onClick={handleMembersClick}
         title={t("project.quanLyThanhVien", "Quản lý thành viên")}
         style={{ cursor: 'pointer' }}
       >
         {displayUsers.map((u, idx) => (
-          <div 
-            key={idx} 
-            className="rounded-circle d-flex align-items-center justify-content-center text-white fw-bold shadow-sm"
+          <MuiBox component="div" sx={{ borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", color: "#fff", fontWeight: 700, boxShadow: "0 .125rem .25rem rgba(0,0,0,.075)" }}
+            key={idx}
+
             style={{
               width: '26px', height: '26px', fontSize: '10px',
               backgroundColor: u.isOwner ? '#ff7a33' : '#6b7280',
@@ -75,11 +79,11 @@ const ProjectCard = ({
             title={`${u.first_name || ''} ${u.last_name || ''} ${u.isOwner ? '(Owner)' : ''}`}
           >
             {getInitials(u.first_name, u.last_name, u.email)}
-          </div>
+          </MuiBox>
         ))}
         {extraCount > 0 && (
-          <div 
-            className="rounded-circle d-flex align-items-center justify-content-center text-secondary fw-medium shadow-sm bg-light"
+          <MuiBox component="div" sx={{ borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", color: "#6c757d", fontWeight: 500, boxShadow: "0 .125rem .25rem rgba(0,0,0,.075)", bgcolor: "#f8f9fa" }}
+
             style={{
               width: '26px', height: '26px', fontSize: '10px',
               marginLeft: '-8px',
@@ -88,9 +92,9 @@ const ProjectCard = ({
             }}
           >
             +{extraCount}
-          </div>
+          </MuiBox>
         )}
-      </div>
+      </MuiBox>
     );
   };
   const handleCardClick = () => {
@@ -108,103 +112,103 @@ const ProjectCard = ({
     }
   };
   if (isRecent) {
-    return <Link to={`/projects/${project.project_id || project.id}`} className="text-decoration-none h-100 d-block" onClick={handleCardClick}>
-        <div className="glass-card rounded-4 border shadow-sm p-3 h-100 d-flex align-items-center gap-3 project-card-recent-hover">
-          <div className="rounded-circle d-flex align-items-center justify-content-center flex-shrink-0" style={{
+    return <MuiBox component={Link} sx={{ textDecoration: "none", height: "100%", display: "block" }} to={`/projects/${project.project_id || project.id}`}  onClick={handleCardClick}>
+        <MuiBox component="div" sx={{ borderRadius: "0.75rem", border: "1px solid #dee2e6", boxShadow: "0 .125rem .25rem rgba(0,0,0,.075)", padding: "1rem", height: "100%", display: "flex", alignItems: "center", gap: "1rem" }} className="glass-card project-card-recent-hover">
+          <MuiBox component="div" sx={{ borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}  style={{
           width: '46px',
           height: '46px',
           backgroundColor: 'var(--primary-light)',
           color: 'var(--primary)'
         }}>
             <Icon icon="lucide:folder-open" width="22" />
-          </div>
-          <div className="flex-grow-1 min-w-0" style={{
+          </MuiBox>
+          <MuiBox component="div" sx={{ flexGrow: 1 }} className="min-w-0" style={{
           minWidth: 0
         }}>
-            <h6 className="fw-bold text-main mb-1 text-truncate">{title}</h6>
-            <div className="d-flex align-items-center gap-2 text-truncate">
-              <span className="badge fw-medium text-truncate" style={{
+            <MuiBox component="h6" sx={{ fontWeight: 700, marginBottom: "0.25rem", overflow: "hidden", whiteSpace: "nowrap", textOverflow: "ellipsis" }} className="text-main">{title}</MuiBox>
+            <MuiBox component="div" sx={{ display: "flex", alignItems: "center", gap: "0.5rem", overflow: "hidden", whiteSpace: "nowrap", textOverflow: "ellipsis" }} >
+              <MuiBox component="span" sx={{ display: "inline-block", px: "0.65em", py: "0.35em", fontSize: "0.75em", fontWeight: 500, lineHeight: 1, color: "#fff", textAlign: "center", whiteSpace: "nowrap", verticalAlign: "baseline", borderRadius: "0.375rem", overflow: "hidden", textOverflow: "ellipsis" }}  style={{
               fontSize: '0.65rem',
               backgroundColor: 'var(--bg-chip)',
               color: 'var(--text-muted)'
             }}>
                 {areaName}
-              </span>
-              <span className="text-muted-custom small flex-shrink-0">• {createdAt}</span>
-            </div>
-          </div>
-          <div className="flex-shrink-0 text-muted-custom recent-arrow-icon">
+              </MuiBox>
+              <MuiBox component="span" sx={{ fontSize: "0.875em", flexShrink: 0 }} className="text-muted-custom">• {createdAt}</MuiBox>
+            </MuiBox>
+          </MuiBox>
+          <MuiBox component="div" sx={{ flexShrink: 0 }} className="text-muted-custom recent-arrow-icon">
             <Icon icon="lucide:chevron-right" width="20" />
-          </div>
-        </div>
-      </Link>;
+          </MuiBox>
+        </MuiBox>
+      </MuiBox>;
   }
   const isDeleted = project.status === 'DELETED';
   const meta = (
-    <div className="d-flex align-items-center gap-2">
-      <span className="badge rounded-pill fw-medium" style={{
+    <MuiBox component="div" sx={{ display: "flex", alignItems: "center", gap: "0.5rem" }} >
+      <MuiBox component="span" sx={{ display: "inline-block", px: "0.65em", py: "0.35em", fontSize: "0.75em", fontWeight: 500, lineHeight: 1, color: "#fff", textAlign: "center", whiteSpace: "nowrap", verticalAlign: "baseline", borderRadius: "50rem" }}  style={{
         backgroundColor: 'var(--primary-light)',
         color: 'var(--primary)'
       }}>
         {areaName}
-      </span>
+      </MuiBox>
       {isDeleted && (
-        <span className="badge rounded-pill bg-danger text-white fw-medium" style={{ fontSize: '0.7rem' }}>
+        <MuiBox component="span" sx={{ display: "inline-block", px: "0.65em", py: "0.35em", fontSize: "0.75em", fontWeight: 500, lineHeight: 1, color: "#fff", textAlign: "center", whiteSpace: "nowrap", verticalAlign: "baseline", borderRadius: "50rem", bgcolor: "error.main" }}  style={{ fontSize: '0.7rem' }}>
           {t("project.daXoa", "Đã xóa")}
-        </span>
+        </MuiBox>
       )}
-    </div>
+    </MuiBox>
   );
-  
+
   // Kiểm tra quyền owner
   const currentUserId = currentUser?.user_id || currentUser?.id;
   const isOwner = project.user_role === 'OWNER' || (currentUser && (
-    (project.user_id && project.user_id === currentUserId) || 
+    (project.user_id && project.user_id === currentUserId) ||
     (project.owner && project.owner.user_id === currentUserId) ||
     (project.owner_id && project.owner_id === currentUserId)
   ));
 
   const actions = isOwner ? (isDeleted ? (
-    <button className="btn btn-sm btn-link text-success p-0 ms-2 hover-primary" onClick={handleRestore} title={t("project.khoiPhucDuAn", "Khôi phục dự án")}>
+    <MuiBox component="button" sx={{ display: "inline-flex", alignItems: "center", justifyContent: "center", px: "0.5rem", py: "0.25rem", border: 0, borderRadius: "0.25rem", fontSize: "0.875rem", fontWeight: 400, lineHeight: 1.5, cursor: "pointer", textDecoration: "underline", bgcolor: "transparent", color: "success.main", padding: "0", marginInlineStart: "0.5rem" }} className="hover-primary" onClick={handleRestore} title={t("project.khoiPhucDuAn", "Khôi phục dự án")}>
       <Icon icon="lucide:refresh-cw" width="18" />
-    </button>
+    </MuiBox>
   ) : (
-    <button className="btn btn-sm btn-link text-muted p-0 ms-2 hover-danger" onClick={handleDelete} title={t("project.xoaDuAn", "Xóa dự án")}>
+    <MuiBox component="button" sx={{ display: "inline-flex", alignItems: "center", justifyContent: "center", px: "0.5rem", py: "0.25rem", border: 0, borderRadius: "0.25rem", fontSize: "0.875rem", fontWeight: 400, lineHeight: 1.5, cursor: "pointer", textDecoration: "underline", bgcolor: "transparent", color: "text.secondary", padding: "0", marginInlineStart: "0.5rem" }} className="hover-danger" onClick={handleDelete} title={t("project.xoaDuAn", "Xóa dự án")}>
       <Icon icon="lucide:trash-2" width="18" />
-    </button>
+    </MuiBox>
   )) : null;
   const description = keywordCount > 0 ? <div>
-      <span className="text-muted-custom small d-block mb-1">{t("project.tuKhoaTheoDoi")}{keywordCount}):</span>
-      <div className="d-flex flex-wrap gap-1">
-        {project.watch_keywords?.slice(0, 3).map((kw, idx) => <span key={idx} className="badge bg-light text-muted border fw-normal" style={{
+      <MuiBox component="span" sx={{ fontSize: "0.875em", display: "block", marginBottom: "0.25rem" }} className="text-muted-custom">{t("project.tuKhoaTheoDoi")}{keywordCount}):</MuiBox>
+      <MuiBox component="div" sx={{ display: "flex", flexWrap: "wrap", gap: "0.25rem" }} >
+        {project.watch_keywords?.slice(0, 3).map((kw, idx) => <MuiBox component="span" sx={{ display: "inline-block", px: "0.65em", py: "0.35em", fontSize: "0.75em", fontWeight: 400, lineHeight: 1, color: "text.secondary", textAlign: "center", whiteSpace: "nowrap", verticalAlign: "baseline", borderRadius: "0.375rem", bgcolor: "#f8f9fa", border: "1px solid #dee2e6" }} key={idx}  style={{
         fontSize: '0.75rem'
       }}>
             {kw.keyword || kw}
-          </span>)}
-        {keywordCount > 3 && <span className="badge bg-light text-muted border fw-normal" style={{
+          </MuiBox>)}
+        {keywordCount > 3 && <MuiBox component="span" sx={{ display: "inline-block", px: "0.65em", py: "0.35em", fontSize: "0.75em", fontWeight: 400, lineHeight: 1, color: "text.secondary", textAlign: "center", whiteSpace: "nowrap", verticalAlign: "baseline", borderRadius: "0.375rem", bgcolor: "#f8f9fa", border: "1px solid #dee2e6" }}  style={{
         fontSize: '0.75rem'
       }}>
             +{keywordCount - 3}
-          </span>}
-      </div>
+          </MuiBox>}
+      </MuiBox>
     </div> : null;
-  const footer = <div className="d-flex justify-content-between align-items-center w-100 mt-2">
-      <div className="d-flex align-items-center gap-2">
+  const footer = <MuiBox component="div" sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", width: "100%", marginTop: "0.5rem" }} >
+      <MuiBox component="div" sx={{ display: "flex", alignItems: "center", gap: "0.5rem" }} >
         {renderAvatarGroup()}
-        <div className="d-flex flex-column justify-content-center" style={{ lineHeight: '1.2' }}>
+        <MuiBox component="div" sx={{ display: "flex", flexDirection: "column", justifyContent: "center" }}  style={{ lineHeight: '1.2' }}>
           <span className="text-muted-custom" style={{ fontSize: '0.7rem' }}>
-            Tạo bởi <span className="fw-semibold text-main">{project.owner?.last_name || 'Admin'}</span>
+            Tạo bởi <MuiBox component="span" sx={{ fontWeight: 600 }} className="text-main">{project.owner?.last_name || 'Admin'}</MuiBox>
           </span>
           <span className="text-muted-custom" style={{ fontSize: '0.65rem' }}>{createdAt}</span>
-        </div>
-      </div>
-      <span className="small fw-medium d-flex align-items-center gap-1 mt-1" style={{
+        </MuiBox>
+      </MuiBox>
+      <MuiBox component="span" sx={{ fontSize: "0.875em", fontWeight: 500, display: "flex", alignItems: "center", gap: "0.25rem", marginTop: "0.25rem" }}  style={{
       color: 'var(--primary)'
     }}>{t("article.chiTiet1")}<Icon icon="lucide:arrow-right" width="14" />
-      </span>
-    </div>;
-  return <Link to={`/projects/${project.project_id || project.id}`} className="text-decoration-none h-100 d-block" onClick={handleCardClick}>
-      <EntityCard className="h-100" title={title} meta={meta} actions={actions} description={description} footer={footer} bodyClassName="flex-column align-items-stretch" />
-    </Link>;
+      </MuiBox>
+    </MuiBox>;
+  return <MuiBox component={Link} sx={{ textDecoration: "none", height: "100%", display: "block" }} to={`/projects/${project.project_id || project.id}`}  onClick={handleCardClick}>
+      <EntityCard sx={{ height: "100%" }}  title={title} meta={meta} actions={actions} description={description} footer={footer} bodyClassName="flex-column align-items-stretch" />
+    </MuiBox>;
 };
 export default ProjectCard;

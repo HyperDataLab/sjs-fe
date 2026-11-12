@@ -1,6 +1,10 @@
 import { useTranslation } from "react-i18next";
 import { useMemo } from 'react';
 import Icon from '../../../shared/components/Icon';
+import { getClassNameSx, stripMappedClassNames } from '../../../shared/theme/classNameSx';
+
+import MuiBox from '@mui/material/Box';
+
 
 // Helper function to map country code to circle-flags icon code
 const getCountryFlagCode = (item) => {
@@ -55,19 +59,19 @@ export default function GeographyTerritoryChart({
   }, [maxVal]);
 
   return (
-    <div className="p-4 journal-dark-card h-100 d-flex flex-column">
+    <MuiBox component="div" sx={{ padding: "1.5rem", height: "100%", display: "flex", flexDirection: "column" }} className="journal-dark-card">
       {/* Header */}
-      <div className="d-flex align-items-center justify-content-between mb-4">
+      <MuiBox component="div" sx={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "1.5rem" }} >
         <div>
-          <h3 className="font-display fw-bold text-main mb-0" style={{ fontSize: '1.1rem' }}>
+          <MuiBox component="h3" sx={{ fontWeight: 700, marginBottom: "0" }} className="font-display text-main" style={{ fontSize: '1.1rem' }}>
             {t("zone.top10QuocGiaCoSanLuongArticleCa", "Top 10 Countries by Article Output")}
-          </h3>
-          <p className="text-muted-custom mb-0 mt-1" style={{ fontSize: '0.8rem' }}>
+          </MuiBox>
+          <MuiBox component="p" sx={{ marginBottom: "0", marginTop: "0.25rem" }} className="text-muted-custom" style={{ fontSize: '0.8rem' }}>
             {t("zone.phanBoSoLuongBaiBaoKhoaHocXuat")}
-          </p>
+          </MuiBox>
         </div>
-        <span
-          className="px-2 py-1 rounded text-muted-custom"
+        <MuiBox component="span" sx={{ paddingLeft: "0.5rem", paddingRight: "0.5rem", paddingTop: "0.25rem", paddingBottom: "0.25rem", borderRadius: "0.375rem" }}
+          className="text-muted-custom"
           style={{
             fontSize: '0.75rem',
             backgroundColor: 'var(--bg-chip)',
@@ -76,35 +80,35 @@ export default function GeographyTerritoryChart({
           }}
         >
           {selectedYear === 'All' ? t("zone.tatCaCacNam") : `Thống kê ${selectedYear}`}
-        </span>
-      </div>
+        </MuiBox>
+      </MuiBox>
 
       {loading ? (
-        <div className="d-flex flex-column gap-3 justify-content-center flex-grow-1" style={{ minHeight: '380px' }}>
+        <MuiBox component="div" sx={{ display: "flex", flexDirection: "column", gap: "1rem", justifyContent: "center", flexGrow: 1 }}  style={{ minHeight: '380px' }}>
           {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((i) => (
-            <div key={i} className="d-flex align-items-center gap-3">
-              <div className="skeleton-shimmer rounded-circle" style={{ width: '28px', height: '28px' }} />
-              <div className="skeleton-shimmer rounded" style={{ width: '100px', height: '18px' }} />
-              <div className="skeleton-shimmer flex-grow-1 rounded" style={{ height: '32px' }} />
-            </div>
+            <MuiBox component="div" sx={{ display: "flex", alignItems: "center", gap: "1rem" }} key={i} >
+              <MuiBox component="div" sx={{ borderRadius: "50%" }} className="skeleton-shimmer" style={{ width: '28px', height: '28px' }} />
+              <MuiBox component="div" sx={{ borderRadius: "0.375rem" }} className="skeleton-shimmer" style={{ width: '100px', height: '18px' }} />
+              <MuiBox component="div" sx={{ flexGrow: 1, borderRadius: "0.375rem" }} className="skeleton-shimmer" style={{ height: '32px' }} />
+            </MuiBox>
           ))}
-        </div>
+        </MuiBox>
       ) : top10.length === 0 ? (
-        <div
-          className="d-flex align-items-center justify-content-center flex-grow-1 text-muted-custom py-5"
+        <MuiBox component="div" sx={{ display: "flex", alignItems: "center", justifyContent: "center", flexGrow: 1, paddingTop: "3rem", paddingBottom: "3rem" }}
+          className="text-muted-custom"
           style={{ minHeight: '380px', fontSize: '0.9rem' }}
         >
           {t("topic.khongCoDuLieu")}
-        </div>
+        </MuiBox>
       ) : (
-        <div className="d-flex flex-column flex-grow-1 justify-content-between pt-2">
-          
+        <MuiBox component="div" sx={{ display: "flex", flexDirection: "column", flexGrow: 1, justifyContent: "space-between", paddingTop: "0.5rem" }} >
+
           {/* Main Horizontal Bars Area */}
-          <div className="position-relative d-flex flex-column gap-2.5 flex-grow-1 justify-content-around">
-            
+          <MuiBox component="div" sx={{ position: "relative", display: "flex", flexDirection: "column", flexGrow: 1, justifyContent: "space-around" }} className="gap-2.5">
+
             {/* Vertical Background Gridlines */}
-            <div
-              className="position-absolute h-100 d-flex justify-content-between pe-2"
+            <MuiBox component="div" sx={{ position: "absolute", height: "100%", display: "flex", justifyContent: "space-between", paddingInlineEnd: "0.5rem" }}
+
               style={{
                 left: '191px',
                 right: 0,
@@ -122,7 +126,7 @@ export default function GeographyTerritoryChart({
                   }}
                 />
               ))}
-            </div>
+            </MuiBox>
 
             {/* Horizontal Rows */}
             {top10.map((item, index) => {
@@ -133,46 +137,50 @@ export default function GeographyTerritoryChart({
               const isSelected = selectedCountry?.zone_id === item.zone_id;
 
               return (
-                <div
+                <MuiBox component="div" sx={getClassNameSx(`d-flex align-items-center gap-3 w-100 bar-row-container position-relative z-1 py-1 ${
+                    isSelected ? 'is-selected' : ''
+                  }`)}
                   key={item.zone_id || index}
                   onClick={() => onSelectCountry?.(item)}
-                  className={`d-flex align-items-center gap-3 w-100 bar-row-container position-relative z-1 py-1 ${
+                  className={stripMappedClassNames(`d-flex align-items-center gap-3 w-100 bar-row-container position-relative z-1 py-1 ${
                     isSelected ? 'is-selected' : ''
-                  }`}
+                  }`)}
                   style={{ cursor: 'pointer' }}
                 >
                   {/* Left Column: Flag + Country Name & Code */}
-                  <div className="d-flex align-items-center" style={{ width: '175px', flexShrink: 0, gap: '10px' }}>
-                    <div className="flex-shrink-0 d-flex align-items-center justify-content-center flag-wrapper">
-                      <Icon icon={`circle-flags:${flagCode}`} width={24} height={24} className="shadow-sm rounded-circle" />
-                    </div>
-                    <div className="d-flex flex-column min-w-0">
-                      <span
-                        className="text-main fw-bold font-display text-truncate"
+                  <MuiBox component="div" sx={{ display: "flex", alignItems: "center" }}  style={{ width: '175px', flexShrink: 0, gap: '10px' }}>
+                    <MuiBox component="div" sx={{ flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center" }} className="flag-wrapper">
+                      <Icon sx={{ boxShadow: "0 .125rem .25rem rgba(0,0,0,.075)", borderRadius: "50%" }} icon={`circle-flags:${flagCode}`} width={24} height={24}  />
+                    </MuiBox>
+                    <MuiBox component="div" sx={{ display: "flex", flexDirection: "column" }} className="min-w-0">
+                      <MuiBox component="span" sx={{ fontWeight: 700, overflow: "hidden", whiteSpace: "nowrap", textOverflow: "ellipsis" }}
+                        className="text-main font-display"
                         style={{ fontSize: '0.82rem' }}
                         title={item.name}
                       >
                         {item.name || item.code}
-                      </span>
+                      </MuiBox>
                       <span className="text-muted-custom font-display text-xs" style={{ fontSize: '0.68rem' }}>
                         {item.code || item.iso_code || '—'}
                       </span>
-                    </div>
-                  </div>
+                    </MuiBox>
+                  </MuiBox>
 
                   {/* Right Column: Horizontal Bar */}
-                  <div className="flex-grow-1 position-relative d-flex align-items-center pe-2" style={{ height: '34px' }}>
+                  <MuiBox component="div" sx={{ flexGrow: 1, position: "relative", display: "flex", alignItems: "center", paddingInlineEnd: "0.5rem" }}  style={{ height: '34px' }}>
                     {/* Background Bar Track */}
-                    <div
-                      className="position-absolute w-100 h-100 rounded-3"
+                    <MuiBox component="div" sx={{ position: "absolute", width: "100%", height: "100%", borderRadius: "0.5rem" }}
+
                       style={{ backgroundColor: 'var(--bg-chip)', opacity: 0.4, zIndex: 0 }}
                     />
 
                     {/* The Fill Bar */}
-                    <div
-                      className={`geography-chart-bar-horizontal rounded-3 d-flex align-items-center justify-content-end px-3 position-relative ${
+                    <MuiBox component="div" sx={getClassNameSx(`geography-chart-bar-horizontal rounded-3 d-flex align-items-center justify-content-end px-3 position-relative ${
                         isSelected ? 'is-active' : ''
-                      }`}
+                      }`)}
+                      className={stripMappedClassNames(`geography-chart-bar-horizontal rounded-3 d-flex align-items-center justify-content-end px-3 position-relative ${
+                        isSelected ? 'is-active' : ''
+                      }`)}
                       style={{
                         width: `${displayWidth}%`,
                         height: '100%',
@@ -181,21 +189,21 @@ export default function GeographyTerritoryChart({
                       }}
                     >
                       {/* Value Label INSIDE the Horizontal Bar */}
-                      <span
-                        className="fw-bold font-display text-white text-nowrap bar-value-inside"
+                      <MuiBox component="span" sx={{ fontWeight: 700, color: "#fff", whiteSpace: "nowrap" }}
+                        className="font-display bar-value-inside"
                         style={{ fontSize: '0.78rem', letterSpacing: '0.01em' }}
                       >
                         {val > 0 ? val.toLocaleString() : '0'}
-                      </span>
-                    </div>
-                  </div>
-                </div>
+                      </MuiBox>
+                    </MuiBox>
+                  </MuiBox>
+                </MuiBox>
               );
             })}
 
-          </div>
-        </div>
+          </MuiBox>
+        </MuiBox>
       )}
-    </div>
+    </MuiBox>
   );
-}
+}

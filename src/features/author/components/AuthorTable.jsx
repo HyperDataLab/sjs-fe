@@ -4,12 +4,16 @@ import { useTranslation } from "react-i18next";
  * @description Vỏ chứa dữ liệu dạng bảng hiển thị danh sách tác giả theo cấu trúc dòng cột.
  */
 
-import { Table, Row, Col } from 'react-bootstrap';
+import { Table, Row, Col } from '@/shared/components/ui/muiAdapters';
 import AuthorTableRow from './AuthorTableRow';
 import AuthorCard from './AuthorCard';
 import LoadingSkeleton from '../../../shared/components/LoadingSkeleton';
 import EmptyState from '../../../shared/components/EmptyState';
 import ErrorState from '../../../shared/components/ErrorState';
+
+
+import MuiBox from '@mui/material/Box';
+
 export default function AuthorTable({
   authors = [],
   loading = false,
@@ -27,32 +31,32 @@ export default function AuthorTable({
     return <EmptyState title={t("author.khongTimThayTacGiaPhuHop")} description={t("author.hayThuThayDoiTuKhoaTimKiemHoac")} icon="lucide:search-slash" />;
   }
   return <div>
-      <div className="author-table-shell d-none d-md-block">
-        <Table hover responsive className="author-table m-0 align-middle">
+      <MuiBox component="div" sx={{ display: "none", "@media (min-width:768px)": { display: "block" } }} className="author-table-shell">
+        <Table sx={{ margin: "0", verticalAlign: "middle" }} hover responsive className="author-table">
           <thead>
             <tr>
-              <th className="author-table-index-col text-center py-3">#</th>
-              <th className="py-3">{t("typeAuthor")}</th>
-              <th className="py-3">{t("author.toChuc")}</th>
-              <th className="py-3">{t("publications")}</th>
-              <th className="py-3">Citations</th>
-              <th className="py-3">H-index</th>
-              <th className="author-table-action-col py-3">{t("article.chiTiet1")}</th>
+              <MuiBox component="th" sx={{ textAlign: "center", paddingTop: "1rem", paddingBottom: "1rem" }} className="author-table-index-col">#</MuiBox>
+              <MuiBox component="th" sx={{ paddingTop: "1rem", paddingBottom: "1rem" }} >{t("typeAuthor")}</MuiBox>
+              <MuiBox component="th" sx={{ paddingTop: "1rem", paddingBottom: "1rem" }} >{t("author.toChuc")}</MuiBox>
+              <MuiBox component="th" sx={{ paddingTop: "1rem", paddingBottom: "1rem" }} >{t("publications")}</MuiBox>
+              <MuiBox component="th" sx={{ paddingTop: "1rem", paddingBottom: "1rem" }} >Citations</MuiBox>
+              <MuiBox component="th" sx={{ paddingTop: "1rem", paddingBottom: "1rem" }} >H-index</MuiBox>
+              <MuiBox component="th" sx={{ paddingTop: "1rem", paddingBottom: "1rem" }} className="author-table-action-col">{t("article.chiTiet1")}</MuiBox>
             </tr>
           </thead>
           <tbody>
             {loading ? Array.from({
             length: 5
           }).map((_, idx) => <tr key={idx}>
-                  <td className="text-center"><LoadingSkeleton width="20px" height="15px" /></td>
+                  <MuiBox component="td" sx={{ textAlign: "center" }} ><LoadingSkeleton width="20px" height="15px" /></MuiBox>
                   <td>
-                    <div className="d-flex align-items-center gap-2">
+                    <MuiBox component="div" sx={{ display: "flex", alignItems: "center", gap: "0.5rem" }} >
                       <LoadingSkeleton width="32px" height="32px" borderRadius="50%" />
-                      <div className="flex-grow-1">
-                        <LoadingSkeleton width="120px" height="14px" className="mb-1" />
+                      <MuiBox component="div" sx={{ flexGrow: 1 }} >
+                        <LoadingSkeleton sx={{ marginBottom: "0.25rem" }} width="120px" height="14px"  />
                         <LoadingSkeleton width="80px" height="10px" />
-                      </div>
-                    </div>
+                      </MuiBox>
+                    </MuiBox>
                   </td>
                   <td><LoadingSkeleton width="150px" height="14px" /></td>
                   <td><LoadingSkeleton width="40px" height="14px" /></td>
@@ -62,29 +66,29 @@ export default function AuthorTable({
                 </tr>) : authors.filter(Boolean).map((author, idx) => <AuthorTableRow key={author.author_id ?? author.id ?? idx} author={author} index={startIndex + idx} />)}
           </tbody>
         </Table>
-      </div>
+      </MuiBox>
 
-      <div className="d-block d-md-none">
-        {loading ? <Row className="g-3">
+      <MuiBox component="div" sx={{ display: "block", "@media (min-width:768px)": { display: "none" } }} >
+        {loading ? <Row sx={{ gap: "1rem" }} >
             {Array.from({
           length: 3
         }).map((_, idx) => <Col xs={12} key={idx}>
                 <div className="author-mobile-skeleton">
-                  <div className="d-flex gap-3 mb-2">
+                  <MuiBox component="div" sx={{ display: "flex", gap: "1rem", marginBottom: "0.5rem" }} >
                     <LoadingSkeleton width="48px" height="48px" borderRadius="50%" />
-                    <div className="flex-grow-1">
-                      <LoadingSkeleton width="60%" height="16px" className="mb-2" />
+                    <MuiBox component="div" sx={{ flexGrow: 1 }} >
+                      <LoadingSkeleton sx={{ marginBottom: "0.5rem" }} width="60%" height="16px"  />
                       <LoadingSkeleton width="40%" height="12px" />
-                    </div>
-                  </div>
+                    </MuiBox>
+                  </MuiBox>
                   <LoadingSkeleton width="100%" height="40px" />
                 </div>
               </Col>)}
-          </Row> : <Row className="g-3">
+          </Row> : <Row sx={{ gap: "1rem" }} >
             {authors.filter(Boolean).map((author, idx) => <Col xs={12} key={author.author_id ?? author.id ?? idx}>
                 <AuthorCard author={author} />
               </Col>)}
           </Row>}
-      </div>
+      </MuiBox>
     </div>;
 }

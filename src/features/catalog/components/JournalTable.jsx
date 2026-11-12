@@ -5,9 +5,13 @@ import { t } from "i18next";
  *
  * File: features\catalog\components\JournalTable.jsx
  */
-import { Table } from 'react-bootstrap';
-import { Icon } from '@iconify/react';
+import { Table } from '@/shared/components/ui/muiAdapters';
+import Icon from '../../../shared/components/Icon.jsx';
 import { useNavigate } from 'react-router-dom';
+
+
+import MuiBox from '@mui/material/Box';
+
 export default function JournalTable({
   journals = [],
   followedJournals = {},
@@ -24,19 +28,19 @@ export default function JournalTable({
     return 'catalog-badge';
   };
   return <section className="catalog-surface catalog-table-card">
-      <div className="table-responsive">
-        <Table hover className="catalog-table align-middle mb-0 text-start">
+      <MuiBox component="div" sx={{ width: "100%", overflowX: "auto", WebkitOverflowScrolling: "touch" }} >
+        <Table sx={{ verticalAlign: "middle", marginBottom: "0", textAlign: "left" }} hover className="catalog-table">
           <thead>
             <tr>
-              <th className="px-4 py-3">Journal</th>
-              <th className="px-3 py-3">ISSN</th>
-              <th className="px-3 py-3">Publisher</th>
-              <th className="px-3 py-3">Country</th>
-              <th className="px-3 py-3">Quartile</th>
-              <th className="px-3 py-3">Metric</th>
-              <th className="px-3 py-3">Year</th>
-              <th className="px-3 py-3">Access</th>
-              <th className="px-4 py-3 text-end">Action</th>
+              <MuiBox component="th" sx={{ paddingLeft: "1.5rem", paddingRight: "1.5rem", paddingTop: "1rem", paddingBottom: "1rem" }} >Journal</MuiBox>
+              <MuiBox component="th" sx={{ paddingLeft: "1rem", paddingRight: "1rem", paddingTop: "1rem", paddingBottom: "1rem" }} >ISSN</MuiBox>
+              <MuiBox component="th" sx={{ paddingLeft: "1rem", paddingRight: "1rem", paddingTop: "1rem", paddingBottom: "1rem" }} >Publisher</MuiBox>
+              <MuiBox component="th" sx={{ paddingLeft: "1rem", paddingRight: "1rem", paddingTop: "1rem", paddingBottom: "1rem" }} >Country</MuiBox>
+              <MuiBox component="th" sx={{ paddingLeft: "1rem", paddingRight: "1rem", paddingTop: "1rem", paddingBottom: "1rem" }} >Quartile</MuiBox>
+              <MuiBox component="th" sx={{ paddingLeft: "1rem", paddingRight: "1rem", paddingTop: "1rem", paddingBottom: "1rem" }} >Metric</MuiBox>
+              <MuiBox component="th" sx={{ paddingLeft: "1rem", paddingRight: "1rem", paddingTop: "1rem", paddingBottom: "1rem" }} >Year</MuiBox>
+              <MuiBox component="th" sx={{ paddingLeft: "1rem", paddingRight: "1rem", paddingTop: "1rem", paddingBottom: "1rem" }} >Access</MuiBox>
+              <MuiBox component="th" sx={{ paddingLeft: "1.5rem", paddingRight: "1.5rem", paddingTop: "1rem", paddingBottom: "1rem", textAlign: "right" }} >Action</MuiBox>
             </tr>
           </thead>
           <tbody>
@@ -44,22 +48,22 @@ export default function JournalTable({
             const id = journal.id || journal.journal_id;
             const isFollowed = !!followedJournals[id];
             return <tr key={id} onClick={() => navigate(`/journals/${id}`)}>
-                  <td className="px-4 py-3">
+                  <MuiBox component="td" sx={{ paddingLeft: "1.5rem", paddingRight: "1.5rem", paddingTop: "1rem", paddingBottom: "1rem" }} >
                     <div className="catalog-journal-name">{journal.display_name}</div>
-                  </td>
-                  <td className="px-3 py-3 text-muted-custom catalog-mono">{journal.issn || '—'}</td>
-                  <td className="px-3 py-3 text-main">{journal.publisher || '—'}</td>
-                  <td className="px-3 py-3 text-main">{journal.country || '—'}</td>
-                  <td className="px-3 py-3">
+                  </MuiBox>
+                  <MuiBox component="td" sx={{ paddingLeft: "1rem", paddingRight: "1rem", paddingTop: "1rem", paddingBottom: "1rem" }} className="text-muted-custom catalog-mono">{journal.issn || '—'}</MuiBox>
+                  <MuiBox component="td" sx={{ paddingLeft: "1rem", paddingRight: "1rem", paddingTop: "1rem", paddingBottom: "1rem" }} className="text-main">{journal.publisher || '—'}</MuiBox>
+                  <MuiBox component="td" sx={{ paddingLeft: "1rem", paddingRight: "1rem", paddingTop: "1rem", paddingBottom: "1rem" }} className="text-main">{journal.country || '—'}</MuiBox>
+                  <MuiBox component="td" sx={{ paddingLeft: "1rem", paddingRight: "1rem", paddingTop: "1rem", paddingBottom: "1rem" }} >
                     {journal.quartile ? <span className={getQuartileBadgeClass(journal.quartile)}>
                         {journal.quartile}
                       </span> : '—'}
-                  </td>
-                  <td className="px-3 py-3 fw-semibold text-main catalog-mono">{journal.metric_value ?? '—'}</td>
-                  <td className="px-3 py-3 text-main">{journal.metric_year || '—'}</td>
-                  <td className="px-3 py-3">{renderAccessBadge(journal)}</td>
-                  <td className="px-4 py-3 text-end">
-                    <div className="d-inline-flex align-items-center">
+                  </MuiBox>
+                  <MuiBox component="td" sx={{ paddingLeft: "1rem", paddingRight: "1rem", paddingTop: "1rem", paddingBottom: "1rem", fontWeight: 600 }} className="text-main catalog-mono">{journal.metric_value ?? '—'}</MuiBox>
+                  <MuiBox component="td" sx={{ paddingLeft: "1rem", paddingRight: "1rem", paddingTop: "1rem", paddingBottom: "1rem" }} className="text-main">{journal.metric_year || '—'}</MuiBox>
+                  <MuiBox component="td" sx={{ paddingLeft: "1rem", paddingRight: "1rem", paddingTop: "1rem", paddingBottom: "1rem" }} >{renderAccessBadge(journal)}</MuiBox>
+                  <MuiBox component="td" sx={{ paddingLeft: "1.5rem", paddingRight: "1.5rem", paddingTop: "1rem", paddingBottom: "1rem", textAlign: "right" }} >
+                    <MuiBox component="div" sx={{ display: "inline-flex", alignItems: "center" }} >
                       <button type="button" onClick={e => {
                     e.preventDefault();
                     e.stopPropagation();
@@ -68,12 +72,12 @@ export default function JournalTable({
                         <Icon icon={isFollowed ? 'lucide:check' : 'lucide:plus'} width="13" />
                         <span>{isFollowed ? t("catalog.daTheoDoi") : t("catalog.theoDoi")}</span>
                       </button>
-                    </div>
-                  </td>
+                    </MuiBox>
+                  </MuiBox>
                 </tr>;
           })}
           </tbody>
         </Table>
-      </div>
+      </MuiBox>
     </section>;
 }

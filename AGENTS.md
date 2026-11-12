@@ -16,7 +16,7 @@ This repository contains the React/Vite frontend and the `sjs-api/` Cloudflare W
 
 ## Required engineering rules
 
-- Follow the existing React/React-Bootstrap, Zustand, React Query, i18n, directory, and naming conventions.
+- Follow the existing React, MUI, Motion, Heroicons, Zustand, React Query, i18n, directory, and naming conventions.
 - Do not introduce another state-management library.
 - Prefer component-local state for isolated UI behavior.
 - Do not store passwords, Firebase ID tokens, or sensitive profile data in localStorage. Let Firebase Auth manage its session persistence.
@@ -28,7 +28,7 @@ This repository contains the React/Vite frontend and the `sjs-api/` Cloudflare W
 
 ## UI rules
 
-- Use React-Bootstrap components where appropriate.
+- Use MUI components and `sx` for layout and component styling. Use Motion for interface animation and Heroicons for icons.
 - Every data page must handle loading, empty, error, and successful states.
 - Interfaces must remain responsive and preserve the existing visual language.
 - Avoid unnecessary gradients, oversized cards, and excessive rounded corners.

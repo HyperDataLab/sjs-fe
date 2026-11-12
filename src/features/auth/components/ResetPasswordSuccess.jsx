@@ -3,6 +3,10 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Icon from '../../../shared/components/Icon';
 import SubmitButton from './SubmitButton';
+
+
+import MuiBox from '@mui/material/Box';
+
 export default function ResetPasswordSuccess() {
   const {
     t
@@ -24,25 +28,25 @@ export default function ResetPasswordSuccess() {
       replace: true
     });
   };
-  return <div className="text-center py-4 animate-fade-in">
-      <div className="d-inline-flex align-items-center justify-content-center rounded-circle mb-4" style={{
+  return <MuiBox component="div" sx={{ textAlign: "center", paddingTop: "1.5rem", paddingBottom: "1.5rem" }} className="animate-fade-in">
+      <MuiBox component="div" sx={{ display: "inline-flex", alignItems: "center", justifyContent: "center", borderRadius: "50%", marginBottom: "1.5rem" }}  style={{
       width: '4.5rem',
       height: '4.5rem',
       backgroundColor: 'var(--primary-light)',
       color: 'var(--primary)'
     }}>
         <Icon icon="lucide:check-circle" width="40" height="40" />
-      </div>
+      </MuiBox>
 
-      <h3 className="font-display fw-bold mb-3 text-main" style={{
+      <MuiBox component="h3" sx={{ fontWeight: 700, marginBottom: "1rem" }} className="font-display text-main" style={{
       fontSize: '1.75rem'
-    }}>{t("auth.datLaiMatKhauThanhCong")}</h3>
-      
-      <p className="text-muted-custom text-sm mb-4 leading-relaxed" style={{
+    }}>{t("auth.datLaiMatKhauThanhCong")}</MuiBox>
+
+      <MuiBox component="p" sx={{ marginBottom: "1.5rem" }} className="text-muted-custom text-sm leading-relaxed" style={{
       lineHeight: 1.6
-    }}>{t("auth.matKhauCuaBanDaDuocCapNhatThan")}<strong>{countdown}</strong>{t("auth.giay")}</p>
+    }}>{t("auth.matKhauCuaBanDaDuocCapNhatThan")}<strong>{countdown}</strong>{t("auth.giay")}</MuiBox>
 
       {/* Button Action */}
       <SubmitButton isLoading={false} onClick={handleRedirect} label={t("article.dangNhapNgay")} />
-    </div>;
+    </MuiBox>;
 }

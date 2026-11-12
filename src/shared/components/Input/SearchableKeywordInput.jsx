@@ -1,7 +1,11 @@
 import { useTranslation } from "react-i18next";
 import { useState, useEffect, useRef } from 'react';
-import { Icon } from '@iconify/react';
+import Icon from '../Icon.jsx';
 import keywordApi from '../../../features/keywords/api/keywordApi';
+import { getClassNameSx, stripMappedClassNames } from '../../theme/classNameSx';
+
+import MuiBox from '@mui/material/Box';
+
 export default function SearchableKeywordInput({
   keywords = [],
   onAddKeyword,
@@ -78,9 +82,9 @@ export default function SearchableKeywordInput({
   // Filter out already selected keywords from suggestions
   const filteredSuggestions = suggestions.filter(s => !keywords.includes(s.display_name || s.name));
   const showCreateOption = searchTerm.trim().length > 0 && !suggestions.find(s => (s.display_name || s.name).toLowerCase() === searchTerm.trim().toLowerCase()) && !keywords.includes(searchTerm.trim());
-  return <div className="position-relative" ref={wrapperRef}>
+  return <MuiBox component="div" sx={{ position: "relative" }}  ref={wrapperRef}>
       {/* Main control - looks like SearchableSelect */}
-      <div className={`form-control form-control-lg d-flex flex-wrap align-items-center gap-2 ${disabled ? 'bg-light text-muted' : ''}`} style={{
+      <MuiBox component="div" sx={getClassNameSx(`form-control form-control-lg d-flex flex-wrap align-items-center gap-2 ${disabled ? 'bg-light text-muted' : ''}`)} className={stripMappedClassNames(`form-control form-control-lg d-flex flex-wrap align-items-center gap-2 ${disabled ? 'bg-light text-muted' : ''}`)} style={{
       cursor: disabled ? 'not-allowed' : 'pointer',
       backgroundColor: 'var(--bg-main)',
       color: 'var(--text-main)',
@@ -88,7 +92,7 @@ export default function SearchableKeywordInput({
       minHeight: '50px'
     }} onClick={() => !disabled && setIsOpen(!isOpen)}>
         {/* Render keyword badges */}
-        {keywords.map(kw => <span key={kw} className="badge rounded-pill d-flex align-items-center gap-1 px-2 py-1 fw-normal" style={{
+        {keywords.map(kw => <MuiBox component="span" sx={{ display: "flex", px: "0.65em", py: "0.35em", fontSize: "0.75em", fontWeight: 400, lineHeight: 1, color: "#fff", textAlign: "center", whiteSpace: "nowrap", verticalAlign: "baseline", borderRadius: "50rem", alignItems: "center", gap: "0.25rem", paddingLeft: "0.5rem", paddingRight: "0.5rem", paddingTop: "0.25rem", paddingBottom: "0.25rem" }} key={kw}  style={{
         backgroundColor: 'var(--bg-section)',
         color: 'var(--text-main)',
         border: '1px solid var(--border)',
@@ -99,7 +103,7 @@ export default function SearchableKeywordInput({
           e.stopPropagation();
           onRemoveKeyword?.(kw);
         }} />
-          </span>)}
+          </MuiBox>)}
 
         {/* Placeholder text */}
         {keywords.length === 0 && <span style={{
@@ -107,47 +111,47 @@ export default function SearchableKeywordInput({
       }}>{resolvedPlaceholder}</span>}
 
         {/* Right side indicators */}
-        <div className="d-flex align-items-center gap-2 flex-shrink-0 ms-auto">
-          {isSearching && <span className="spinner-border spinner-border-sm text-primary" role="status"></span>}
-          <Icon icon="lucide:chevron-down" width="18" className="text-muted" />
-        </div>
-      </div>
+        <MuiBox component="div" sx={{ display: "flex", alignItems: "center", gap: "0.5rem", flexShrink: 0, ml: "auto" }} >
+          {isSearching && <MuiBox component="span" sx={{ display: "inline-block", width: "1rem", height: "1rem", verticalAlign: "-0.125em", border: "0.25em solid currentColor", borderRightColor: "transparent", borderRadius: "50%", animation: "spin .75s linear infinite", borderWidth: "0.2em", color: "primary.main" }}  role="status"></MuiBox>}
+          <Icon sx={{ color: "text.secondary" }} icon="lucide:chevron-down" width="18"  />
+        </MuiBox>
+      </MuiBox>
 
       {/* Dropdown panel */}
-      {isOpen && <div className="position-absolute w-100 bg-white border rounded-3 shadow mt-1 z-3" style={{
+      {isOpen && <MuiBox component="div" sx={{ position: "absolute", width: "100%", bgcolor: "background.paper", border: "1px solid #dee2e6", borderRadius: "0.5rem", boxShadow: "0 .5rem 1rem rgba(0,0,0,.15)", marginTop: "0.25rem", zIndex: 3 }}  style={{
       maxHeight: '350px',
       display: 'flex',
       flexDirection: 'column'
     }}>
           {/* Search input inside dropdown */}
-          <div className="p-2 border-bottom">
-            <div className="input-group input-group-sm">
-              <span className="input-group-text bg-transparent border-end-0">
-                <Icon icon="lucide:search" width="14" className="text-muted" />
-              </span>
-              <input type="text" className="form-control border-start-0 ps-0 shadow-none" placeholder={t("common.timKiemTuKhoa")} value={searchTerm} onChange={e => setSearchTerm(e.target.value)} onKeyDown={handleKeyDown} onClick={e => e.stopPropagation()} autoFocus />
-            </div>
-          </div>
+          <MuiBox component="div" sx={{ padding: "0.5rem", borderBottom: "1px solid #dee2e6" }} >
+            <MuiBox component="div" sx={{ display: "flex", flexWrap: "wrap", alignItems: "stretch", width: "100%", "& input, & select, & button": { minHeight: 31, fontSize: "0.875rem" } }} >
+              <MuiBox component="span" sx={{ display: "flex", alignItems: "center", px: "0.75rem", py: "0.375rem", color: "#212529", textAlign: "center", whiteSpace: "nowrap", bgcolor: "transparent", border: "1px solid #dee2e6", borderRadius: "0.375rem", borderInlineEnd: 0 }} >
+                <Icon sx={{ color: "text.secondary" }} icon="lucide:search" width="14"  />
+              </MuiBox>
+              <MuiBox component="input" sx={{ display: "block", width: "100%", px: "0.75rem", py: "0.375rem", fontSize: "1rem", lineHeight: 1.5, color: "text.primary", bgcolor: "background.paper", border: "1px solid #dee2e6", borderRadius: "0.375rem", borderInlineStart: 0, paddingInlineStart: "0", boxShadow: "none" }} type="text"  placeholder={t("common.timKiemTuKhoa")} value={searchTerm} onChange={e => setSearchTerm(e.target.value)} onKeyDown={handleKeyDown} onClick={e => e.stopPropagation()} autoFocus />
+            </MuiBox>
+          </MuiBox>
 
           {/* Results list */}
-          <div className="overflow-auto py-1" style={{
+          <MuiBox component="div" sx={{ overflow: "auto", paddingTop: "0.25rem", paddingBottom: "0.25rem" }}  style={{
         maxHeight: '280px'
       }}>
-            {isSearching ? <div className="p-3 text-center text-muted small">{t("common.dangTimKiem")}</div> : filteredSuggestions.length === 0 && !showCreateOption ? <div className="p-3 text-center text-muted small">
+            {isSearching ? <MuiBox component="div" sx={{ padding: "1rem", textAlign: "center", color: "text.secondary", fontSize: "0.875em" }} >{t("common.dangTimKiem")}</MuiBox> : filteredSuggestions.length === 0 && !showCreateOption ? <MuiBox component="div" sx={{ padding: "1rem", textAlign: "center", color: "text.secondary", fontSize: "0.875em" }} >
                 {searchTerm.trim() ? t("common.khongTimThayTuKhoaPhuHop") : t("common.nhapTuKhoaDeTimKiem")}
-              </div> : <>
+              </MuiBox> : <>
                 {filteredSuggestions.map(kwObj => {
             const name = kwObj.display_name || kwObj.name;
-            return <div key={kwObj.id || kwObj.keyword_id || name} className="dropdown-item px-3 py-2 d-flex align-items-center gap-2 cursor-pointer text-dark" onClick={() => handleSelect(name)}>
-                      <Icon icon="lucide:hash" width="14" className="text-muted flex-shrink-0" />
-                      <span className="text-truncate">{name}</span>
-                    </div>;
+            return <MuiBox component="div" sx={{ display: "flex", width: "100%", px: "1rem", py: "0.25rem", clear: "both", color: "#212529", textAlign: "inherit", textDecoration: "none", whiteSpace: "nowrap", bgcolor: "transparent", border: 0, "&:hover": { bgcolor: "action.hover" }, paddingLeft: "1rem", paddingRight: "1rem", paddingTop: "0.5rem", paddingBottom: "0.5rem", alignItems: "center", gap: "0.5rem" }} key={kwObj.id || kwObj.keyword_id || name} className="cursor-pointer" onClick={() => handleSelect(name)}>
+                      <Icon sx={{ color: "text.secondary", flexShrink: 0 }} icon="lucide:hash" width="14"  />
+                      <MuiBox component="span" sx={{ overflow: "hidden", whiteSpace: "nowrap", textOverflow: "ellipsis" }} >{name}</MuiBox>
+                    </MuiBox>;
           })}
-                {showCreateOption && <div className="dropdown-item px-3 py-2 border-top text-primary fw-medium cursor-pointer bg-light d-flex align-items-center gap-2" onClick={() => handleSelect(searchTerm.trim())}>
+                {showCreateOption && <MuiBox component="div" sx={{ display: "flex", width: "100%", px: "1rem", py: "0.25rem", clear: "both", color: "primary.main", textAlign: "inherit", textDecoration: "none", whiteSpace: "nowrap", bgcolor: "#f8f9fa", border: 0, "&:hover": { bgcolor: "action.hover" }, paddingLeft: "1rem", paddingRight: "1rem", paddingTop: "0.5rem", paddingBottom: "0.5rem", borderTop: "1px solid #dee2e6", fontWeight: 500, alignItems: "center", gap: "0.5rem" }} className="cursor-pointer" onClick={() => handleSelect(searchTerm.trim())}>
                     <Icon icon="lucide:plus" width="14" />{t("common.taoTuKhoaMoi")}{searchTerm.trim()}"
-                  </div>}
+                  </MuiBox>}
               </>}
-          </div>
-        </div>}
-    </div>;
+          </MuiBox>
+        </MuiBox>}
+    </MuiBox>;
 }

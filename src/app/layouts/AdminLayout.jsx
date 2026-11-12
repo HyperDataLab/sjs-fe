@@ -2,8 +2,6 @@ import { Outlet } from 'react-router-dom';
 import AdminSidebar from './AdminSidebar';
 import AdminHeader from './AdminHeader';
 import AdminFooter from './AdminFooter';
-import '../../features/admin/admin.css';
-
 /**
  * AdminLayout
  * Layout chính cho khu vực quản trị viên (Admin).
@@ -31,4 +29,3 @@ export default function AdminLayout({ children }) {
     </div>
   );
 }
-

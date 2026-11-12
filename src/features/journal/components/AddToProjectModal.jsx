@@ -6,10 +6,14 @@ import { t } from "i18next";
  * File: features\journal\components\AddToProjectModal.jsx
  */
 import { useState, useEffect } from 'react';
-import { Modal, Form, Spinner, Alert } from 'react-bootstrap';
-import { Icon } from '@iconify/react';
+import { Modal, Form, Spinner, Alert } from '@/shared/components/ui/muiAdapters';
+import Icon from '../../../shared/components/Icon.jsx';
 import PrimaryButton from '../../../shared/components/Button/PrimaryButton';
 import { getProjectsApi, createProjectApi, getProjectByIdApi, updateProjectApi } from '../../project/api/project.api';
+
+
+import MuiBox from '@mui/material/Box';
+
 export default function AddToProjectModal({
   show,
   onHide,
@@ -128,43 +132,43 @@ export default function AddToProjectModal({
   return <Modal show={show} onHide={onHide} centered contentClassName="border-0 text-start text-main rounded-3 shadow" style={{
     backdropFilter: 'blur(4px)'
   }}>
-      <Modal.Header closeButton className="border-0 pb-0" style={{
+      <Modal.Header sx={{ border: 0, paddingBottom: "0" }} closeButton  style={{
       backgroundColor: 'var(--bg-card)'
     }}>
-        <Modal.Title className="font-display fw-bold text-main d-flex align-items-center gap-2" style={{
+        <Modal.Title sx={{ fontWeight: 700, display: "flex", alignItems: "center", gap: "0.5rem" }} className="font-display text-main" style={{
         fontSize: '1.25rem'
       }}>
-          <Icon icon="lucide:folder-plus" className="text-primary" width="22" />{t("journal.themTapChiVaoDuAn")}</Modal.Title>
+          <Icon sx={{ color: "primary.main" }} icon="lucide:folder-plus"  width="22" />{t("journal.themTapChiVaoDuAn")}</Modal.Title>
       </Modal.Header>
 
       <Form onSubmit={handleSubmit}>
-        <Modal.Body className="py-4" style={{
+        <Modal.Body sx={{ paddingTop: "1.5rem", paddingBottom: "1.5rem" }}  style={{
         backgroundColor: 'var(--bg-card)',
         color: 'var(--text-main)'
       }}>
           {error && <Alert variant="danger">{error}</Alert>}
           {success && <Alert variant="success">{t("journal.daThemTapChiVaoDuAnThanhCong")}</Alert>}
 
-          <Form.Group className="mb-4">
-            <Form.Label className="fw-semibold mb-2" style={{
+          <Form.Group sx={{ marginBottom: "1.5rem" }} >
+            <Form.Label sx={{ fontWeight: 600, marginBottom: "0.5rem" }}  style={{
             fontSize: '0.9rem'
           }}>{t("journal.phuongThuc")}</Form.Label>
-            <div className="d-flex gap-3">
+            <MuiBox component="div" sx={{ display: "flex", gap: "1rem" }} >
               <Form.Check type="radio" label={t("journal.chonDuAnDaCo")} name="projectMode" id="modeSelect" checked={mode === 'select'} onChange={() => setMode('select')} className="custom-radio" />
               <Form.Check type="radio" label={t("journal.taoDuAnMoi")} name="projectMode" id="modeCreate" checked={mode === 'create'} onChange={() => setMode('create')} className="custom-radio" />
-            </div>
+            </MuiBox>
           </Form.Group>
 
-          {mode === 'select' ? <Form.Group className="mb-3">
-              <Form.Label className="fw-semibold mb-2" style={{
+          {mode === 'select' ? <Form.Group sx={{ marginBottom: "1rem" }} >
+              <Form.Label sx={{ fontWeight: 600, marginBottom: "0.5rem" }}  style={{
             fontSize: '0.9rem'
           }}>{t("journal.chonDuAnCuaBan")}</Form.Label>
-              {loading ? <div className="d-flex align-items-center gap-2 py-2 text-muted-custom">
+              {loading ? <MuiBox component="div" sx={{ display: "flex", alignItems: "center", gap: "0.5rem", paddingTop: "0.5rem", paddingBottom: "0.5rem" }} className="text-muted-custom">
                   <Spinner animation="border" size="sm" />
                   <span>{t("journal.dangTaiDanhSachDuAn")}</span>
-                </div> : projects.length === 0 ? <div className="text-muted-custom py-2" style={{
+                </MuiBox> : projects.length === 0 ? <MuiBox component="div" sx={{ paddingTop: "0.5rem", paddingBottom: "0.5rem" }} className="text-muted-custom" style={{
             fontSize: '0.9rem'
-          }}>{t("journal.banChuaCoDuAnNaoVuiLongChonTao")}</div> : <Form.Select value={selectedProjectId} onChange={e => setSelectedProjectId(e.target.value)} className="journal-dark-input" style={{
+          }}>{t("journal.banChuaCoDuAnNaoVuiLongChonTao")}</MuiBox> : <Form.Select value={selectedProjectId} onChange={e => setSelectedProjectId(e.target.value)} className="journal-dark-input" style={{
             backgroundColor: 'var(--bg-main)',
             color: 'var(--text-main)',
             borderColor: 'var(--border)',
@@ -176,8 +180,8 @@ export default function AddToProjectModal({
                       {p.title}
                     </option>)}
                 </Form.Select>}
-            </Form.Group> : <Form.Group className="mb-3">
-              <Form.Label className="fw-semibold mb-2" style={{
+            </Form.Group> : <Form.Group sx={{ marginBottom: "1rem" }} >
+              <Form.Label sx={{ fontWeight: 600, marginBottom: "0.5rem" }}  style={{
             fontSize: '0.9rem'
           }}>{t("journal.tenDuAnMoi")}</Form.Label>
               <Form.Control type="text" placeholder={t("journal.nhapTieuDeDuAnNghienCuu")} value={newProjectTitle} onChange={e => setNewProjectTitle(e.target.value)} className="journal-dark-input" style={{
@@ -190,7 +194,7 @@ export default function AddToProjectModal({
             </Form.Group>}
         </Modal.Body>
 
-        <Modal.Footer className="border-0 pt-0" style={{
+        <Modal.Footer sx={{ border: 0, paddingTop: "0" }}  style={{
         backgroundColor: 'var(--bg-card)',
         gap: '8px'
       }}>

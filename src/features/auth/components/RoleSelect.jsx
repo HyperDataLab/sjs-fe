@@ -1,6 +1,10 @@
 import { useTranslation } from "react-i18next";
-import { Form, Row, Col } from 'react-bootstrap';
+import { Form, Row, Col } from '@/shared/components/ui/muiAdapters';
 import Icon from '../../../shared/components/Icon';
+import { getClassNameSx, stripMappedClassNames } from '../../../shared/theme/classNameSx';
+
+import MuiBox from '@mui/material/Box';
+
 
 export default function RoleSelect({
   label,
@@ -44,81 +48,58 @@ export default function RoleSelect({
     });
   };
 
-  return <Form.Group className="mb-4">
-      {label && <Form.Label className="text-xs font-bold mb-1.5 d-flex align-items-center gap-1" style={{
+  return <Form.Group sx={{ marginBottom: "1.5rem" }} >
+      {label && <Form.Label sx={{ display: "flex", alignItems: "center", gap: "0.25rem" }} className="text-xs font-bold mb-1.5" style={{
       letterSpacing: '0.05em',
       color: 'var(--text-main)',
       textTransform: 'uppercase'
     }}>
           {label}
-          {required && <span className="text-danger">*</span>}
+          {required && <MuiBox component="span" sx={{ color: "error.main" }} >*</MuiBox>}
         </Form.Label>}
 
-      <Row className="g-3">
+      <Row sx={{ gap: "1rem" }} >
         {roles.map(role => {
         const isSelected = value === role.key;
         return <Col key={role.key} xs={4}>
-              <div onClick={() => handleSelect(role.key)} className={`role-card-item ${isSelected ? 'selected' : ''} ${disabled ? 'disabled' : ''} w-100 p-3 rounded-3 text-center d-flex flex-column align-items-center justify-content-center gap-2 select-none`} style={{
-            cursor: disabled ? 'not-allowed' : 'pointer',
-            background: '#ffffff',
-            border: isSelected ? '1px solid var(--primary)' : '1px solid var(--border)',
-            opacity: disabled ? 0.6 : 1,
-            minHeight: '110px'
-          }}>
-                <div className="d-flex align-items-center justify-content-center rounded-circle icon-container" style={{
-              width: '32px',
-              height: '32px',
-              color: isSelected ? 'var(--primary)' : 'var(--text-muted)',
-              transition: 'all 0.2s'
-            }}>
+              <MuiBox component="div" sx={[
+                getClassNameSx(`role-card-item ${isSelected ? 'selected' : ''} ${disabled ? 'disabled' : ''} w-100 p-3 rounded-3 text-center d-flex flex-column align-items-center justify-content-center gap-2 select-none`),
+                {
+                  cursor: disabled ? 'not-allowed' : 'pointer',
+                  background: '#ffffff',
+                  border: isSelected ? '1px solid var(--primary)' : '1px solid var(--border)',
+                  opacity: disabled ? 0.6 : 1,
+                  minHeight: 110,
+                  transition: 'all 0.25s cubic-bezier(0.4, 0, 0.2, 1)',
+                  '&:hover:not(.disabled):not(.selected)': {
+                    borderColor: 'primary.main',
+                    transform: 'translateY(-2px)',
+                    boxShadow: '0 6px 16px rgba(255, 122, 51, 0.08)',
+                  },
+                  '&.selected': { borderColor: 'primary.main', boxShadow: '0 0 0 3px rgba(255, 122, 51, 0.15)' },
+                  '&.selected .icon-container': { transform: 'scale(1.08)', color: 'primary.main' },
+                },
+              ]} onClick={() => handleSelect(role.key)} className={stripMappedClassNames(`role-card-item ${isSelected ? 'selected' : ''} ${disabled ? 'disabled' : ''} w-100 p-3 rounded-3 text-center d-flex flex-column align-items-center justify-content-center gap-2 select-none`)}>
+                <MuiBox component="div" sx={{ display: "flex", alignItems: "center", justifyContent: "center", borderRadius: "50%", width: 32, height: 32, color: isSelected ? 'primary.main' : 'text.secondary', transition: 'all 0.2s' }} className="icon-container">
                   <Icon icon={role.icon} width="22" />
-                </div>
-                <div>
-                  <div className="font-semibold title" style={{
-                fontSize: '13px',
-                color: isSelected ? 'var(--text-main)' : 'var(--text-main)',
-                fontWeight: isSelected ? '700' : '600'
-              }}>
+                </MuiBox>
+                <MuiBox component="div">
+                  <MuiBox component="div" className="font-semibold title" sx={{ fontSize: 13, color: 'text.primary', fontWeight: isSelected ? 700 : 600 }}>
                     {role.label}
-                  </div>
-                  <div style={{
-                fontSize: '10px',
-                color: 'var(--text-muted)',
-                marginTop: '2px'
-              }}>
+                  </MuiBox>
+                  <MuiBox component="div" sx={{ fontSize: 10, color: 'text.secondary', mt: '2px' }}>
                     {role.desc}
-                  </div>
-                </div>
-              </div>
+                  </MuiBox>
+                </MuiBox>
+              </MuiBox>
             </Col>;
       })}
       </Row>
 
-      {error && <div className="text-danger text-xs mt-1.5 d-flex align-items-center gap-1 animate-fade-in" style={{
-      fontWeight: 500
-    }}>
+      {error && <MuiBox component="div" sx={{ color: "error.main", display: "flex", alignItems: "center", gap: "0.25rem", fontWeight: 500 }} className="text-xs mt-1.5 animate-fade-in">
           <Icon icon="lucide:alert-circle" width="12" />
           <span>{error}</span>
-        </div>}
+        </MuiBox>}
 
-      {/* Scoped hover and selection styles */}
-      <style>{`
-        .role-card-item {
-          transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        .role-card-item:hover:not(.disabled):not(.selected) {
-          border-color: var(--primary) !important;
-          transform: translateY(-2px);
-          box-shadow: 0 6px 16px rgba(255, 122, 51, 0.08) !important;
-        }
-        .role-card-item.selected {
-          border-color: var(--primary) !important;
-          box-shadow: 0 0 0 3px rgba(255, 122, 51, 0.15) !important;
-        }
-        .role-card-item.selected .icon-container {
-          transform: scale(1.08);
-          color: var(--primary) !important;
-        }
-      `}</style>
     </Form.Group>;
 }

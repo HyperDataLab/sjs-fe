@@ -6,11 +6,15 @@ import useProjects from '../hooks/useProjects';
 import ProjectCard from '../components/ProjectCard';
 import EmptyState from '../../../shared/components/EmptyState';
 import LoadingSkeleton from '../../../shared/components/LoadingSkeleton';
-import { Icon } from '@iconify/react';
-import { Modal, Button } from 'react-bootstrap';
+import Icon from '../../../shared/components/Icon.jsx';
+import { Modal, Button } from '@/shared/components/ui/muiAdapters';
 import Header from '../../landing/components/Header';
 import PrimaryButton from '../../../shared/components/Button/PrimaryButton';
 import useAuth from '../../auth/hooks/useAuth';
+
+
+import MuiBox from '@mui/material/Box';
+
 const ProjectListPage = () => {
   const navigate = useNavigate();
   const {
@@ -77,49 +81,49 @@ const ProjectListPage = () => {
   };
 
   const activeProjects = projects.filter(p => p.status !== 'DELETED');
-  
+
   // Lọc các dự án xem gần đây từ danh sách active projects
   const recentProjects = recentIds.map(id => activeProjects.find(p => (p.project_id || p.id) === id)).filter(Boolean);
-  return <div className="container-fluid pb-4 grid-bg min-vh-100 position-relative overflow-hidden" style={{
+  return <MuiBox component="div" sx={{ width: "100%", px: "0.75rem", mx: "auto", paddingBottom: "1.5rem", minHeight: "100vh", position: "relative", overflow: "hidden" }} className="grid-bg" style={{
     paddingTop: '80px'
   }}>
-      <div className="position-absolute w-100 h-100 radial-fade pe-none" style={{
+      <MuiBox component="div" sx={{ position: "absolute", width: "100%", height: "100%", pointerEvents: "none" }} className="radial-fade" style={{
       top: 0,
       left: 0,
       zIndex: 0
     }} />
       <Header />
-      <div className="container mx-auto position-relative z-1" style={{
+      <MuiBox component="div" sx={{ width: "100%", mx: "auto", px: "0.75rem", "@media (min-width:576px)": { maxWidth: 540 }, "@media (min-width:768px)": { maxWidth: 720 }, "@media (min-width:992px)": { maxWidth: 960 }, "@media (min-width:1200px)": { maxWidth: 1140 }, "@media (min-width:1400px)": { maxWidth: 1320 }, position: "relative", zIndex: 1 }}  style={{
       maxWidth: '1200px',
       marginTop: '40px'
     }}>
         {/* Breadcrumb */}
-        <nav aria-label="breadcrumb" className="mb-4">
-          <ol className="breadcrumb mb-2 text-muted-custom small">
-            <li className="breadcrumb-item"><Link to={ROUTES.DASHBOARD} className="text-decoration-none text-muted-custom hover-primary">{t("author.tongQuan")}</Link></li>
-            <li className="breadcrumb-item active" aria-current="page">{t("project.duAnTheoDoi")}</li>
-          </ol>
-        </nav>
+        <MuiBox component="nav" sx={{ marginBottom: "1.5rem" }} aria-label="breadcrumb" >
+          <MuiBox component="ol" sx={{ display: "flex", flexWrap: "wrap", padding: 0, marginBottom: "0.5rem", listStyle: "none", fontSize: "0.875em" }} className="text-muted-custom">
+            <MuiBox component="li" sx={{ display: "flex", alignItems: "center", "&:not(:last-child)::after": { content: "\"/\"", px: "0.5rem", color: "text.secondary" } }} ><MuiBox component={Link} sx={{ textDecoration: "none" }} to={ROUTES.DASHBOARD} className="text-muted-custom hover-primary">{t("author.tongQuan")}</MuiBox></MuiBox>
+            <MuiBox component="li" sx={{ display: "flex", alignItems: "center", "&:not(:last-child)::after": { content: "\"/\"", px: "0.5rem", color: "text.secondary" } }} className="active" aria-current="page">{t("project.duAnTheoDoi")}</MuiBox>
+          </MuiBox>
+        </MuiBox>
 
         {/* Page Header */}
-        <div className="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-5">
+        <MuiBox component="div" sx={{ display: "flex", flexDirection: "column", "@media (min-width:768px)": { flexDirection: "row", alignItems: "center" }, justifyContent: "space-between", gap: "1rem", marginBottom: "3rem" }} >
           <div>
-            <h1 className="font-display fw-bold text-main mb-2">{t("project.duAnNghienCuuCuaToi")}</h1>
-            <p className="text-muted-custom mb-0">{t("project.quanLyCacKeywordWatchlistsPhan")}</p>
+            <MuiBox component="h1" sx={{ fontWeight: 700, marginBottom: "0.5rem" }} className="font-display text-main">{t("project.duAnNghienCuuCuaToi")}</MuiBox>
+            <MuiBox component="p" sx={{ marginBottom: "0" }} className="text-muted-custom">{t("project.quanLyCacKeywordWatchlistsPhan")}</MuiBox>
           </div>
           <PrimaryButton icon="lucide:plus" onClick={() => navigate(ROUTES.PROJECT_CREATE)}>{t("journal.taoDuAnMoi")}</PrimaryButton>
-        </div>
+        </MuiBox>
 
         {/* Filter / Search Bar Placeholder */}
-        <div className="d-flex justify-content-between align-items-center mb-4 pb-2 border-bottom">
-          <div className="position-relative" style={{
+        <MuiBox component="div" sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1.5rem", paddingBottom: "0.5rem", borderBottom: "1px solid #dee2e6" }} >
+          <MuiBox component="div" sx={{ position: "relative" }}  style={{
           maxWidth: '300px',
           width: '100%'
         }}>
-            <Icon icon="lucide:search" width="18" className="position-absolute top-50 translate-middle-y text-muted" style={{
+            <Icon sx={{ position: "absolute", top: "50%", translate: "0 -50%", color: "text.secondary" }} icon="lucide:search" width="18"  style={{
             left: '12px'
           }} />
-            <input type="text" className="form-control ps-5 bg-white border" placeholder={t("project.timKiemDuAn")} style={{
+            <MuiBox component="input" sx={{ display: "block", width: "100%", px: "0.75rem", py: "0.375rem", fontSize: "1rem", lineHeight: 1.5, color: "text.primary", bgcolor: "background.paper", border: "1px solid #dee2e6", borderRadius: "0.375rem", paddingInlineStart: "3rem" }} type="text"  placeholder={t("project.timKiemDuAn")} style={{
             fontSize: '0.9rem',
             borderRadius: '15px',
             boxShadow: 'none'
@@ -130,88 +134,88 @@ const ProjectListPage = () => {
           }} onBlur={e => {
             e.currentTarget.style.borderColor = 'var(--border)';
           }} />
-          </div>
-          <div className="d-flex gap-4 text-muted-custom small">
+          </MuiBox>
+          <MuiBox component="div" sx={{ display: "flex", gap: "1.5rem", fontSize: "0.875em" }} className="text-muted-custom">
             <span>{t("project.tongSoDuAn")}{" "}<strong className="text-main">{activeProjects.length}</strong></span>
-            <span>{t("project.dangHoatDong")}{" "}<strong className="text-success">{activeProjects.filter(p => p.status === 'ACTIVE').length}</strong></span>
-          </div>
-        </div>
+            <span>{t("project.dangHoatDong")}{" "}<MuiBox component="strong" sx={{ color: "success.main" }} >{activeProjects.filter(p => p.status === 'ACTIVE').length}</MuiBox></span>
+          </MuiBox>
+        </MuiBox>
 
         {/* Content */}
-        {error ? <div className="alert alert-danger border-0 rounded-4 shadow-sm p-4 d-flex align-items-center gap-3">
-            <Icon icon="lucide:alert-triangle" width="24" className="text-danger flex-shrink-0" />
+        {error ? <MuiBox component="div" sx={{ position: "relative", p: "1rem", mb: "1rem", border: 0, borderRadius: "0.75rem", bgcolor: "#f8d7da", borderColor: "#f5c2c7", color: "#842029", boxShadow: "0 .125rem .25rem rgba(0,0,0,.075)", padding: "1.5rem", display: "flex", alignItems: "center", gap: "1rem" }} >
+            <Icon sx={{ color: "error.main", flexShrink: 0 }} icon="lucide:alert-triangle" width="24"  />
             <div>
-              <h6 className="fw-bold mb-1">{t("article.loiTaiDuLieu")}</h6>
-              <p className="mb-0 small">{error}</p>
+              <MuiBox component="h6" sx={{ fontWeight: 700, marginBottom: "0.25rem" }} >{t("article.loiTaiDuLieu")}</MuiBox>
+              <MuiBox component="p" sx={{ marginBottom: "0", fontSize: "0.875em" }} >{error}</MuiBox>
             </div>
-            <PrimaryButton variant="outline" className="ms-auto" onClick={() => refetch()}>{t("article.thuLai")}</PrimaryButton>
-          </div> : isLoading ? <div className="row g-4">
-            {[1, 2, 3].map(i => <div key={i} className="col-12 col-md-6 col-lg-4">
-                <div className="card glass-card border-0 shadow-sm rounded-4 p-4 h-100">
-                  <LoadingSkeleton height="24px" width="40%" className="mb-3 rounded-pill" />
-                  <LoadingSkeleton height="28px" width="80%" className="mb-4 rounded" />
-                  <LoadingSkeleton height="16px" width="60%" className="mb-2 rounded" />
-                  <LoadingSkeleton height="16px" width="50%" className="mb-4 rounded" />
-                  <LoadingSkeleton height="1px" width="100%" className="mb-3 rounded" />
-                  <div className="d-flex justify-content-between mt-auto">
-                    <LoadingSkeleton height="16px" width="40%" className="rounded" />
-                    <LoadingSkeleton height="16px" width="20%" className="rounded" />
-                  </div>
-                </div>
-              </div>)}
-          </div> : projects.length === 0 ? <EmptyState title={t("project.banChuaCoDuAnNao")} description={t("project.taoDuAnDauTienDeBatDauTheoDoiT")} icon="lucide:folder-open" actionLabel="+ Tạo dự án mới" onAction={() => navigate(ROUTES.PROJECT_CREATE)} className="mt-4" /> : <div className="d-flex flex-column gap-5">
+            <PrimaryButton sx={{ ml: "auto" }} variant="outline"  onClick={() => refetch()}>{t("article.thuLai")}</PrimaryButton>
+          </MuiBox> : isLoading ? <MuiBox component="div" sx={{ display: "grid", gridTemplateColumns: "repeat(12,minmax(0,1fr))", width: "100%", gap: "1.5rem" }} >
+            {[1, 2, 3].map(i => <MuiBox component="div" sx={{ gridColumn: "span 12", "@media (min-width:768px)": { gridColumn: "span 6" }, "@media (min-width:992px)": { gridColumn: "span 4" } }} key={i} >
+                <MuiBox component="div" sx={{ position: "relative", display: "flex", flexDirection: "column", minWidth: 0, wordWrap: "break-word", bgcolor: "background.paper", backgroundClip: "border-box", border: 0, borderRadius: "0.75rem", boxShadow: "0 .125rem .25rem rgba(0,0,0,.075)", padding: "1.5rem", height: "100%" }} className="glass-card">
+                  <LoadingSkeleton sx={{ marginBottom: "1rem", borderRadius: "50rem" }} height="24px" width="40%"  />
+                  <LoadingSkeleton sx={{ marginBottom: "1.5rem", borderRadius: "0.375rem" }} height="28px" width="80%"  />
+                  <LoadingSkeleton sx={{ marginBottom: "0.5rem", borderRadius: "0.375rem" }} height="16px" width="60%"  />
+                  <LoadingSkeleton sx={{ marginBottom: "1.5rem", borderRadius: "0.375rem" }} height="16px" width="50%"  />
+                  <LoadingSkeleton sx={{ marginBottom: "1rem", borderRadius: "0.375rem" }} height="1px" width="100%"  />
+                  <MuiBox component="div" sx={{ display: "flex", justifyContent: "space-between", mt: "auto" }} >
+                    <LoadingSkeleton sx={{ borderRadius: "0.375rem" }} height="16px" width="40%"  />
+                    <LoadingSkeleton sx={{ borderRadius: "0.375rem" }} height="16px" width="20%"  />
+                  </MuiBox>
+                </MuiBox>
+              </MuiBox>)}
+          </MuiBox> : projects.length === 0 ? <EmptyState sx={{ marginTop: "1.5rem" }} title={t("project.banChuaCoDuAnNao")} description={t("project.taoDuAnDauTienDeBatDauTheoDoiT")} icon="lucide:folder-open" actionLabel="+ Tạo dự án mới" onAction={() => navigate(ROUTES.PROJECT_CREATE)}  /> : <MuiBox component="div" sx={{ display: "flex", flexDirection: "column", gap: "3rem" }} >
             {/* Section: Dự án xem gần đây */}
             {recentProjects.length > 0 && <div>
-                <h5 className="font-display fw-bold text-main mb-3 d-flex align-items-center gap-2">
+                <MuiBox component="h5" sx={{ fontWeight: 700, marginBottom: "1rem", display: "flex", alignItems: "center", gap: "0.5rem" }} className="font-display text-main">
                   <Icon icon="lucide:clock" width={18} style={{
               color: 'var(--primary)'
             }} />
                   <span>{t("project.duAnXemGanDay")}</span>
-                </h5>
-                <div className="row g-4">
-                  {recentProjects.map(project => <div key={`recent-${project.project_id || project.id}`} className="col-12 col-md-6 col-lg-4">
+                </MuiBox>
+                <MuiBox component="div" sx={{ display: "grid", gridTemplateColumns: "repeat(12,minmax(0,1fr))", width: "100%", gap: "1.5rem" }} >
+                  {recentProjects.map(project => <MuiBox component="div" sx={{ gridColumn: "span 12", "@media (min-width:768px)": { gridColumn: "span 6" }, "@media (min-width:992px)": { gridColumn: "span 4" } }} key={`recent-${project.project_id || project.id}`} >
                       <ProjectCard project={project} onDelete={handleDelete} onRestore={handleRestore} isRecent={true} currentUser={currentUser} />
-                    </div>)}
-                </div>
+                    </MuiBox>)}
+                </MuiBox>
               </div>}
 
             {/* Section: Tất cả dự án */}
             <div>
-              <h5 className="font-display fw-bold text-main mb-3 d-flex align-items-center gap-2">
+              <MuiBox component="h5" sx={{ fontWeight: 700, marginBottom: "1rem", display: "flex", alignItems: "center", gap: "0.5rem" }} className="font-display text-main">
                 <Icon icon="lucide:folder" width={18} style={{
               color: 'var(--primary)'
             }} />
                 <span>{t("project.tatCaDuAn")} ({activeProjects.length})</span>
-              </h5>
-              <div className="row g-4">
-                {activeProjects.map(project => <div key={project.project_id || project.id} className="col-12 col-md-6 col-lg-4">
+              </MuiBox>
+              <MuiBox component="div" sx={{ display: "grid", gridTemplateColumns: "repeat(12,minmax(0,1fr))", width: "100%", gap: "1.5rem" }} >
+                {activeProjects.map(project => <MuiBox component="div" sx={{ gridColumn: "span 12", "@media (min-width:768px)": { gridColumn: "span 6" }, "@media (min-width:992px)": { gridColumn: "span 4" } }} key={project.project_id || project.id} >
                     <ProjectCard project={project} onDelete={handleDelete} onRestore={handleRestore} currentUser={currentUser} />
-                  </div>)}
-              </div>
+                  </MuiBox>)}
+              </MuiBox>
             </div>
-          </div>}
-      </div>
+          </MuiBox>}
+      </MuiBox>
 
       <Modal show={confirmModal.show} onHide={() => setConfirmModal({ show: false, projectId: null, action: null })} centered>
         <Modal.Header border="0" closeButton>
-          <Modal.Title className="fw-bold">
+          <Modal.Title sx={{ fontWeight: 700 }} >
             {confirmModal.action === 'delete' ? t("project.xacNhanXoaDuAn", "Xác nhận xóa dự án") : "Xác nhận khôi phục dự án"}
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <p className="text-muted-custom mb-0">
-            {confirmModal.action === 'delete' 
+          <MuiBox component="p" sx={{ marginBottom: "0" }} className="text-muted-custom">
+            {confirmModal.action === 'delete'
               ? (t("project.banCoChacMuonXoaDuAnNayHanhDon") || "Bạn có chắc muốn xóa dự án này? Hành động này không thể hoàn tác.")
               : "Bạn có chắc muốn khôi phục dự án này?"}
-          </p>
+          </MuiBox>
         </Modal.Body>
-        <Modal.Footer border="0" className="gap-2">
-          <Button variant="light" className="px-4 fw-medium" onClick={() => setConfirmModal({ show: false, projectId: null, action: null })} style={{ borderRadius: '10px' }}>
+        <Modal.Footer sx={{ gap: "0.5rem" }} border="0" >
+          <Button sx={{ paddingLeft: "1.5rem", paddingRight: "1.5rem", fontWeight: 500 }} variant="light"  onClick={() => setConfirmModal({ show: false, projectId: null, action: null })} style={{ borderRadius: '10px' }}>
             Hủy bỏ
           </Button>
-          <Button 
-            variant={confirmModal.action === 'delete' ? "danger" : "success"} 
-            className="px-4 fw-medium text-white" 
+          <Button sx={{ paddingLeft: "1.5rem", paddingRight: "1.5rem", fontWeight: 500, color: "#fff" }}
+            variant={confirmModal.action === 'delete' ? "danger" : "success"}
+
             onClick={confirmModal.action === 'delete' ? executeDelete : executeRestore}
             style={{ borderRadius: '10px' }}
           >
@@ -219,6 +223,6 @@ const ProjectListPage = () => {
           </Button>
         </Modal.Footer>
       </Modal>
-    </div>;
+    </MuiBox>;
 };
 export default ProjectListPage;

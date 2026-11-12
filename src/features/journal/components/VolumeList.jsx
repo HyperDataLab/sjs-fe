@@ -1,7 +1,11 @@
 import { useTranslation } from "react-i18next";
 import { t } from "i18next";
-import { ListGroup, Badge } from 'react-bootstrap';
-import { Icon } from '@iconify/react';
+import { ListGroup, Badge } from '@/shared/components/ui/muiAdapters';
+import Icon from '../../../shared/components/Icon.jsx';
+import { getClassNameSx, stripMappedClassNames } from '../../../shared/theme/classNameSx';
+
+import MuiBox from '@mui/material/Box';
+
 
 /**
  * Component VolumeList - Hiển thị danh sách các Tập (Volume) thuộc Tạp chí đang chọn.
@@ -17,32 +21,32 @@ export default function VolumeList({
   const { t: _t } = useTranslation();
   // Trạng thái trống nếu Tạp chí này chưa được khởi tạo Volume nào
   if (!volumes || volumes.length === 0) {
-    return <div className="text-center py-4 bg-light rounded-3 border" style={{
+    return <MuiBox component="div" sx={{ textAlign: "center", paddingTop: "1.5rem", paddingBottom: "1.5rem", bgcolor: "#f8f9fa", borderRadius: "0.5rem", border: "1px solid #dee2e6" }}  style={{
       backgroundColor: 'var(--bg-chip)'
     }}>
-        <Icon icon="lucide:layers-3" width="32" className="text-muted-custom mb-2" />
-        <p className="text-muted-custom small mb-0">{t("admin.chuaCoVolumeNaoDuocTao")}</p>
-      </div>;
+        <Icon sx={{ marginBottom: "0.5rem" }} icon="lucide:layers-3" width="32" className="text-muted-custom" />
+        <MuiBox component="p" sx={{ fontSize: "0.875em", marginBottom: "0" }} className="text-muted-custom">{t("admin.chuaCoVolumeNaoDuocTao")}</MuiBox>
+      </MuiBox>;
   }
-  return <ListGroup className="shadow-sm rounded-3 overflow-hidden">
+  return <ListGroup sx={{ boxShadow: "0 .125rem .25rem rgba(0,0,0,.075)", borderRadius: "0.5rem", overflow: "hidden" }} >
       {volumes.map(vol => {
       const isSelected = vol.id === selectedVolumeId;
-      return <ListGroup.Item key={vol.id} action active={isSelected} onClick={() => onSelectVolume(vol.id)} className="d-flex justify-content-between align-items-center py-3 border-start-0 border-end-0" style={{
+      return <ListGroup.Item sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", paddingTop: "1rem", paddingBottom: "1rem", borderInlineStart: 0, borderInlineEnd: 0 }} key={vol.id} action active={isSelected} onClick={() => onSelectVolume(vol.id)}  style={{
         backgroundColor: isSelected ? 'var(--text-main)' : '#ffffff',
         borderColor: 'var(--border)',
         color: isSelected ? '#ffffff' : 'var(--text-main)',
         transition: 'all 0.2s ease'
       }}>
             <div>
-              <div className={`fw-bold ${isSelected ? 'text-white' : 'text-main'}`}>
+              <MuiBox component="div" sx={getClassNameSx(`fw-bold ${isSelected ? 'text-white' : 'text-main'}`)} className={stripMappedClassNames(`fw-bold ${isSelected ? 'text-white' : 'text-main'}`)}>
                 {vol.volumeNumber}
-              </div>
-              <small className={isSelected ? 'text-white-50 font-monospace' : 'text-muted-custom font-monospace'}>{t("article.namXuatBan")}{vol.publicationYear}
-              </small>
+              </MuiBox>
+              <MuiBox component="small" sx={getClassNameSx(isSelected ? 'text-white-50 font-monospace' : 'text-muted-custom font-monospace')} className={stripMappedClassNames(isSelected ? 'text-white-50 font-monospace' : 'text-muted-custom font-monospace')}>{t("article.namXuatBan")}{vol.publicationYear}
+              </MuiBox>
             </div>
-            
+
             {/* Hiển thị số lượng bài báo (Articles) hoặc Số phát sóng (Issues) đi kèm của tập đó */}
-            <Badge bg={isSelected ? 'light' : 'dark'} text={isSelected ? 'dark' : 'light'} className="rounded-pill px-2.5 py-1.5">
+            <Badge sx={{ borderRadius: "50rem" }} bg={isSelected ? 'light' : 'dark'} text={isSelected ? 'dark' : 'light'} className="px-2.5 py-1.5">
               {vol.totalIssues || 0} Issues
             </Badge>
           </ListGroup.Item>;

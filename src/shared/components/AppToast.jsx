@@ -1,12 +1,16 @@
-﻿/**
+/**
  * File source thuộc hệ thống FE ResearchPulse.
  *
  * File: shared\components\AppToast.jsx
  */
 import { useEffect, useState } from "react";
-import { Toast, ToastContainer } from "react-bootstrap";
-import { Icon } from "@iconify/react";
+import { Toast, ToastContainer } from '@/shared/components/ui/muiAdapters';
+import Icon from './Icon.jsx';
 import { registerToast } from "../utils/toast";
+
+
+import MuiBox from '@mui/material/Box';
+
 
 const TOAST_CONFIG = {
   success: {
@@ -51,18 +55,18 @@ export default function AppToast() {
   const config = TOAST_CONFIG[variant] || TOAST_CONFIG.info;
 
   return (
-    <ToastContainer
+    <ToastContainer sx={{ padding: "1.5rem" }}
       position="top-end"
-      className="p-4"
+
       style={{ zIndex: 9999 }}
     >
-      <Toast
+      <Toast sx={{ border: 0, boxShadow: "0 1rem 3rem rgba(0,0,0,.175)" }}
         show={show}
         autohide
         delay={3500}
         onClose={() => setShow(false)}
         animation
-        className="border-0 shadow-lg"
+
         style={{
           minWidth: 360,
           background: config.bg,
@@ -70,7 +74,7 @@ export default function AppToast() {
           borderRadius: 16,
         }}
       >
-        <Toast.Body className="d-flex align-items-center gap-3 p-3">
+        <Toast.Body sx={{ display: "flex", alignItems: "center", gap: "1rem", padding: "1rem" }} >
           <Icon
             icon={config.icon}
             width={24}
@@ -80,8 +84,8 @@ export default function AppToast() {
             }}
           />
 
-          <div
-            className="flex-grow-1"
+          <MuiBox component="div" sx={{ flexGrow: 1 }}
+
             style={{
               color: config.color,
               fontSize: 14,
@@ -90,18 +94,18 @@ export default function AppToast() {
             }}
           >
             {message}
-          </div>
+          </MuiBox>
 
-          <button
+          <MuiBox component="button" sx={{ display: "inline-flex", alignItems: "center", justifyContent: "center", px: "0.5rem", py: "0.25rem", border: 0, borderRadius: "0.25rem", fontSize: "0.875rem", fontWeight: 400, lineHeight: 1.5, cursor: "pointer", textDecoration: "none", padding: "0", bgcolor: "transparent" }}
             onClick={() => setShow(false)}
-            className="btn btn-sm p-0 border-0 bg-transparent"
+
           >
             <Icon
               icon="solar:close-circle-outline"
               width={20}
               color="#94a3b8"
             />
-          </button>
+          </MuiBox>
         </Toast.Body>
       </Toast>
     </ToastContainer>

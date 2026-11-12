@@ -1,6 +1,8 @@
 import { useTranslation } from "react-i18next";
-import { Row, Col } from 'react-bootstrap';
+import { Row, Col } from '@/shared/components/ui/muiAdapters';
 import StatCard from '../../dashboard/components/StatCard';
+
+
 export default function GeographyStatsCards({
   countryStats = [],
   globalRegions = [],
@@ -51,7 +53,7 @@ export default function GeographyStatsCards({
     label: `Top: ${topCountryName}`,
     growth: null
   }];
-  return <Row className="g-3 mb-4">
+  return <Row sx={{ gap: "1rem", marginBottom: "1.5rem" }} >
       {cards.map((card, idx) => <Col xs={12} sm={6} lg={3} key={idx}>
           <StatCard icon={card.icon} accentColor={card.accentColor} value={card.value} label={card.label} growth={card.growth} loading={loading} />
         </Col>)}

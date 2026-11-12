@@ -1,11 +1,14 @@
 import { useTranslation } from "react-i18next";
 import { t } from "i18next";
-import "../styles/ProfilePage.css";
 import Header from "../../landing/components/Header";
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import useAuth from "../../auth/hooks/useAuth";
 import { isAuthenticated as isAuthenticatedUtil } from "../../../shared/utils/auth";
+import { getClassNameSx, stripMappedClassNames } from '../../../shared/theme/classNameSx';
+
+import MuiBox from '@mui/material/Box';
+
 export default function ProfilePage() {
   const { t: _t } = useTranslation();
   const {
@@ -202,7 +205,7 @@ export default function ProfilePage() {
               <p>{t("profile.quanLyThongTinCaNhanVaThietLap")}</p>
             </div>
 
-            <div className="breadcrumb">{t("author.tongQuan")}<span>&gt;</span>{t("profile.hoSoCaNhan")}</div>
+            <MuiBox component="div" sx={{ display: "flex", flexWrap: "wrap", padding: 0, marginBottom: "1rem", listStyle: "none" }} >{t("author.tongQuan")}<span>&gt;</span>{t("profile.hoSoCaNhan")}</MuiBox>
 
             <div className="profile-content">
               <div className="profile-sidebar">
@@ -219,7 +222,7 @@ export default function ProfilePage() {
               }}>
                     {formData.first_name ? formData.first_name.charAt(0).toUpperCase() : formData.last_name ? formData.last_name.charAt(0).toUpperCase() : "U"}
                   </span>}
-                  
+
                 </div>
 
                 <h2>
@@ -230,9 +233,9 @@ export default function ProfilePage() {
                   {formData.role || t("auth.nhaNghienCuu")}
                 </div>
 
-                <div className={`status-badge ${user?.is_active ?? true ? "active" : "inactive"}`}>
+                <MuiBox component="div" sx={getClassNameSx(`status-badge ${user?.is_active ?? true ? "active" : "inactive"}`)} className={stripMappedClassNames(`status-badge ${user?.is_active ?? true ? "active" : "inactive"}`)}>
                   {user?.is_active ?? true ? "Active" : "Inactive"}
-                </div>
+                </MuiBox>
 
                 <hr />
 
@@ -322,14 +325,14 @@ export default function ProfilePage() {
         </div>}
 
       {showDeleteModal && isAuthenticated && <div className="modal-overlay">
-          <div className="modal-content">
+          <MuiBox component="div" sx={{ position: "relative", display: "flex", flexDirection: "column", width: "100%", pointerEvents: "auto", bgcolor: "background.paper", backgroundClip: "padding-box", border: "1px solid rgba(0,0,0,.2)", borderRadius: "0.5rem" }} >
             <h3>{t("profile.xacNhanXoaTaiKhoan")}</h3>
             <p>{t("profile.banCoChacMuonXoaTaiKhoanNayKho")}</p>
             <div className="modal-actions">
               <button className="cancel-btn" onClick={() => setShowDeleteModal(false)}>{t("admin.huy")}</button>
               <button className="delete-confirm-btn" onClick={handleDelete}>{t("profile.xoaTaiKhoan")}</button>
             </div>
-          </div>
+          </MuiBox>
         </div>}
     </>;
 }

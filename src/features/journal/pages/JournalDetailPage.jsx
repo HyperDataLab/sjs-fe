@@ -5,8 +5,8 @@ import { useTranslation } from "react-i18next";
  * File: features\journal\pages\JournalDetailPage.jsx
  */
 import { useParams, useNavigate } from 'react-router-dom';
-import { Container, Breadcrumb } from 'react-bootstrap';
-import { Icon } from '@iconify/react';
+import { Container, Breadcrumb } from '@/shared/components/ui/muiAdapters';
+import Icon from '../../../shared/components/Icon.jsx';
 import PrimaryButton from '../../../shared/components/Button/PrimaryButton';
 
 // Shared Layout Header
@@ -25,7 +25,10 @@ import VolumesTabContent from '../components/VolumesTabContent';
 import ArticlesTabContent from '../components/ArticlesTabContent';
 import AuthRequiredModal from '../../../shared/components/AuthRequiredModal';
 import AddToProjectModal from '../components/AddToProjectModal';
-import '../components/JournalDetail.css';
+
+
+import MuiBox from '@mui/material/Box';
+
 export default function JournalDetailPage() {
   const {
     t
@@ -68,31 +71,31 @@ export default function JournalDetailPage() {
 
   // Fallback for not found or empty ID
   if (notFound) {
-    return <div className="grid-bg min-vh-100 d-flex flex-column text-main">
+    return <MuiBox component="div" sx={{ minHeight: "100vh", display: "flex", flexDirection: "column" }} className="grid-bg text-main">
         <Header />
-        <Container className="flex-grow-1 d-flex flex-column justify-content-center align-items-center py-5">
-          <div className="journal-dark-card p-5 text-center" style={{
+        <Container sx={{ flexGrow: 1, display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", paddingTop: "3rem", paddingBottom: "3rem" }} >
+          <MuiBox component="div" sx={{ padding: "3rem", textAlign: "center" }} className="journal-dark-card" style={{
           maxWidth: '500px'
         }}>
-            <Icon icon="lucide:alert-circle" className="text-danger mb-4" width="64" />
-            <h2 className="font-display fw-bold text-main mb-3">{t("journal.khongTimThayTapChi")}</h2>
-            <p className="text-muted-custom mb-4">{t("journal.tapChiBanDangTimKiemKhongTonTa")}</p>
-            <PrimaryButton className="px-4 py-2" onClick={() => navigate('/')}>{t("journal.quayLaiTrangChu")}</PrimaryButton>
-          </div>
+            <Icon sx={{ color: "error.main", marginBottom: "1.5rem" }} icon="lucide:alert-circle"  width="64" />
+            <MuiBox component="h2" sx={{ fontWeight: 700, marginBottom: "1rem" }} className="font-display text-main">{t("journal.khongTimThayTapChi")}</MuiBox>
+            <MuiBox component="p" sx={{ marginBottom: "1.5rem" }} className="text-muted-custom">{t("journal.tapChiBanDangTimKiemKhongTonTa")}</MuiBox>
+            <PrimaryButton sx={{ paddingLeft: "1.5rem", paddingRight: "1.5rem", paddingTop: "0.5rem", paddingBottom: "0.5rem" }}  onClick={() => navigate('/')}>{t("journal.quayLaiTrangChu")}</PrimaryButton>
+          </MuiBox>
         </Container>
-      </div>;
+      </MuiBox>;
   }
-  return <div className="grid-bg min-vh-100 text-main pb-5 journal-detail-page">
+  return <MuiBox component="div" sx={{ minHeight: "100vh", paddingBottom: "3rem" }} className="grid-bg text-main journal-detail-page">
       {/* Top Navbar */}
       <Header />
 
       {/* Main Container */}
-      <Container className="pt-5 mt-5 journal-detail-shell">
-        
+      <Container sx={{ paddingTop: "3rem", marginTop: "3rem" }} className="journal-detail-shell">
+
         {/* Custom Breadcrumb Nav */}
         <div aria-label="breadcrumb" className="journal-breadcrumb">
-          <Breadcrumb className="mb-0 custom-breadcrumb d-flex align-items-center">
-            <Breadcrumb.Item onClick={() => navigate('/')} className="d-flex align-items-center" linkProps={{
+          <Breadcrumb sx={{ marginBottom: "0", display: "flex", alignItems: "center" }} className="custom-breadcrumb">
+            <Breadcrumb.Item sx={{ display: "flex", alignItems: "center" }} onClick={() => navigate('/')}  linkProps={{
             style: {
               cursor: 'pointer',
               fontSize: '0.85rem',
@@ -101,7 +104,7 @@ export default function JournalDetailPage() {
               textDecoration: 'none'
             }
           }}>{t("home")}</Breadcrumb.Item>
-            <Breadcrumb.Item onClick={() => navigate('/search')} className="d-flex align-items-center" linkProps={{
+            <Breadcrumb.Item sx={{ display: "flex", alignItems: "center" }} onClick={() => navigate('/search')}  linkProps={{
             style: {
               cursor: 'pointer',
               fontSize: '0.85rem',
@@ -110,7 +113,7 @@ export default function JournalDetailPage() {
               textDecoration: 'none'
             }
           }}>{t("search")}</Breadcrumb.Item>
-            <Breadcrumb.Item active className="d-flex align-items-center" style={{
+            <Breadcrumb.Item sx={{ display: "flex", alignItems: "center" }} active  style={{
             fontSize: '0.85rem',
             color: 'var(--text-main)',
             fontWeight: 500
@@ -144,5 +147,5 @@ export default function JournalDetailPage() {
 
       {/* Project selection modal */}
       <AddToProjectModal show={showProjectModal} onHide={() => setShowProjectModal(false)} journalId={id} onConfirm={handleAddToProject} />
-    </div>;
+    </MuiBox>;
 }

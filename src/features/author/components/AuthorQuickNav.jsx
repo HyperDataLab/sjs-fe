@@ -1,5 +1,9 @@
 ﻿import { useState, useEffect } from "react";
 import Icon from "../../../shared/components/Icon";
+import { getClassNameSx, stripMappedClassNames } from '../../../shared/theme/classNameSx';
+
+import MuiBox from '@mui/material/Box';
+
 
 /**
  * @file AuthorQuickNav.jsx
@@ -57,15 +61,15 @@ export default function AuthorQuickNav() {
     <div className="ap-quicknav">
       <div className="ap-quicknav-container">
         {navItems.map((item) => (
-          <button
+          <MuiBox component="button" sx={getClassNameSx(`ap-quicknav-item ${activeSection === item.id ? "active" : ""}`)}
             key={item.id}
             type="button"
-            className={`ap-quicknav-item ${activeSection === item.id ? "active" : ""}`}
+            className={stripMappedClassNames(`ap-quicknav-item ${activeSection === item.id ? "active" : ""}`)}
             onClick={() => scrollToSection(item.id)}
           >
             <Icon icon={item.icon} width="13" />
             <span>{item.label}</span>
-          </button>
+          </MuiBox>
         ))}
       </div>
     </div>

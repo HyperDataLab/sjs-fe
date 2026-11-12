@@ -1,5 +1,5 @@
 import { useNavigate, useLocation } from 'react-router-dom';
-import { Nav } from 'react-bootstrap';
+import { Nav } from '@/shared/components/ui/muiAdapters';
 import Icon from '../../shared/components/Icon';
 import Logo from '../../shared/components/Logo';
 import useAuth from '../../features/auth/hooks/useAuth';

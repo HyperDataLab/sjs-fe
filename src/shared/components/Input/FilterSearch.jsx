@@ -1,14 +1,10 @@
-import { useTranslation } from "react-i18next";
-import { useState, useEffect, useRef } from 'react';
-import { Icon } from '@iconify/react';
-import './FilterInput.css';
+import { useEffect, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import Box from '@mui/material/Box';
+import IconButton from '@mui/material/IconButton';
+import InputBase from '@mui/material/InputBase';
+import Icon from '../Icon.jsx';
 
-/**
- * Shared component cho ô tìm kiếm trong các Filter Card.
- * Hỗ trợ 2 chế độ:
- * 1. Debounced: dùng `initialValue` + `onSearchChange` (Tự động trigger sau 400ms)
- * 2. Controlled: dùng `value` + `onChange` (Chế độ form thường)
- */
 export default function FilterSearch({
   value,
   onChange,
@@ -17,66 +13,119 @@ export default function FilterSearch({
   placeholder,
   className = '',
   actionButton = null,
-  style = {}
+  style = {},
+  sx,
 }) {
-  const {
-    t
-  } = useTranslation();
-  const resolvedPlaceholder = placeholder || t("common.timKiem");
+  const { t } = useTranslation();
+  const resolvedPlaceholder = placeholder || t('common.timKiem');
   const isControlled = value !== undefined;
   const [internalVal, setInternalVal] = useState(initialValue || '');
 
-  // Cập nhật giá trị nội bộ nếu initialValue bên ngoài thay đổi
   useEffect(() => {
     if (!isControlled && initialValue !== undefined) {
       setInternalVal(initialValue);
     }
   }, [initialValue, isControlled]);
+
   const onSearchChangeRef = useRef(onSearchChange);
   useEffect(() => {
     onSearchChangeRef.current = onSearchChange;
   }, [onSearchChange]);
 
-  // Xử lý debounce
   useEffect(() => {
-    if (isControlled) return;
+    if (isControlled) return undefined;
     const timer = setTimeout(() => {
-      onSearchChangeRef.current && onSearchChangeRef.current(internalVal);
+      onSearchChangeRef.current?.(internalVal);
     }, 400);
     return () => clearTimeout(timer);
   }, [internalVal, isControlled]);
-  const handleChange = e => {
+
+  const handleChange = (event) => {
     if (isControlled) {
-      onChange && onChange(e);
+      onChange?.(event);
     } else {
-      setInternalVal(e.target.value);
+      setInternalVal(event.target.value);
     }
   };
+
   const handleClear = () => {
     if (isControlled) {
-      onChange && onChange({
-        target: {
-          value: ''
-        }
-      });
+      onChange?.({ target: { value: '' } });
     } else {
       setInternalVal('');
     }
   };
-  const displayValue = isControlled ? value : internalVal;
-  return <div className={`shared-search-container ${className}`.trim()} style={style}>
-      <div className="search-icon-wrapper">
-        <Icon icon="lucide:search" width="18" height="18" />
-      </div>
-      
-      <input type="text" value={displayValue} onChange={handleChange} placeholder={resolvedPlaceholder} className="search-input" />
-      
-      {displayValue && <button type="button" className="clear-icon-btn" onClick={handleClear} title={t("common.xoaTimKiem")}>
-          <Icon icon="lucide:x" width="16" height="16" />
-        </button>}
 
-      {actionButton && <div className="search-action-wrapper">
+  const displayValue = isControlled ? value : internalVal;
+
+  return (
+    <Box
+      className={className}
+      style={style}
+      sx={[
+        {
+          display: 'flex',
+          alignItems: 'stretch',
+          width: '100%',
+          minHeight: 44,
+          overflow: 'hidden',
+          border: 1,
+          borderColor: 'divider',
+          borderRadius: 999,
+          backgroundColor: 'background.paper',
+          transition: 'border-color 180ms ease',
+          '&:focus-within': { borderColor: 'text.disabled' },
+          '& .MuiInputBase-root': { flex: '1 1 auto', minWidth: 0 },
+          '& .MuiInputBase-input': {
+            width: '100%',
+            minWidth: 0,
+            px: 0.25,
+            py: 1,
+            color: 'text.primary',
+            fontFamily: 'inherit',
+            fontSize: '0.92rem',
+            '&::placeholder': { color: 'text.secondary', opacity: 1 },
+          },
+        },
+        sx,
+      ]}
+    >
+      <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', px: 1.5, color: 'text.secondary' }}>
+        <Icon icon="lucide:search" width="18" height="18" />
+      </Box>
+
+      <InputBase
+        type="text"
+        value={displayValue}
+        onChange={handleChange}
+        placeholder={resolvedPlaceholder}
+        inputProps={{ 'aria-label': resolvedPlaceholder }}
+      />
+
+      {displayValue && (
+        <IconButton
+          type="button"
+          aria-label={t('common.xoaTimKiem')}
+          title={t('common.xoaTimKiem')}
+          onClick={handleClear}
+          size="small"
+          sx={{ px: 1.5, color: 'text.secondary', '&:hover': { color: 'text.primary', backgroundColor: 'transparent' } }}
+        >
+          <Icon icon="lucide:x" width="16" height="16" />
+        </IconButton>
+      )}
+
+      {actionButton && (
+        <Box
+          sx={{
+            display: 'flex',
+            alignItems: 'stretch',
+            '& button': { minHeight: '100%', m: 0, borderRadius: 0, borderTopWidth: 0, borderBottomWidth: 0, borderRightWidth: 0 },
+          }}
+        >
           {actionButton}
-        </div>}
-    </div>;
+        </Box>
+      )}
+    </Box>
+  );
 }

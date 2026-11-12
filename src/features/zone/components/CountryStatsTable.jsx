@@ -1,8 +1,12 @@
 import { useTranslation } from "react-i18next";
 import React, { useState, useMemo } from 'react';
-import { Table, InputGroup, Form } from 'react-bootstrap';
-import { Icon } from '@iconify/react';
+import { Table, InputGroup, Form } from '@/shared/components/ui/muiAdapters';
+import Icon from '../../../shared/components/Icon.jsx';
 import AdminPagination from '../../../shared/components/Pagination';
+
+
+import MuiBox from '@mui/material/Box';
+
 export default function CountryStatsTable({
   countries = [],
   selectedCountry = null,
@@ -63,49 +67,49 @@ export default function CountryStatsTable({
       setSortOrder('desc'); // Default to descending for numbers, or ascending for names can be adjusted
     }
   };
-  return <div className="p-4 journal-dark-card d-flex flex-column h-100" style={{
+  return <MuiBox component="div" sx={{ padding: "1.5rem", display: "flex", flexDirection: "column", height: "100%" }} className="journal-dark-card" style={{
     minHeight: '520px'
   }}>
       {/* Table Header / Action Section */}
-      <div className="d-flex flex-column flex-sm-row justify-content-between align-items-start align-items-sm-center gap-3 mb-4">
+      <MuiBox component="div" sx={{ display: "flex", flexDirection: "column", "@media (min-width:576px)": { flexDirection: "row", alignItems: "center" }, justifyContent: "space-between", alignItems: "flex-start", gap: "1rem", marginBottom: "1.5rem" }} >
         <div>
-          <h2 className="font-display fw-bold text-main mb-1" style={{
+          <MuiBox component="h2" sx={{ fontWeight: 700, marginBottom: "0.25rem" }} className="font-display text-main" style={{
           fontSize: '1.2rem'
-        }}>{t("zone.thongKeTheoQuocGia")}</h2>
-          <p className="text-muted-custom mb-0" style={{
+        }}>{t("zone.thongKeTheoQuocGia")}</MuiBox>
+          <MuiBox component="p" sx={{ marginBottom: "0" }} className="text-muted-custom" style={{
           fontSize: '0.75rem'
-        }}>{t("zone.danhSachCacQuocGiaCungTongSoLu")}</p>
+        }}>{t("zone.danhSachCacQuocGiaCungTongSoLu")}</MuiBox>
         </div>
-      </div>
+      </MuiBox>
 
       {/* Search Input */}
-      <div className="mb-3">
-        <InputGroup className="px-3 py-1 rounded-3" style={{
+      <MuiBox component="div" sx={{ marginBottom: "1rem" }} >
+        <InputGroup sx={{ paddingLeft: "1rem", paddingRight: "1rem", paddingTop: "0.25rem", paddingBottom: "0.25rem", borderRadius: "0.5rem" }}  style={{
         backgroundColor: 'var(--bg-chip)',
         border: '1px solid var(--border)',
         transition: 'border-color 0.2s ease'
       }}>
-          <InputGroup.Text className="bg-transparent border-0 p-0 me-2">
+          <InputGroup.Text sx={{ bgcolor: "transparent", border: 0, padding: "0", marginInlineEnd: "0.5rem" }} >
             <Icon icon="lucide:search" width="16" style={{
             color: 'var(--text-muted)'
           }} />
           </InputGroup.Text>
-          <Form.Control type="text" placeholder={t("zone.timKiemQuocGia")} value={searchTerm} onChange={e => setSearchTerm(e.target.value)} className="border-0 bg-transparent text-main w-100 p-1" style={{
+          <Form.Control sx={{ border: 0, bgcolor: "transparent", width: "100%", padding: "0.25rem" }} type="text" placeholder={t("zone.timKiemQuocGia")} value={searchTerm} onChange={e => setSearchTerm(e.target.value)} className="text-main" style={{
           outline: 'none',
           fontSize: '0.82rem',
           boxShadow: 'none'
         }} />
-          {searchTerm && <button className="bg-transparent border-0 p-0 text-muted-custom hover:text-main" onClick={() => setSearchTerm('')}>
+          {searchTerm && <MuiBox component="button" sx={{ bgcolor: "transparent", border: 0, padding: "0" }} className="text-muted-custom hover:text-main" onClick={() => setSearchTerm('')}>
               <Icon icon="lucide:x" width="16" />
-            </button>}
+            </MuiBox>}
         </InputGroup>
-      </div>
+      </MuiBox>
 
       {/* Table */}
-      <div className="table-responsive flex-grow-1" style={{
+      <MuiBox component="div" sx={{ width: "100%", overflowX: "auto", WebkitOverflowScrolling: "touch", flexGrow: 1 }}  style={{
       overflowX: 'auto'
     }}>
-        <Table hover className="align-middle mb-0 text-start" style={{
+        <Table sx={{ verticalAlign: "middle", marginBottom: "0", textAlign: "left" }} hover  style={{
         minWidth: '400px',
         fontSize: '0.85rem'
       }}>
@@ -114,38 +118,38 @@ export default function CountryStatsTable({
           borderBottom: '1px solid var(--border)'
         }}>
             <tr>
-              <th className="py-2.5 ps-3 text-muted-custom font-semibold text-xs text-uppercase" style={{
+              <MuiBox component="th" sx={{ paddingInlineStart: "1rem", textTransform: "uppercase" }} className="py-2.5 text-muted-custom font-semibold text-xs" style={{
               width: '50px'
             }}>
                 #
-              </th>
-              <th className="py-2.5 text-muted-custom font-semibold text-xs text-uppercase cursor-pointer select-none" onClick={() => toggleSort('name')} style={{
+              </MuiBox>
+              <MuiBox component="th" sx={{ textTransform: "uppercase" }} className="py-2.5 text-muted-custom font-semibold text-xs cursor-pointer select-none" onClick={() => toggleSort('name')} style={{
               cursor: 'pointer'
             }}>
-                <div className="d-flex align-items-center gap-1">
+                <MuiBox component="div" sx={{ display: "flex", alignItems: "center", gap: "0.25rem" }} >
                   <span>{t("journal.quocGia")}</span>
-                  <Icon icon={sortKey === 'name' ? sortOrder === 'asc' ? 'lucide:arrow-up' : 'lucide:arrow-down' : 'lucide:arrow-up-down'} width="12" className="text-muted" />
-                </div>
-              </th>
-              <th className="py-2.5 text-muted-custom font-semibold text-xs text-uppercase" style={{
+                  <Icon sx={{ color: "text.secondary" }} icon={sortKey === 'name' ? sortOrder === 'asc' ? 'lucide:arrow-up' : 'lucide:arrow-down' : 'lucide:arrow-up-down'} width="12"  />
+                </MuiBox>
+              </MuiBox>
+              <MuiBox component="th" sx={{ textTransform: "uppercase" }} className="py-2.5 text-muted-custom font-semibold text-xs" style={{
               width: '70px'
-            }}>{t("zone.ma")}</th>
-              <th className="py-2.5 text-muted-custom font-semibold text-xs text-uppercase cursor-pointer select-none" onClick={() => toggleSort('article_count')} style={{
+            }}>{t("zone.ma")}</MuiBox>
+              <MuiBox component="th" sx={{ textTransform: "uppercase" }} className="py-2.5 text-muted-custom font-semibold text-xs cursor-pointer select-none" onClick={() => toggleSort('article_count')} style={{
               cursor: 'pointer'
             }}>
-                <div className="d-flex align-items-center gap-1">
+                <MuiBox component="div" sx={{ display: "flex", alignItems: "center", gap: "0.25rem" }} >
                   <span>{t("articles")}</span>
-                  <Icon icon={sortKey === 'article_count' ? sortOrder === 'asc' ? 'lucide:arrow-up' : 'lucide:arrow-down' : 'lucide:arrow-up-down'} width="12" className="text-muted" />
-                </div>
-              </th>
-              <th className="py-2.5 pe-3 text-end text-muted-custom font-semibold text-xs text-uppercase" style={{
+                  <Icon sx={{ color: "text.secondary" }} icon={sortKey === 'article_count' ? sortOrder === 'asc' ? 'lucide:arrow-up' : 'lucide:arrow-down' : 'lucide:arrow-up-down'} width="12"  />
+                </MuiBox>
+              </MuiBox>
+              <MuiBox component="th" sx={{ paddingInlineEnd: "1rem", textAlign: "right", textTransform: "uppercase" }} className="py-2.5 text-muted-custom font-semibold text-xs" style={{
               width: '100px'
-            }}>{t("article.chiTiet1")}</th>
+            }}>{t("article.chiTiet1")}</MuiBox>
             </tr>
           </thead>
           <tbody>
             {paginatedCountries.length === 0 ? <tr>
-                <td colSpan="5" className="text-center py-5 text-muted-custom">{t("zone.khongTimThayQuocGiaPhuHop")}</td>
+                <MuiBox component="td" sx={{ textAlign: "center", paddingTop: "3rem", paddingBottom: "3rem" }} colSpan="5" className="text-muted-custom">{t("zone.khongTimThayQuocGiaPhuHop")}</MuiBox>
               </tr> : paginatedCountries.map((country, index) => {
             const globalIndex = startIndex + index + 1;
             const isSelected = selectedCountry?.code === country.code;
@@ -154,22 +158,22 @@ export default function CountryStatsTable({
               backgroundColor: isSelected ? 'var(--primary-light)' : 'transparent',
               fontWeight: isSelected ? 600 : 400
             }} onClick={() => onSelectCountry(country)}>
-                    <td className="ps-3 text-muted-custom font-monospace" style={{
+                    <MuiBox component="td" sx={{ paddingInlineStart: "1rem", fontFamily: "monospace" }} className="text-muted-custom" style={{
                 fontSize: '0.8rem'
               }}>
                       {globalIndex}
-                    </td>
+                    </MuiBox>
                     <td className="py-2.5 font-display text-main">
                       {country.name || '—'}
                     </td>
-                    <td className="text-muted-custom font-monospace">
+                    <MuiBox component="td" sx={{ fontFamily: "monospace" }} className="text-muted-custom">
                       {country.code || country.iso_code || '—'}
-                    </td>
-                    <td className="text-main fw-bold font-monospace">
+                    </MuiBox>
+                    <MuiBox component="td" sx={{ fontWeight: 700, fontFamily: "monospace" }} className="text-main">
                       {Number(country.article_count || 0).toLocaleString()}
-                    </td>
-                    <td className="pe-3 text-end">
-                      <button className="btn btn-link text-primary p-0 text-decoration-none d-inline-flex align-items-center gap-1 hover:translate-x-1" style={{
+                    </MuiBox>
+                    <MuiBox component="td" sx={{ paddingInlineEnd: "1rem", textAlign: "right" }} >
+                      <MuiBox component="button" sx={{ display: "inline-flex", alignItems: "center", justifyContent: "center", px: "0.75rem", py: "0.375rem", border: 0, borderRadius: "0.375rem", fontSize: "1rem", fontWeight: 400, lineHeight: 1.5, cursor: "pointer", textDecoration: "none", bgcolor: "transparent", color: "primary.main", padding: "0", gap: "0.25rem" }} className="hover:translate-x-1" style={{
                   fontSize: '0.78rem',
                   transition: 'all 0.15s ease'
                 }} onClick={e => {
@@ -178,17 +182,17 @@ export default function CountryStatsTable({
                 }}>
                         <span>Xem region</span>
                         <Icon icon="lucide:chevron-right" width="14" />
-                      </button>
-                    </td>
+                      </MuiBox>
+                    </MuiBox>
                   </tr>;
           })}
           </tbody>
         </Table>
-      </div>
+      </MuiBox>
 
       {/* Pagination Controls */}
-      {sortedCountries.length > 0 && totalPages > 1 && <div className="mt-3 pt-3 border-top border-light">
+      {sortedCountries.length > 0 && totalPages > 1 && <MuiBox component="div" sx={{ marginTop: "1rem", paddingTop: "1rem", borderTop: "1px solid #dee2e6", borderColor: "#dee2e6" }} >
           <AdminPagination totalItems={sortedCountries.length} currentPage={safeCurrentPage} limit={itemsPerPage} onPageChange={handlePageChange} entityName="quốc gia" />
-        </div>}
-    </div>;
+        </MuiBox>}
+    </MuiBox>;
 }
