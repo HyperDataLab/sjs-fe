@@ -6,9 +6,12 @@
 import { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
-import { searchJournalsApi } from '../../journal/api/journalApi';
-import { getSubjectAreasApi, getCatalogSubjectCategoriesApi } from '../api/catalogApi';
-import { getCountryStatsApi } from '../../zone/api/zone.api';
+import {
+  getCatalogCountriesApi,
+  getCatalogFieldsApi,
+  getCatalogSubfieldsApi,
+  searchCatalogJournalsApi,
+} from '../api/catalogSearchApi';
 import { normalizeSearchResponse } from '../services/catalogSearchService';
 import { useCatalogSearchStore } from '../store/catalogSearchStore';
 
@@ -39,20 +42,18 @@ export function useCatalogSearch(currentUser) {
   // Default to 'metric' (highest metric first) on first load per ISSUE_FE_SEARCH_PAGE
   const sort = searchParams.get('sort') || 'metric';
 
-  const selectedAreas = searchParams.getAll('area_id').map(String);
-  const selectedCategories = searchParams.getAll('cat_id').map(String);
+  const selectedAreas = searchParams.getAll('area_id').map(String).filter((id) => /^F\d+$/.test(id));
+  const selectedCategories = searchParams.getAll('cat_id').map(String).filter((id) => /^S\d+$/.test(id));
   const selectedAccess = searchParams.getAll('access');
-  const selectedQuartiles = searchParams.getAll('quartile');
-  const selectedYear = searchParams.get('ranking_year') || '';
-  const selectedZone = searchParams.get('country_id') || '';
-  const isOaDiamond = searchParams.get('is_oa_diamond') === 'true';
+  const countryId = (searchParams.get('country_id') || '').toUpperCase();
+  const selectedZone = /^[A-Z]{2}$/.test(countryId) ? countryId : '';
+  const isInDoaj = searchParams.get('is_in_doaj') === 'true';
 
   const selectedAreaId = selectedAreas[0] || '';
 
   const selectedAreasStr = selectedAreas.join(',');
   const selectedCategoriesStr = selectedCategories.join(',');
   const selectedAccessStr = selectedAccess.join(',');
-  const selectedQuartilesStr = selectedQuartiles.join(',');
 
   useEffect(() => {
     hydrateFromQuery({
@@ -63,25 +64,59 @@ export function useCatalogSearch(currentUser) {
       selectedAreas,
       selectedCategories,
       selectedAccess,
-      selectedQuartiles,
-      selectedYear,
       selectedZone,
-      isOaDiamond,
+      isInDoaj,
       viewMode,
     });
-  }, [search, page, limit, sort, selectedAreasStr, selectedCategoriesStr, selectedAccessStr, selectedQuartilesStr, viewMode, hydrateFromQuery]);  
+  }, [search, page, limit, sort, selectedAreasStr, selectedCategoriesStr, selectedAccessStr, selectedZone, isInDoaj, viewMode, hydrateFromQuery]);
+
+  useEffect(() => {
+    const next = new URLSearchParams(searchParams);
+    let changed = false;
+    for (const key of ['quartile', 'ranking_year']) {
+      if (next.has(key)) {
+        next.delete(key);
+        changed = true;
+      }
+    }
+    const legacyDoaj = next.get('is_oa_diamond');
+    if (legacyDoaj !== null) {
+      next.delete('is_oa_diamond');
+      changed = true;
+    }
+    if (next.get('country_id') && !/^[A-Za-z]{2}$/.test(next.get('country_id'))) {
+      next.delete('country_id');
+      changed = true;
+    } else if (next.get('country_id')) {
+      const countryCode = next.get('country_id').toUpperCase();
+      if (countryCode !== next.get('country_id')) {
+        next.set('country_id', countryCode);
+        changed = true;
+      }
+    }
+    if (next.getAll('area_id').some((id) => !/^F\d+$/.test(id))) {
+      next.delete('area_id');
+      next.delete('cat_id');
+      changed = true;
+    }
+    if (next.getAll('cat_id').some((id) => !/^S\d+$/.test(id))) {
+      next.delete('cat_id');
+      changed = true;
+    }
+    if (changed) setSearchParams(next, { replace: true });
+  }, [searchParams, setSearchParams]);
 
   /* ----- Load filter dropdown lists on mount (Cached via TanStack Query) ----- */
   const { data: filtersData, isLoading: loadingFilters } = useQuery({
     queryKey: ['catalog', 'filters'],
-    queryFn: async () => {
+    queryFn: async ({ signal }) => {
       const [areasRes, zonesRes] = await Promise.all([
-        getSubjectAreasApi(),
-        getCountryStatsApi({ page: 1, limit: 300 }),
+        getCatalogFieldsApi({ signal }),
+        getCatalogCountriesApi({ signal }),
       ]);
       return {
-        subjectAreas: areasRes.data?.data?.items || areasRes.data?.data || [],
-        zones: zonesRes.data?.data?.items || zonesRes.data?.data?.countries || zonesRes.data?.data || [],
+        subjectAreas: areasRes.items || [],
+        zones: zonesRes.items || [],
       };
     },
     staleTime: 86400000, // 24 hours
@@ -90,10 +125,10 @@ export function useCatalogSearch(currentUser) {
   /* ----- Load subject categories dependent on the selected subject area ----- */
   const { data: categoriesData = [], isLoading: loadingCategories } = useQuery({
     queryKey: ['catalog', 'categories', selectedAreaId],
-    queryFn: async () => {
+    queryFn: async ({ signal }) => {
       if (!selectedAreaId) return [];
-      const res = await getCatalogSubjectCategoriesApi({ subject_area_id: selectedAreaId });
-      return res.data?.data || res.data?.data?.items || [];
+      const res = await getCatalogSubfieldsApi({ fieldId: selectedAreaId, signal });
+      return res.items || [];
     },
     enabled: Boolean(selectedAreaId),
     staleTime: 300000, // 5 minutes
@@ -121,39 +156,33 @@ export function useCatalogSearch(currentUser) {
         selectedAreasStr,
         selectedCategoriesStr,
         selectedAccessStr,
-        selectedQuartilesStr,
-        selectedYear,
         selectedZone,
-        isOaDiamond,
+        isInDoaj,
       },
     ],
-    queryFn: async () => {
+    queryFn: async ({ signal }) => {
       const params = {
         search: search || undefined,
         page,
         limit,
         sort,
-        subject_area_ids: selectedAreas.join(',') || undefined,
-        subject_category_ids: selectedCategories.join(',') || undefined,
+        field_ids: selectedAreas.join(',') || undefined,
+        subfield_ids: selectedCategories.join(',') || undefined,
         is_open_access:
           selectedAccess.includes('open_access') && !selectedAccess.includes('subscription')
             ? true
             : !selectedAccess.includes('open_access') && selectedAccess.includes('subscription')
             ? false
             : undefined,
-        quartiles: selectedQuartiles.join(',') || undefined,
-        ranking_year: selectedYear || undefined,
-        country_ids: selectedZone || undefined,
-        is_oa_diamond: isOaDiamond ? true : undefined,
+        country_code: selectedZone || undefined,
+        is_in_doaj: isInDoaj ? true : undefined,
       };
 
-      const response = await searchJournalsApi(params);
-
-      if (response.data && response.data.success !== false) {
-        return normalizeSearchResponse(response.data);
-      } else {
-        throw new Error(response.data?.message || 'Lỗi không xác định từ server');
+      const response = await searchCatalogJournalsApi(params, { signal });
+      if (response.error || !Array.isArray(response.items)) {
+        throw new Error(response.message || response.error || 'The Worker returned an invalid catalog response.');
       }
+      return normalizeSearchResponse(response);
     },
     staleTime: 300000, // 5 minutes
     retry: 1,
@@ -220,7 +249,6 @@ export function useCatalogSearch(currentUser) {
     setSearchParams(next);
   };
 
-  const handleQuartileToggle = (q) => toggleParamValue('quartile', q);
   const handleAccessToggle = (a) => toggleParamValue('access', a);
 
   /** Toggle a subject area; if toggled off, removes dependent categories. */
@@ -276,25 +304,6 @@ export function useCatalogSearch(currentUser) {
     setSearchParams(next);
   };
 
-  const onQuartileSelect = (quartileVal) => {
-    const next = new URLSearchParams(searchParams);
-    next.delete('quartile');
-    if (quartileVal && quartileVal !== 'all') next.set('quartile', quartileVal);
-    next.set('page', '1');
-    setSearchParams(next);
-  };
-
-  const onYearSelect = (yearVal) => {
-    const next = new URLSearchParams(searchParams);
-    if (yearVal && yearVal !== 'all') {
-      next.set('ranking_year', String(yearVal));
-    } else {
-      next.delete('ranking_year');
-    }
-    next.set('page', '1');
-    setSearchParams(next);
-  };
-
   const onZoneSelect = (zoneId) => {
     const next = new URLSearchParams(searchParams);
     if (zoneId && zoneId !== 'all') {
@@ -306,14 +315,15 @@ export function useCatalogSearch(currentUser) {
     setSearchParams(next);
   };
 
-  /** Toggle is_oa_diamond filter. */
-  const handleOaDiamondToggle = (val) => {
+  /** Toggle the OpenAlex DOAJ membership filter. */
+  const handleDoajToggle = (val) => {
     const next = new URLSearchParams(searchParams);
     if (val) {
-      next.set('is_oa_diamond', 'true');
+      next.set('is_in_doaj', 'true');
     } else {
-      next.delete('is_oa_diamond');
+      next.delete('is_in_doaj');
     }
+    next.delete('is_oa_diamond');
     next.set('page', '1');
     setSearchParams(next);
   };
@@ -374,10 +384,8 @@ export function useCatalogSearch(currentUser) {
     selectedAreas,
     selectedCategories,
     selectedAccess,
-    selectedQuartiles,
-    selectedYear,
     selectedZone,
-    isOaDiamond,
+    isInDoaj,
 
     // View mode
     viewMode,
@@ -391,17 +399,14 @@ export function useCatalogSearch(currentUser) {
     // Handlers
     handleSearchSubmit,
     searchForTag,
-    handleQuartileToggle,
     handleAccessToggle,
     handleAreaToggle,
     handleCategoryToggle,
     onAreaSelect,
     onCategorySelect,
     onAccessSelect,
-    onQuartileSelect,
-    onYearSelect,
     onZoneSelect,
-    handleOaDiamondToggle,
+    handleDoajToggle,
     handleClearAll,
     handleSortChange,
     handlePageChange,

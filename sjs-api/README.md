@@ -40,6 +40,13 @@ npx firebase deploy --only firestore:rules --project sjs-be --config firebase.js
 
 ## Worker API
 
+Journal catalog routes are public reads and return normalized OpenAlex Sources data. Search, list, and filter values are validated and bounded by the Worker. OpenAlex source search supports subject fields/subfields, country, fully open-access status, and DOAJ membership; it does not provide Scimago quartiles or ranking years.
+
+- `GET /api/v1/catalog/journals?search=...&page=1&limit=10&sort=metric` lists and searches journals. Optional filters are `field_ids`, `subfield_ids`, `country_code`, `is_open_access`, and `is_in_doaj`.
+- `GET /api/v1/catalog/fields` returns OpenAlex subject fields.
+- `GET /api/v1/catalog/subfields?field_id=F...` returns subfields for one field.
+- `GET /api/v1/catalog/countries` returns OpenAlex country codes and names.
+
 All research routes require a Firebase ID token in `Authorization: Bearer <id-token>`.
 
 - `GET /api/v1/research/works?source=openalex&query=...&limit=25&cursor=...` searches one provider and returns normalized works.

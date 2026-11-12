@@ -14,7 +14,6 @@ export const CATALOG_DEFAULT_SEARCH_STATE = {
   selectedAreas: [],
   selectedCategories: [],
   selectedAccess: [],
-  selectedQuartiles: [],
 };
 
 export const useCatalogSearchStore = create((set) => ({
@@ -40,9 +39,6 @@ export const useCatalogSearchStore = create((set) => ({
 
   /** Replace selected access filters and reset pagination. */
   setSelectedAccess: (selectedAccess) => set({ selectedAccess, page: 1 }),
-
-  /** Replace selected quartile filters and reset pagination. */
-  setSelectedQuartiles: (selectedQuartiles) => set({ selectedQuartiles, page: 1 }),
 
   /** Reset filters to defaults while preserving the default metric sort. */
   clearFilters: () => set({ ...CATALOG_DEFAULT_SEARCH_STATE }),

@@ -15,6 +15,8 @@ The Worker is the serverless backend for business logic and external scholarly s
 
 The project create/list/detail/delete flow stores project inputs and a compact analysis summary in Firestore. The Worker returns normalized works for direct searches and aggregate summaries for project analysis; the FE does not persist bulk work metadata.
 
+The public journal catalog reads normalized journal sources from OpenAlex through the Worker. OpenAlex fields, subfields, country codes, open-access status, and DOAJ membership drive its supported filters; quartile and ranking-year filters are disabled because those values are not provided by this source.
+
 The development login uses Firebase Auth Emulator, and local Firestore reads and writes use Firestore Emulator. Local emulator settings and API credentials belong in ignored `.env.local` and `sjs-api/.dev.vars` files. Production Worker provider keys belong in Cloudflare secrets.
 
 This branch migrates the core project flow and authentication entry points. Other legacy sections of the FE may still call the former API service and must be migrated as separate features.

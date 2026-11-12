@@ -41,11 +41,9 @@ export default function CatalogSearchPage() {
     selectedAreas,
     selectedCategories,
     selectedAccess,
-    selectedQuartiles,
-    selectedYear,
     selectedZone,
     zones,
-    isOaDiamond,
+    isInDoaj,
     followedJournals,
     showAuthModal,
     setShowAuthModal,
@@ -53,10 +51,8 @@ export default function CatalogSearchPage() {
     onAreaSelect,
     onCategorySelect,
     onAccessSelect,
-    onQuartileSelect,
-    onYearSelect,
     onZoneSelect,
-    handleOaDiamondToggle,
+    handleDoajToggle,
     handleClearAll,
     handleSortChange,
     handlePageChange,
@@ -92,7 +88,7 @@ export default function CatalogSearchPage() {
         {/* Catalog Main Layout */}
         <MuiBox component="div" sx={{ width: "100%" }} >
           {/* Toolbar Filter Panel */}
-          <FilterPanel searchInput={searchInput} setSearchInput={setSearchInput} onSearchSubmit={handleSearchSubmit} subjectAreas={subjectAreas} subjectCategories={subjectCategories} selectedAreas={selectedAreas} selectedCategories={selectedCategories} selectedAccess={selectedAccess} selectedQuartiles={selectedQuartiles} onAreaSelect={onAreaSelect} onCategorySelect={onCategorySelect} onAccessSelect={onAccessSelect} onQuartileSelect={onQuartileSelect} selectedYear={selectedYear} selectedZone={selectedZone} zones={zones} onYearSelect={onYearSelect} onZoneSelect={onZoneSelect} isOaDiamond={isOaDiamond} onOaDiamondToggle={handleOaDiamondToggle} onClearAll={handleClearAll} loading={loadingFilters} />
+          <FilterPanel searchInput={searchInput} setSearchInput={setSearchInput} onSearchSubmit={handleSearchSubmit} subjectAreas={subjectAreas} subjectCategories={subjectCategories} selectedAreas={selectedAreas} selectedCategories={selectedCategories} selectedAccess={selectedAccess} onAreaSelect={onAreaSelect} onCategorySelect={onCategorySelect} onAccessSelect={onAccessSelect} selectedZone={selectedZone} zones={zones} onZoneSelect={onZoneSelect} isInDoaj={isInDoaj} onDoajToggle={handleDoajToggle} onClearAll={handleClearAll} loading={loadingFilters} />
 
           {/* Toolbar Panel */}
           <MuiBox component="div" sx={{ display: "flex", flexDirection: "column", "@media (min-width:576px)": { flexDirection: "row", alignItems: "center" }, justifyContent: "space-between", gap: "1rem", textAlign: "left" }} className="catalog-toolbar">

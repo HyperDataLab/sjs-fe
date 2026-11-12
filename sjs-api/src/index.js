@@ -87,6 +87,25 @@ function parseLimit(value, fallback = 100) {
   return Number.isInteger(limit) && limit >= 1 && limit <= 100 ? limit : null;
 }
 
+function parsePage(value) {
+  const page = value === null || value === '' ? 1 : Number(value);
+  return Number.isSafeInteger(page) && page >= 1 ? page : null;
+}
+
+function parseOpenAlexIdList(value, prefix) {
+  if (value === null || value === '') return [];
+  const ids = value.split(',').map((id) => id.trim()).filter(Boolean);
+  if (ids.length > 5 || ids.some((id) => !new RegExp(`^${prefix}\\d+$`).test(id))) return null;
+  return [...new Set(ids)];
+}
+
+function parseOptionalBoolean(value) {
+  if (value === null) return undefined;
+  if (value === 'true') return true;
+  if (value === 'false') return false;
+  return null;
+}
+
 function summarizeWorks(works) {
   const years = new Map();
   const venues = new Map();
@@ -118,6 +137,48 @@ async function handleRequest(request, env) {
   if (url.pathname === '/health' && request.method === 'GET') return jsonResponse(request, env, { status: 'ok' });
 
   const service = createResearchSourceService({ env });
+  const catalogCacheHeaders = { 'Cache-Control': 'public, max-age=300' };
+  if (url.pathname === '/api/v1/catalog/fields' && request.method === 'GET') {
+    return jsonResponse(request, env, { source: 'openalex', items: await service.listFields() }, 200, catalogCacheHeaders);
+  }
+  if (url.pathname === '/api/v1/catalog/subfields' && request.method === 'GET') {
+    const fieldId = (url.searchParams.get('field_id') ?? '').trim();
+    if (!/^F\d+$/.test(fieldId)) return jsonResponse(request, env, { error: 'invalid_catalog_filter' }, 400);
+    return jsonResponse(request, env, { source: 'openalex', items: await service.listSubfields({ fieldId }) }, 200, catalogCacheHeaders);
+  }
+  if (url.pathname === '/api/v1/catalog/countries' && request.method === 'GET') {
+    return jsonResponse(request, env, { source: 'openalex', items: await service.listCountries() }, 200, catalogCacheHeaders);
+  }
+  if (url.pathname === '/api/v1/catalog/journals' && request.method === 'GET') {
+    const search = (url.searchParams.get('search') ?? '').trim();
+    const page = parsePage(url.searchParams.get('page'));
+    const limit = parseLimit(url.searchParams.get('limit'), 10);
+    const sort = url.searchParams.get('sort') ?? 'metric';
+    const fieldIds = parseOpenAlexIdList(url.searchParams.get('field_ids'), 'F');
+    const subfieldIds = parseOpenAlexIdList(url.searchParams.get('subfield_ids'), 'S');
+    const countryCode = (url.searchParams.get('country_code') ?? '').trim().toUpperCase();
+    const isOpenAccess = parseOptionalBoolean(url.searchParams.get('is_open_access'));
+    const isInDoaj = parseOptionalBoolean(url.searchParams.get('is_in_doaj'));
+    if (
+      search.length > 300 || page === null || limit === null || page * limit > 10000 ||
+      !['metric', 'name'].includes(sort) || fieldIds === null || subfieldIds === null ||
+      (countryCode && !/^[A-Z]{2}$/.test(countryCode)) || isOpenAccess === null || isInDoaj === null
+    ) {
+      return jsonResponse(request, env, { error: 'invalid_catalog_search_parameters' }, 400);
+    }
+    return jsonResponse(request, env, await service.searchJournals({
+      search,
+      page,
+      limit,
+      sort,
+      fieldIds,
+      subfieldIds,
+      countryCode: countryCode || undefined,
+      isOpenAccess,
+      isInDoaj,
+    }), 200, catalogCacheHeaders);
+  }
+
   if (url.pathname === '/api/v1/research/works' && request.method === 'GET') {
     const auth = await authenticate(request, env);
     if (auth.response) return auth.response;
@@ -158,7 +219,9 @@ async function handleRequest(request, env) {
     });
   }
 
-  if (url.pathname.startsWith('/api/v1/research/')) return jsonResponse(request, env, { error: 'method_not_allowed' }, 405);
+  if (url.pathname.startsWith('/api/v1/research/') || url.pathname.startsWith('/api/v1/catalog/')) {
+    return jsonResponse(request, env, { error: 'method_not_allowed' }, 405);
+  }
   return jsonResponse(request, env, { error: 'not_found' }, 404);
 }
 

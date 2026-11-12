@@ -20,28 +20,20 @@ export default function FilterPanel({
   selectedAreas = [],
   selectedCategories = [],
   selectedAccess = [],
-  selectedQuartiles = [],
-  selectedYear = '',
   selectedZone = '',
   zones = [],
   onAreaSelect,
   onCategorySelect,
   onAccessSelect,
-  onQuartileSelect,
-  onYearSelect,
   onZoneSelect,
-  isOaDiamond = false,
-  onOaDiamondToggle,
+  isInDoaj = false,
+  onDoajToggle,
   onClearAll,
   loading = false
 }) {
   const [menuSearch, setMenuSearch] = useState({});
   const hasSelectedArea = selectedAreas.length > 0;
   const accessValue = selectedAccess[0] || 'all';
-  const currentYear = new Date().getFullYear();
-  const yearOptions = Array.from({
-    length: currentYear - 2014
-  }, (_, i) => currentYear - i);
   const cleanLabel = (value = '') => {
     const parts = String(value).split(';').map(part => part.trim()).filter(Boolean);
     return parts.length > 0 ? parts[parts.length - 1] : value;
@@ -74,21 +66,15 @@ export default function FilterPanel({
       title: cat.display_name
     })),
     zone: zoneOptions,
-    quartile: ['Q1', 'Q2', 'Q3', 'Q4'].map(q => ({
-      value: q,
-      label: q
-    })),
-    year: yearOptions.map(year => ({
-      value: String(year),
-      label: String(year)
-    }))
+    quartile: [],
+    year: []
   };
   const selectedLabels = {
     area: selectedAreas[0] ? getAreaLabel(selectedAreas[0]) : '',
     category: selectedCategories[0] ? filterOptions.category.find(option => option.value === String(selectedCategories[0]))?.label || '' : '',
     zone: selectedZone ? zoneOptions.find(option => option.value === String(selectedZone))?.label || '' : '',
-    quartile: selectedQuartiles[0] || '',
-    year: selectedYear || ''
+    quartile: '',
+    year: ''
   };
   const filterConfigs = [{
     id: 'area',
@@ -111,7 +97,7 @@ export default function FilterPanel({
     onClear: () => onCategorySelect('all')
   }, {
     id: 'zone',
-    label: 'Zone',
+    label: 'Country',
     selectedLabel: selectedLabels.zone,
     options: filterOptions.zone,
     disabled: loading,
@@ -123,17 +109,15 @@ export default function FilterPanel({
     label: 'Quartile',
     selectedLabel: selectedLabels.quartile,
     options: filterOptions.quartile,
-    disabled: loading,
-    onSelect: onQuartileSelect,
-    onClear: () => onQuartileSelect('all')
+    disabled: true,
+    disabledReason: 'OpenAlex does not provide journal quartiles.'
   }, {
     id: 'year',
     label: 'Year',
     selectedLabel: selectedLabels.year,
     options: filterOptions.year,
-    disabled: loading,
-    onSelect: onYearSelect,
-    onClear: () => onYearSelect('all')
+    disabled: true,
+    disabledReason: 'OpenAlex does not provide ranking years.'
   }];
   const activeChips = filterConfigs.filter(config => config.selectedLabel).map(config => ({
     id: config.id,
@@ -149,12 +133,12 @@ export default function FilterPanel({
       onClear: () => onAccessSelect('all')
     });
   }
-  if (isOaDiamond) {
+  if (isInDoaj) {
     activeChips.push({
-      id: 'oa-diamond',
+      id: 'doaj',
       label: 'Access',
-      value: 'OA Diamond',
-      onClear: () => onOaDiamondToggle?.(false)
+      value: 'Indexed in DOAJ',
+      onClear: () => onDoajToggle?.(false)
     });
   }
   const getFilteredOptions = config => {
@@ -164,9 +148,9 @@ export default function FilterPanel({
   };
   const renderDropdown = config => {
     const filteredOptions = getFilteredOptions(config);
-    const activeValue = config.id === 'area' ? selectedAreas[0] : config.id === 'category' ? selectedCategories[0] : config.id === 'zone' ? selectedZone : config.id === 'quartile' ? selectedQuartiles[0] : selectedYear;
+    const activeValue = config.id === 'area' ? selectedAreas[0] : config.id === 'category' ? selectedCategories[0] : config.id === 'zone' ? selectedZone : '';
     return <Dropdown key={config.id} className="catalog-filter-dropdown" autoClose="outside">
-        <Dropdown.Toggle variant="light" id={`catalog-filter-${config.id}`} className={`catalog-filter-button ${config.selectedLabel ? 'is-active' : ''}`} disabled={config.disabled}>
+        <Dropdown.Toggle variant="light" id={`catalog-filter-${config.id}`} className={`catalog-filter-button ${config.selectedLabel ? 'is-active' : ''}`} disabled={config.disabled} title={config.disabledReason}>
           <span className="catalog-filter-button-label">{config.selectedLabel || config.label}</span>
           <Icon icon="lucide:chevron-down" width="15" />
         </Dropdown.Toggle>
@@ -227,9 +211,9 @@ export default function FilterPanel({
                 <span>Only Open Access Journals</span>
               </button>
 
-              <button type="button" onClick={() => onOaDiamondToggle && onOaDiamondToggle(!isOaDiamond)} className={`catalog-toggle-row ${isOaDiamond ? 'is-active' : ''}`}>
-                <Form.Check sx={{ margin: "0" }} type="switch" checked={isOaDiamond} readOnly  />
-                <span>Only OA Diamond</span>
+              <button type="button" onClick={() => onDoajToggle && onDoajToggle(!isInDoaj)} className={`catalog-toggle-row ${isInDoaj ? 'is-active' : ''}`}>
+                <Form.Check sx={{ margin: "0" }} type="switch" checked={isInDoaj} readOnly  />
+                <span>Only journals indexed in DOAJ</span>
               </button>
             </Dropdown.Menu>
           </Dropdown>

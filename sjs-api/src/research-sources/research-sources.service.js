@@ -1,16 +1,17 @@
-import { ScholarlySourceError } from './scholarly-source.errors.js';
 import { createCrossrefProvider } from './providers/crossref.provider.js';
 import { createOpenAlexProvider } from './providers/openalex.provider.js';
+import { ScholarlySourceError } from './scholarly-source.errors.js';
 
 export function createResearchSourceService({ env = {}, fetchImpl = globalThis.fetch } = {}) {
+  const openAlex = createOpenAlexProvider({
+    apiKey: env.OPENALEX_API_KEY,
+    baseUrl: env.OPENALEX_BASE_URL,
+    email: env.OPENALEX_EMAIL,
+    timeout: env.OPENALEX_TIMEOUT,
+    fetchImpl,
+  });
   const providers = new Map([
-    ['openalex', createOpenAlexProvider({
-      apiKey: env.OPENALEX_API_KEY,
-      baseUrl: env.OPENALEX_BASE_URL,
-      email: env.OPENALEX_EMAIL,
-      timeout: env.OPENALEX_TIMEOUT,
-      fetchImpl,
-    })],
+    ['openalex', openAlex],
     ['crossref', createCrossrefProvider({ mailto: env.CROSSREF_MAILTO, fetchImpl })],
   ]);
 
@@ -24,6 +25,18 @@ export function createResearchSourceService({ env = {}, fetchImpl = globalThis.f
         throw new ScholarlySourceError({ source, statusCode: 400, code: 'UNSUPPORTED_SOURCE', message: 'The requested scholarly data source is not supported.' });
       }
       return provider.searchWorks({ query: query.trim(), limit, cursor });
+    },
+    searchJournals(parameters) {
+      return openAlex.searchJournals(parameters);
+    },
+    listFields() {
+      return openAlex.listFields();
+    },
+    listSubfields(parameters) {
+      return openAlex.listSubfields(parameters);
+    },
+    listCountries() {
+      return openAlex.listCountries();
     },
   };
 }

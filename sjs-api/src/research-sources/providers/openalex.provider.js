@@ -3,6 +3,7 @@ import { asInteger, fetchJson, normalizeDoi } from './provider-http.js';
 
 const MAX_PER_PAGE = 100;
 const BASIC_PAGING_LIMIT = 10000;
+const OPENALEX_SOURCE_FIELDS = 'id,display_name,issn_l,issn,type,host_organization_name,country_code,is_oa,is_in_doaj,summary_stats,topics';
 
 function configurationError() {
   return new ScholarlySourceError({
@@ -13,11 +14,11 @@ function configurationError() {
   });
 }
 
-function worksUrl(baseUrl) {
+function entityUrl(baseUrl, entity) {
   try {
     const url = new URL(baseUrl);
     if (url.protocol !== 'https:') throw configurationError();
-    url.pathname = `${url.pathname.replace(/\/+$/, '')}/works`;
+    url.pathname = `${url.pathname.replace(/\/+$/, '')}/${entity}`;
     url.search = '';
     url.hash = '';
     return url;
@@ -26,10 +27,52 @@ function worksUrl(baseUrl) {
   }
 }
 
+function worksUrl(baseUrl) {
+  return entityUrl(baseUrl, 'works');
+}
+
 function timeoutMilliseconds(timeoutSeconds) {
   const seconds = Number(timeoutSeconds);
   if (!Number.isFinite(seconds) || seconds <= 0) throw configurationError();
   return Math.ceil(seconds * 1000);
+}
+
+function lastOpenAlexId(value) {
+  if (typeof value !== 'string') return '';
+  return value.split('/').filter(Boolean).pop() || '';
+}
+
+function normalizeJournalSource(source = {}) {
+  const id = lastOpenAlexId(source.id);
+  const topic = Array.isArray(source.topics) ? source.topics[0] : null;
+  const meanCitedness = source.summary_stats?.['2yr_mean_citedness'];
+
+  return {
+    id,
+    openalex_url: /^S\d+$/.test(id) ? `https://openalex.org/${id}` : '',
+    display_name: typeof source.display_name === 'string' ? source.display_name : '',
+    issn: source.issn_l || (Array.isArray(source.issn) ? source.issn[0] : '') || '',
+    type: typeof source.type === 'string' ? source.type : 'journal',
+    publisher_name: typeof source.host_organization_name === 'string' ? source.host_organization_name : '',
+    country_code: typeof source.country_code === 'string' ? source.country_code : '',
+    is_open_access: source.is_oa === true,
+    is_in_doaj: source.is_in_doaj === true,
+    metric_value: meanCitedness !== null && meanCitedness !== undefined && Number.isFinite(Number(meanCitedness)) ? Number(meanCitedness) : null,
+    metric_name: '2yr mean citedness',
+    metric_year: null,
+    quartile: '',
+    subject_area_name: typeof topic?.field?.display_name === 'string' ? topic.field.display_name : '',
+    subject_category_name: typeof topic?.subfield?.display_name === 'string' ? topic.subfield.display_name : '',
+  };
+}
+
+function normalizeTaxonomyItems(payload, idPrefix) {
+  const results = Array.isArray(payload?.results) ? payload.results : [];
+  return results.map((item) => {
+    const id = lastOpenAlexId(item?.id);
+    if (!new RegExp(`^${idPrefix}\\d+$`).test(id) || typeof item?.display_name !== 'string') return null;
+    return { id, display_name: item.display_name };
+  }).filter(Boolean);
 }
 
 function normalizeWork(work) {
@@ -54,6 +97,20 @@ function normalizeWork(work) {
 export function createOpenAlexProvider({ apiKey = '', baseUrl, email = '', timeout, fetchImpl = globalThis.fetch } = {}) {
   const normalizedApiKey = typeof apiKey === 'string' ? apiKey.trim() : '';
   const normalizedEmail = typeof email === 'string' ? email.trim() : '';
+
+  async function fetchEntityList(entity, { filter, search, sort, page = 1, limit = MAX_PER_PAGE, select } = {}) {
+    const url = entityUrl(baseUrl, entity);
+    url.searchParams.set('per_page', String(Math.min(limit, MAX_PER_PAGE)));
+    url.searchParams.set('page', String(page));
+    if (filter) url.searchParams.set('filter', filter);
+    if (search) url.searchParams.set('search', search);
+    if (sort) url.searchParams.set('sort', sort);
+    if (select) url.searchParams.set('select', select);
+    if (normalizedApiKey) url.searchParams.set('api_key', normalizedApiKey);
+    if (normalizedEmail) url.searchParams.set('mailto', normalizedEmail);
+    return fetchJson(url, 'openalex', fetchImpl, timeoutMilliseconds(timeout));
+  }
+
   return {
     async searchWorks({ query, limit, cursor }) {
       const url = worksUrl(baseUrl);
@@ -86,6 +143,70 @@ export function createOpenAlexProvider({ apiKey = '', baseUrl, email = '', timeo
         if (count !== null && (page + 1) * limit <= accessible) nextCursor = String(page + 1);
       }
       return { works: results.map(normalizeWork), nextCursor };
+    },
+
+    async searchJournals({ search, page = 1, limit = 10, sort = 'metric', fieldIds = [], subfieldIds = [], countryCode, isOpenAccess, isInDoaj } = {}) {
+      const filters = ['type:journal'];
+      if (fieldIds.length) filters.push(`topics.field.id:${fieldIds.join('|')}`);
+      if (subfieldIds.length) filters.push(`topics.subfield.id:${subfieldIds.join('|')}`);
+      if (countryCode) filters.push(`country_code:${countryCode}`);
+      if (typeof isOpenAccess === 'boolean') filters.push(`is_oa:${isOpenAccess}`);
+      if (typeof isInDoaj === 'boolean') filters.push(`is_in_doaj:${isInDoaj}`);
+
+      const payload = await fetchEntityList('sources', {
+        filter: filters.join(','),
+        search: typeof search === 'string' ? search.trim() : '',
+        sort: sort === 'name' ? 'display_name' : 'summary_stats.2yr_mean_citedness:desc',
+        page,
+        limit,
+        select: OPENALEX_SOURCE_FIELDS,
+      });
+      const results = Array.isArray(payload?.results) ? payload.results : [];
+      const count = asInteger(payload?.meta?.count);
+      return {
+        items: results.map(normalizeJournalSource),
+        pagination: { page, limit, total: Math.min(count ?? results.length, BASIC_PAGING_LIMIT) },
+        source: 'openalex',
+      };
+    },
+
+    async listFields() {
+      const payload = await fetchEntityList('fields', { page: 1, limit: 100, sort: 'display_name', select: 'id,display_name' });
+      return normalizeTaxonomyItems(payload, 'F').map(({ id, display_name }) => ({ subject_area_id: id, display_name }));
+    },
+
+    async listSubfields({ fieldId }) {
+      const payload = await fetchEntityList('subfields', {
+        filter: `field.id:${fieldId}`,
+        page: 1,
+        limit: 100,
+        sort: 'display_name',
+        select: 'id,display_name',
+      });
+      return normalizeTaxonomyItems(payload, 'S').map(({ id, display_name }) => ({
+        subject_category_id: id,
+        subject_area_id: fieldId,
+        display_name,
+      }));
+    },
+
+    async listCountries() {
+      const pageSize = 100;
+      const select = 'id,display_name,country_code';
+      const firstPage = await fetchEntityList('countries', { page: 1, limit: pageSize, sort: 'display_name', select });
+      const count = asInteger(firstPage?.meta?.count) ?? 0;
+      const pageCount = Math.min(Math.ceil(count / pageSize), 10);
+      const remainingPages = await Promise.all(Array.from({ length: Math.max(0, pageCount - 1) }, (_, index) => (
+        fetchEntityList('countries', { page: index + 2, limit: pageSize, sort: 'display_name', select })
+      )));
+      const countries = [firstPage, ...remainingPages]
+        .flatMap((payload) => Array.isArray(payload?.results) ? payload.results : [])
+        .map((country) => ({
+          zone_id: typeof country.country_code === 'string' ? country.country_code : lastOpenAlexId(country.id),
+          name: typeof country.display_name === 'string' ? country.display_name : '',
+        }))
+        .filter((country) => /^[A-Z]{2}$/.test(country.zone_id) && country.name);
+      return [...new Map(countries.map((country) => [country.zone_id, country])).values()];
     },
   };
 }
