@@ -5,6 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "emulator": "cd sjs-api && npx --yes --package firebase-tools firebase emulators:start --only auth,firestore --project sjs-be --config firebase.json",
+    "worker": "cd sjs-api && npm run dev",
     "build": "vite build",
     "preview": "vite preview --port $PORT --host",
     "lint": "eslint .",
