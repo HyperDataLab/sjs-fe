@@ -92,7 +92,7 @@
     "baiBaoNaoCoLuotTrichDanCaoNhat": "Bài báo nào có lượt trích dẫn cao nhất?",
     "xinChaoToiLaAiResearchAssistan": "Xin chào! Tôi là AI Research Assistant. Hãy hỏi tôi về bài báo, tạp chí, xếp hạng Q1-Q4 hoặc dữ liệu trong dự án của bạn.",
     "toiDaNhanPhanHoiNhungChuaCoNoi": "Tôi đã nhận phản hồi nhưng chưa có nội dung trả lời.",
-    "xinLoiToiChuaTheKetNoiToiApiCh": "Xin lỗi, tôi chưa thể kết nối tới API chatbot. Vui lòng kiểm tra backend tại http://localhost:3000/api/v1/chat hoặc cấu hình VITE_RAG_CHAT_URL.",
+    "xinLoiToiChuaTheKetNoiToiApiCh": "Tính năng trợ lý AI đang tạm dừng trong phiên bản hiện tại.",
     "key": "×",
     "bangDuLieu": "Bảng dữ liệu",
     "dong": "dòng",

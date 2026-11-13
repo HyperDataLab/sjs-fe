@@ -14,19 +14,15 @@ import Icon from '../../../shared/components/Icon.jsx';
 import Header from '../../landing/components/Header';
 
 // Auth
-import useAuth from '../../auth/hooks/useAuth';
 
 // API
-import { getArticleDetailApi, bookmarkArticleApi, getArticlesListApi } from '../api/articleApi';
-import { spendCoin } from '../../wallet/api/walletApi';
-import { useWalletStore } from '../../../app/store/walletStore';
+import { getArticleDetailApi, getArticlesListApi } from '../api/articleApi';
 
 // Subcomponents
 import ArticleDetailSkeleton from '../components/ArticleDetailSkeleton';
 import ArticleDetailEmpty from '../components/ArticleDetailEmpty';
 import ArticleDetailError from '../components/ArticleDetailError';
 import ErrorState from '../../../shared/components/ErrorState';
-import AuthRequiredModal from '../../../shared/components/AuthRequiredModal';
 import { toast } from '../../../shared/utils/toast';
 import { getDoiUrl, normalizeArticleDetail } from '../utils/articleFormatters';
 import { downloadArticleCsv } from '../utils/csvExport';
@@ -65,18 +61,11 @@ const ArticleDetailPane = ({
   onTitleClick
 }) => {
   const navigate = useNavigate();
-  const auth = useAuth();
-  const currentUser = auth?.user;
-  const { balance, setBalance } = useWalletStore();
   const [article, setArticle] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [isBookmarked, setIsBookmarked] = useState(false);
-  const [isBookmarkLoading, setIsBookmarkLoading] = useState(false);
-  const [showLoginModal, setShowLoginModal] = useState(false);
   const [showAllAuthors, setShowAllAuthors] = useState(false);
   const [showCitationsModal, setShowCitationsModal] = useState(false);
-  const [showPremiumModal, setShowPremiumModal] = useState(false);
   const [referencePage, setReferencePage] = useState(1);
   const referencesPerPage = 2;
   const fetchArticleForPane = useCallback(async () => {
@@ -98,9 +87,6 @@ const ArticleDetailPane = ({
           const parsedArticle = normalizeArticleDetail(apiData, articleId);
           setArticle(parsedArticle);
         }
-        const localBookmarkKey = `bookmark_${currentUser?.username || 'guest'}_${articleId}`;
-        const isLocallyBookmarked = localStorage.getItem(localBookmarkKey) === 'true';
-        setIsBookmarked(apiData.is_bookmarked || isLocallyBookmarked);
       } else {
         throw new Error(response.data?.message || t("article.khongTheTaiChiTietBaiBao"));
       }
@@ -120,7 +106,7 @@ const ArticleDetailPane = ({
     } finally {
       setIsLoading(false);
     }
-  }, [articleId, currentUser]);
+  }, [articleId]);
   useEffect(() => {
     fetchArticleForPane();
   }, [fetchArticleForPane]);
@@ -135,29 +121,6 @@ const ArticleDetailPane = ({
   const referenceTotalPages = Math.max(1, Math.ceil(references.length / referencesPerPage));
   const paginatedReferences = references.slice((referencePage - 1) * referencesPerPage, referencePage * referencesPerPage);
   const articleDoiUrl = getDoiUrl(article?.doi);
-  const handleBookmarkToggle = async () => {
-    if (!currentUser) {
-      setShowLoginModal(true);
-      return;
-    }
-    if (!article?.article_id) return;
-    setIsBookmarkLoading(true);
-    const localBookmarkKey = `bookmark_${currentUser.username}_${article.article_id}`;
-    const nextState = !isBookmarked;
-    try {
-      await bookmarkArticleApi(article.article_id);
-      setIsBookmarked(nextState);
-      localStorage.setItem(localBookmarkKey, String(nextState));
-      toast.success(nextState ? t("article.daThemBaiBaoVaoProject") : t("article.daXoaBaiBaoKhoiProject"));
-    } catch (err) {
-      console.warn('Bookmark API error, toggling state locally:', err);
-      setIsBookmarked(nextState);
-      localStorage.setItem(localBookmarkKey, String(nextState));
-      toast.warning(t("article.khongTheDongBoServerDaCapNhatT"));
-    } finally {
-      setIsBookmarkLoading(false);
-    }
-  };
   const handleShareArticle = async () => {
     const shareUrl = `${window.location.origin}/articles/${article.article_id}`;
     const shareData = {
@@ -177,30 +140,6 @@ const ArticleDetailPane = ({
       if (err?.name === 'AbortError') return;
       console.warn('Unable to share article:', err);
       toast.error(t("article.khongTheChiaSeBaiBaoLucNay"));
-    }
-  };
-  const handleConfirmPremiumDownload = async () => {
-    if (!currentUser) {
-      setShowPremiumModal(false);
-      setShowLoginModal(true);
-      return;
-    }
-    const currentCoins = balance ?? 0;
-    if (currentCoins < 2) {
-      toast.error(t("article.soDuCoinCuaBanKhongDuVuiLongNa"));
-      setShowPremiumModal(false);
-      return;
-    }
-    try {
-      await spendCoin(2, `Download Premium PDF for article ${article.article_id}`);
-      setBalance(currentCoins - 2);
-      toast.success(t("article.thanhToan2XuDeTaiPremium"));
-      downloadArticlePdf(article, { withWatermark: false });
-    } catch (err) {
-      console.error("Spend coin API error", err);
-      toast.error(err?.response?.data?.message || err.message || "Giao dịch thất bại, không thể tải Premium PDF.");
-    } finally {
-      setShowPremiumModal(false);
     }
   };
   if (isLoading) {
@@ -291,11 +230,6 @@ const ArticleDetailPane = ({
             <Dropdown.Item onClick={() => downloadArticlePdf(article, { withWatermark: true })}>
               <Icon sx={{ marginInlineEnd: "0.5rem" }} icon="lucide:file-text" width="14"  />
               {t("article.exportPdf")}
-            </Dropdown.Item>
-            <Dropdown.Divider />
-            <Dropdown.Item sx={{ display: "flex", alignItems: "center", paddingTop: "0.5rem", paddingBottom: "0.5rem", fontWeight: 500 }} onClick={() => setShowPremiumModal(true)} >
-              <Icon sx={{ marginInlineEnd: "0.5rem" }} icon="lucide:star" width="14"  style={{ color: 'var(--primary)' }} />
-              {t("article.premiumPdfCoin")}
             </Dropdown.Item>
           </Dropdown.Menu>
         </Dropdown>
@@ -396,37 +330,6 @@ const ArticleDetailPane = ({
         <Modal.Footer><Button variant="outline-secondary" onClick={() => setShowCitationsModal(false)} className="font-display">{t("article.dong")}</Button></Modal.Footer>
       </Modal>
 
-      <Modal show={showPremiumModal} onHide={() => setShowPremiumModal(false)} centered>
-        <Modal.Header closeButton>
-          <Modal.Title sx={{ fontWeight: 700, display: "flex", alignItems: "center" }} className="font-display text-main">
-            <Icon sx={{ marginInlineEnd: "0.5rem" }} icon="lucide:star"  style={{ color: 'var(--primary)' }} />
-            {t("article.taiPdfPremium")}
-          </Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <MuiBox component="p" sx={{ marginBottom: "1rem" }} className="text-muted-custom" style={{ lineHeight: 1.7 }}>
-            {t("article.banCoChacChanMuonDung2Xu")}
-          </MuiBox>
-          <MuiBox component="div" sx={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "0.5rem", paddingLeft: "1rem", paddingRight: "1rem" }} className="article-modal-stat-box" style={{ background: 'var(--bg-main)', borderRadius: '8px', border: '1px solid var(--border)' }}>
-            <MuiBox component="span" sx={{ fontWeight: 600, display: "flex", alignItems: "center" }} className="text-main">
-              <Icon sx={{ marginInlineEnd: "0.5rem" }} icon="lucide:file-text" className="text-muted-custom" /> {t("article.premiumPdf")}
-            </MuiBox>
-            <MuiBox component="span" sx={{ fontWeight: 700, display: "flex", alignItems: "center" }} className="font-display" style={{ fontSize: '1.25rem', color: 'var(--primary)' }}>
-              -2 <Icon sx={{ marginInlineStart: "0.25rem" }} icon="lucide:coins"  width="18" />
-            </MuiBox>
-          </MuiBox>
-        </Modal.Body>
-        <Modal.Footer sx={{ border: 0 }} >
-          <Button sx={{ paddingLeft: "1rem", paddingRight: "1rem" }} variant="outline-secondary" onClick={() => setShowPremiumModal(false)} className="font-display">
-            {t("admin.huy")}
-          </Button>
-          <Button sx={{ fontWeight: 700, paddingLeft: "1rem", paddingRight: "1rem", display: "flex", alignItems: "center", color: "#fff", border: 0 }} onClick={handleConfirmPremiumDownload} className="font-display" style={{ backgroundColor: 'var(--primary)' }}>
-             Đồng ý
-          </Button>
-        </Modal.Footer>
-      </Modal>
-
-      <AuthRequiredModal show={showLoginModal} onHide={() => setShowLoginModal(false)} />
     </MuiBox>;
 };
 

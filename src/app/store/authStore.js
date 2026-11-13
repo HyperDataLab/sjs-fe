@@ -2,11 +2,16 @@ import { create } from 'zustand';
 
 function toPublicUser(user) {
   if (!user) return null;
+  const displayName = user.displayName || '';
+  const [firstName = '', ...lastNameParts] = displayName.split(/\s+/).filter(Boolean);
   return {
     uid: user.uid,
     id: user.uid,
     email: user.email || null,
-    displayName: user.displayName || null,
+    displayName: displayName || null,
+    first_name: firstName,
+    last_name: lastNameParts.join(' '),
+    url_image: user.photoURL || '',
     photoURL: user.photoURL || null,
     emailVerified: Boolean(user.emailVerified),
   };

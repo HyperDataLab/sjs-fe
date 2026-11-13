@@ -16,7 +16,6 @@ import Icon from "../../../shared/components/Icon";
 import useAuth from "../../auth/hooks/useAuth";
 import { useUserStore } from "../../../app/store/userStore";
 import ROUTES from "../../../app/routes/routePaths";
-import CoinBalanceBadge from "../../wallet/components/CoinBalanceBadge";
 import { getClassNameSx, stripMappedClassNames } from '../../../shared/theme/classNameSx';
 
 import MuiBox from '@mui/material/Box';
@@ -40,9 +39,6 @@ export default function Header() {
   };
   const { logout } = auth;
   const email = useUserStore((state) => state.email);
-  const userRole = auth.user?.role;
-  const accountManagementRoute =
-    userRole === "ADMINISTRATOR" ? ROUTES.ADMIN_USERS : ROUTES.PROFILE;
   const language = i18n.language || "vi";
   const currentLanguage =
     LANGUAGES.find((lang) => language.startsWith(lang.code)) || LANGUAGES[0];
@@ -264,7 +260,6 @@ export default function Header() {
               {/* User Authentication Display/Buttons */}
               {email ? (
                 <>
-                  <CoinBalanceBadge />
                   <Dropdown align="end">
                     <Dropdown.Toggle sx={{ border: 0, bgcolor: "transparent", display: "inline-flex", alignItems: "center", justifyContent: "center", padding: "0" }}
                       as="button"
@@ -298,26 +293,6 @@ export default function Header() {
                         </MuiBox>
                       </MuiBox>
                       <Dropdown.Item sx={{ display: "flex", alignItems: "center", gap: "0.5rem", paddingTop: "0.5rem", paddingBottom: "0.5rem" }}
-                        onClick={() => navigateWithLang(ROUTES.WALLET)}
-                        className="text-xs text-main"
-                      >
-                        <Icon
-                          icon="solar:wallet-bold"
-                          width="14"
-                          style={{
-                            color: "#ff7a33",
-                          }}
-                        />
-                        <span
-                          className="font-weight-bold"
-                          style={{
-                            color: "var(--text-main)",
-                          }}
-                        >
-                          {t("landing.viCuaToi")}
-                        </span>
-                      </Dropdown.Item>
-                      <Dropdown.Item sx={{ display: "flex", alignItems: "center", gap: "0.5rem", paddingTop: "0.5rem", paddingBottom: "0.5rem" }}
                         onClick={() => navigateWithLang(ROUTES.DASHBOARD)}
                         className="text-xs text-main"
                       >
@@ -329,7 +304,7 @@ export default function Header() {
                         <span>{t("landing.bangDieuKhien")}</span>
                       </Dropdown.Item>
                       <Dropdown.Item sx={{ display: "flex", alignItems: "center", gap: "0.5rem", paddingTop: "0.5rem", paddingBottom: "0.5rem" }}
-                        onClick={() => navigateWithLang(accountManagementRoute)}
+                        onClick={() => navigateWithLang(ROUTES.PROFILE)}
                         className="text-xs text-main"
                       >
                         <Icon
@@ -337,7 +312,7 @@ export default function Header() {
                           width="14"
                           className="text-muted-custom"
                         />
-                        <span>{t("landing.quanTriTaiKhoan")}</span>
+                        <span>{t("profile.hoSoCaNhan")}</span>
                       </Dropdown.Item>
                       <Dropdown.Item sx={{ display: "flex", alignItems: "center", gap: "0.5rem", paddingTop: "0.5rem", paddingBottom: "0.5rem", color: "error.main" }}
                         onClick={logout}
@@ -426,13 +401,13 @@ export default function Header() {
               tabIndex={0}
               onClick={() => {
                 setShowMobileMenu(false);
-                navigateWithLang(accountManagementRoute);
+                navigateWithLang(ROUTES.PROFILE);
               }}
               onKeyDown={(e) => {
                 if (e.key === "Enter" || e.key === " ") {
                   e.preventDefault();
                   setShowMobileMenu(false);
-                  navigateWithLang(accountManagementRoute);
+                  navigateWithLang(ROUTES.PROFILE);
                 }
               }}
               onMouseEnter={(e) =>
@@ -467,9 +442,6 @@ export default function Header() {
                 >
                   {email}
                 </MuiBox>
-              </MuiBox>
-              <MuiBox component="div" sx={{ flexShrink: 0 }} >
-                <CoinBalanceBadge />
               </MuiBox>
             </MuiBox>
           )}

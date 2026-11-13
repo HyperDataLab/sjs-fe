@@ -10,10 +10,9 @@ import {
   getCatalogVolumesApi,
   getCatalogIssuesApi,
   getJournalArticlesApi,
-  followJournalApi,
 } from '../api/journalApi';
 
-export function useJournalDetail(journalId, currentUser) {
+export function useJournalDetail(journalId) {
   // Page core states
   const [journal, setJournal] = useState(null);
   const [rankingHistory, setRankingHistory] = useState([]);
@@ -33,12 +32,6 @@ export function useJournalDetail(journalId, currentUser) {
   const [volumesError, setVolumesError] = useState(false);
   const [error, setError] = useState(null);
   const [notFound, setNotFound] = useState(false);
-
-  // Modal / Interaction states
-  const [showAuthModal, setShowAuthModal] = useState(false);
-  const [showProjectModal, setShowProjectModal] = useState(false);
-  const [isFollowing, setIsFollowing] = useState(false);
-  const [isAddingToProject, setIsAddingToProject] = useState(false);  
 
   // Fetch Core Journal Info
   const fetchJournalInfo = useCallback(async () => {
@@ -216,41 +209,6 @@ export function useJournalDetail(journalId, currentUser) {
     fetchIssuesForVolume(volumeId, nextPage);
   }, [fetchIssuesForVolume]);
 
-  // Actions
-  const handleFollow = useCallback(async () => {
-    if (!currentUser) {
-      setShowAuthModal(true);
-      return;
-    }
-
-    setIsFollowing(true);
-    try {
-      await followJournalApi(journalId);
-      setJournal(prev => {
-        if (!prev) return prev;
-        const wasFollowing = prev.is_following;
-        return { ...prev, is_following: !wasFollowing };
-      });
-    } catch (err) {
-      console.error('Follow API failed:', err);
-    } finally {
-      setIsFollowing(false);
-    }
-  }, [journalId, currentUser]);
-
-  const handleAddToProject = useCallback(async (projectId) => {
-    if (!currentUser) {
-      setShowAuthModal(true);
-      return;
-    }
-
-    if (projectId) {
-      setShowProjectModal(false);
-    } else {
-      setShowProjectModal(true);
-    }
-  }, [currentUser]);
-
   return {
     journal,
     rankingHistory,
@@ -269,14 +227,6 @@ export function useJournalDetail(journalId, currentUser) {
     volumesError,
     error,
     notFound,
-    showAuthModal,
-    setShowAuthModal,
-    showProjectModal,
-    setShowProjectModal,
-    isFollowing,
-    isAddingToProject,
-    handleFollow,
-    handleAddToProject,
     fetchIssuesForVolume,
     handleVolumePageChange,
     handleIssuePageChange

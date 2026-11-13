@@ -45,10 +45,6 @@ export const getArticleDetailApi = (id) => {
  * @param {number|string} id - ID bài báo
  * @returns {Promise} Axios promise
  */
-export const bookmarkArticleApi = (id) => {
-  return api.post(`/articles/${id}/bookmark`);
-};
-
 /**
  * Cập nhật thông tin bài báo khoa học theo ID
  * @param {number|string} id - ID bài báo

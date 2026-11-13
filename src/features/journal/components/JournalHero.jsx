@@ -4,20 +4,13 @@ import { useTranslation } from "react-i18next";
  *
  * File: features\journal\components\JournalHero.jsx
  */
-import { Row, Col, Button, Spinner } from '@/shared/components/ui/muiAdapters';
-import Icon from '../../../shared/components/Icon.jsx';
+import { Row, Col } from '@/shared/components/ui/muiAdapters';
 import { useNavigate } from 'react-router-dom';
-import PrimaryButton from '../../../shared/components/Button/PrimaryButton';
-import { getClassNameSx, stripMappedClassNames } from '../../../shared/theme/classNameSx';
 
 import MuiBox from '@mui/material/Box';
 
 export default function JournalHero({
   journal,
-  isFollowing,
-  isAddingToProject,
-  onFollow,
-  onAddToProject,
   loading
 }) {
   const {
@@ -94,7 +87,6 @@ export default function JournalHero({
     metric_year,
     latest_metrics,
     subject_categories = [],
-    is_following
   } = journal || {};
 
   const journalTitle = display_name || title || name || '';
@@ -143,18 +135,6 @@ export default function JournalHero({
               <span className="text-muted-custom">{t("journal.chuaCoDuLieuRanking")}</span>
             </MuiBox>}
 
-          <div className="journal-action-row">
-            <Button sx={getClassNameSx(`journal-outline-btn px-3 py-2 ${is_following ? 'is-active' : ''}`)} onClick={onFollow} disabled={isFollowing} className={stripMappedClassNames(`journal-outline-btn px-3 py-2 ${is_following ? 'is-active' : ''}`)}>
-              {isFollowing ? <Spinner animation="border" size="sm" /> : is_following ? <>
-                  <Icon icon="lucide:check" width="16" />{t("journal.dangTheoDoi")}</> : <>
-                  <Icon icon="lucide:plus" width="16" />{t("catalog.theoDoi")}</>}
-            </Button>
-
-            <PrimaryButton sx={{ gap: "0.5rem", paddingLeft: "1rem", paddingRight: "1rem", paddingTop: "0.5rem", paddingBottom: "0.5rem" }} onClick={onAddToProject} disabled={isAddingToProject} >
-              {isAddingToProject ? <Spinner animation="border" size="sm" variant="light" /> : <>
-                  <Icon icon="lucide:folder-plus" width="16" />{t("journal.themVaoProject")}</>}
-            </PrimaryButton>
-          </div>
         </Col>
       </Row>
     </MuiBox>;

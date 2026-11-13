@@ -10,9 +10,12 @@ This repository contains the React/Vite frontend and the `sjs-api/` Cloudflare W
 - Firestore stores user-owned projects, compact analysis parameters/results, and a private SSO-sub-to-Firebase-UID mapping used to preserve existing project ownership.
 - Project CRUD must go directly from the frontend SDK to Firestore under `users/{uid}/projects/{projectId}`, protected by Firestore Security Rules. Do not route project CRUD through the Worker.
 - `sjs-api/` is the serverless backend. Use it for business logic, scholarly-source requests (OpenAlex, Crossref, and future providers), and analysis. Keep provider credentials in Cloudflare Worker secrets; never expose them to Vite or commit them.
+- All HTTP-backed research screens must target `VITE_WORKER_API_URL` through the shared API client or a dedicated Worker service; do not add a dependency on the former Node/Fastify API or `VITE_API_URL`.
+- The Worker serves active research reads and analysis from scholarly providers. Legacy admin editing, wallet/payment, journal-follow, project-collaboration, and RAG chatbot flows are retired from application routes; do not port them into the Worker unless product scope changes.
+- Article bookmarks are browser-local and keyed by Firebase UID. Do not add a bookmark API or persist bulk scholarly records in Firestore.
 - Do not persist bulk scholarly metadata in Firestore. Store project inputs and compact analysis summaries; keep the private SSO UID mapping limited to identity hashes and Firebase UIDs.
 - Development mock login must use the Firebase Auth Emulator so Firestore receives an emulator-authenticated `uid`. Never add a production mock-login bypass.
-- Legacy screens and API services may still use the old API. Migrate them only when the requested feature requires it; do not imply the whole frontend has already moved.
+- Project CRUD and analysis-summary persistence remain direct, owner-scoped Firestore SDK operations. Send Firebase ID tokens to authenticated Worker routes; public scholarly reads may omit authentication.
 
 ## Required engineering rules
 

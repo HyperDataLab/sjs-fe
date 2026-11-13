@@ -2,6 +2,7 @@ import { FirebaseCertificateError, verifyFirebaseIdToken } from './firebase-auth
 import { createFirebaseCustomTokenForSso } from './sso-auth.js';
 import { ScholarlySourceError } from './research-sources/scholarly-source.errors.js';
 import { createResearchSourceService } from './research-sources/research-sources.service.js';
+import { handleResearchApiRequest } from './research-api.js';
 
 const JSON_HEADERS = { 'Content-Type': 'application/json; charset=utf-8' };
 
@@ -203,6 +204,19 @@ async function handleRequest(request, env) {
       isOpenAccess,
       isInDoaj,
     }), 200, catalogCacheHeaders);
+  }
+
+  if (request.method === 'GET') {
+    const researchResponse = await handleResearchApiRequest(url, service);
+    if (researchResponse) {
+      return jsonResponse(
+        request,
+        env,
+        researchResponse.body,
+        researchResponse.status ?? 200,
+        { 'Cache-Control': 'public, max-age=120' },
+      );
+    }
   }
 
   if (url.pathname === '/api/v1/research/works' && request.method === 'GET') {

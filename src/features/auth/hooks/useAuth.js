@@ -13,7 +13,6 @@ import { useNavigate } from 'react-router-dom';
 import { auth, firebaseEmulatorsEnabled } from '../../../shared/services/firebase';
 import { useAuthStore } from '../../../app/store/authStore';
 import { useUserStore } from '../../../app/store/userStore';
-import { useWalletStore } from '../../../app/store/walletStore';
 
 function displayNameFrom(data = {}) {
   return data.displayName || [data.first_name, data.last_name].filter(Boolean).join(' ').trim() || undefined;
@@ -32,7 +31,6 @@ export default function useAuth() {
   const clearAuthState = useAuthStore((state) => state.logout);
   const setEmail = useUserStore((state) => state.setEmail);
   const clearEmail = useUserStore((state) => state.clearEmail);
-  const clearWallet = useWalletStore((state) => state.clearWallet);
 
   const login = useCallback(async (email, password) => {
     setLoading(true);
@@ -121,9 +119,8 @@ export default function useAuth() {
     await signOut(auth);
     clearAuthState();
     clearEmail();
-    clearWallet();
     navigate('/login', { replace: true });
-  }, [clearAuthState, clearEmail, clearWallet, navigate]);
+  }, [clearAuthState, clearEmail, navigate]);
 
   const fetchProfile = useCallback(async () => {
     const currentUser = auth.currentUser;
@@ -139,7 +136,9 @@ export default function useAuth() {
     const displayName = displayNameFrom(profileData);
     await updateFirebaseProfile(currentUser, {
       ...(displayName ? { displayName } : {}),
-      ...(profileData.photoURL ? { photoURL: profileData.photoURL } : {}),
+      ...((profileData.photoURL || profileData.url_image)
+        ? { photoURL: profileData.photoURL || profileData.url_image }
+        : {}),
     });
     setAuthUser(currentUser);
     return currentUser;
@@ -151,9 +150,8 @@ export default function useAuth() {
     await deleteUser(currentUser);
     clearAuthState();
     clearEmail();
-    clearWallet();
     navigate('/register', { replace: true });
-  }, [clearAuthState, clearEmail, clearWallet, navigate]);
+  }, [clearAuthState, clearEmail, navigate]);
 
   return {
     user,

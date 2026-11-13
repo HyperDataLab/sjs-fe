@@ -12,9 +12,6 @@ import PrimaryButton from '../../../shared/components/Button/PrimaryButton';
 // Shared Layout Header
 import Header from '../../landing/components/Header';
 
-// Auth Hook
-import useAuth from '../../auth/hooks/useAuth';
-
 // Feature Components & Hooks
 import { useJournalDetail } from '../hooks/useJournalDetail';
 import JournalHero from '../components/JournalHero';
@@ -23,8 +20,6 @@ import JournalTabs from '../components/JournalTabs';
 import RankingTabContent from '../components/RankingTabContent';
 import VolumesTabContent from '../components/VolumesTabContent';
 import ArticlesTabContent from '../components/ArticlesTabContent';
-import AuthRequiredModal from '../../../shared/components/AuthRequiredModal';
-import AddToProjectModal from '../components/AddToProjectModal';
 
 
 import MuiBox from '@mui/material/Box';
@@ -37,8 +32,6 @@ export default function JournalDetailPage() {
     id
   } = useParams();
   const navigate = useNavigate();
-  const auth = useAuth();
-  const currentUser = auth?.user;
   const {
     journal,
     rankingHistory,
@@ -56,18 +49,10 @@ export default function JournalDetailPage() {
     loadingArticles,
     volumesError,
     notFound,
-    showAuthModal,
-    setShowAuthModal,
-    showProjectModal,
-    setShowProjectModal,
-    isFollowing,
-    isAddingToProject,
-    handleFollow,
-    handleAddToProject,
     fetchIssuesForVolume,
     handleVolumePageChange,
     handleIssuePageChange
-  } = useJournalDetail(id, currentUser);
+  } = useJournalDetail(id);
 
   // Fallback for not found or empty ID
   if (notFound) {
@@ -124,7 +109,7 @@ export default function JournalDetailPage() {
         </div>
 
         {/* Hero Section */}
-        <JournalHero journal={journal} isFollowing={isFollowing} isAddingToProject={isAddingToProject} onFollow={handleFollow} onAddToProject={() => handleAddToProject()} loading={loadingJournal} />
+        <JournalHero journal={journal} loading={loadingJournal} />
 
         {/* Grid Metadata metrics */}
         <JournalMetadataGrid journal={journal} loading={loadingJournal} />
@@ -142,10 +127,5 @@ export default function JournalDetailPage() {
         </div>
       </Container>
 
-      {/* Guest warning auth modal */}
-      <AuthRequiredModal show={showAuthModal} onHide={() => setShowAuthModal(false)} />
-
-      {/* Project selection modal */}
-      <AddToProjectModal show={showProjectModal} onHide={() => setShowProjectModal(false)} journalId={id} onConfirm={handleAddToProject} />
     </MuiBox>;
 }

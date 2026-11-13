@@ -8,7 +8,6 @@ import { BrowserRouter } from 'react-router-dom';
 import { onAuthStateChanged } from 'firebase/auth';
 import AppRoutes from './app/routes/AppRoutes';
 import AppToast from './shared/components/AppToast';
-import SessionExpiredModal from './shared/components/SessionExpiredModal';
 import { auth } from './shared/services/firebase';
 import { useAuthStore } from './app/store/authStore';
 
@@ -25,7 +24,6 @@ function App() {
     <>
       <AppToast />
       <BrowserRouter>
-        <SessionExpiredModal />
         <AppRoutes />
       </BrowserRouter>
     </>

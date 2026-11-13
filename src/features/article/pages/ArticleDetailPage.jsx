@@ -15,10 +15,9 @@ import Header from '../../landing/components/Header';
 
 // Auth
 import useAuth from '../../auth/hooks/useAuth';
-import { useWalletStore } from '../../../app/store/walletStore';
 
 // API
-import { getArticleDetailApi, bookmarkArticleApi, getArticlesListApi } from '../api/articleApi';
+import { getArticleDetailApi, getArticlesListApi } from '../api/articleApi';
 
 // Subcomponents
 import ArticleDetailSkeleton from '../components/ArticleDetailSkeleton';
@@ -78,15 +77,12 @@ export default function ArticleDetailPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
   const [isBookmarked, setIsBookmarked] = useState(false);
-  const [isBookmarkLoading, setIsBookmarkLoading] = useState(false);
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [activeTab, setActiveTab] = useState('preview');
   const [recommendedArticles, setRecommendedArticles] = useState([]);
   const [isRecommendedLoading, setIsRecommendedLoading] = useState(false);
   const [showAllAuthors, setShowAllAuthors] = useState(false);
   const [showCitationsModal, setShowCitationsModal] = useState(false);
-  const [showPremiumModal, setShowPremiumModal] = useState(false);
-  const { balance, setBalance } = useWalletStore();
   const [referencePage, setReferencePage] = useState(1);
   const referencesPerPage = 2;
   const visibleAuthors = useMemo(() => {
@@ -134,7 +130,7 @@ export default function ArticleDetailPage() {
         const parsedArticle = normalizeArticleDetail(apiData, id);
         setArticle(parsedArticle);
         fetchRecommendedArticles(parsedArticle);
-        const localBookmarkKey = `bookmark_${currentUser?.username || 'guest'}_${id}`;
+        const localBookmarkKey = `bookmark_${currentUser?.uid || 'guest'}_${id}`;
         const isLocallyBookmarked = localStorage.getItem(localBookmarkKey) === 'true';
         setIsBookmarked(apiData.is_bookmarked || isLocallyBookmarked);
       } else {
@@ -150,43 +146,15 @@ export default function ArticleDetailPage() {
   useEffect(() => {
     fetchArticleDetail();
   }, [fetchArticleDetail]);
-  const handleBookmarkToggle = async () => {    if (!currentUser) {
+  const handleBookmarkToggle = () => {    if (!currentUser) {
       setShowLoginModal(true);
       return;
     }
-    setIsBookmarkLoading(true);
-    const localBookmarkKey = `bookmark_${currentUser.username}_${id}`;
+    const localBookmarkKey = `bookmark_${currentUser.uid}_${id}`;
     const nextState = !isBookmarked;
-    try {
-      await bookmarkArticleApi(id);
-      setIsBookmarked(nextState);
-      localStorage.setItem(localBookmarkKey, String(nextState));
-      toast.success(nextState ? t("article.daThemBaiBaoVaoProject") : t("article.daXoaBaiBaoKhoiProject"));
-    } catch (err) {
-      console.warn('Bookmark API error, toggling state locally:', err);
-      setIsBookmarked(nextState);
-      localStorage.setItem(localBookmarkKey, String(nextState));
-      toast.warning(t("article.khongTheDongBoServerDaCapNhatT"));
-    } finally {
-      setIsBookmarkLoading(false);
-    }
-  };
-  const handleConfirmPremiumDownload = async () => {
-    if (!currentUser) {
-      setShowPremiumModal(false);
-      setShowLoginModal(true);
-      return;
-    }
-    const currentCoins = balance ?? 0;
-    if (currentCoins < 2) {
-      toast.error(t("article.soDuCoinCuaBanKhongDuVuiLongNa"));
-      setShowPremiumModal(false);
-      return;
-    }
-    setBalance(currentCoins - 2);
-    setShowPremiumModal(false);
-    // eslint-disable-next-line no-undef
-    downloadArticlePdf(article, { withWatermark: false, premium: true });
+    setIsBookmarked(nextState);
+    localStorage.setItem(localBookmarkKey, String(nextState));
+    toast.success(nextState ? 'Saved in this browser.' : 'Removed from this browser.');
   };
   const handleDoiClick = () => {
     if (!articleDoiUrl) return;
@@ -314,9 +282,9 @@ export default function ArticleDetailPage() {
                       <Icon icon="lucide:quote" width="15" />
                       {t("article.citations")}: {article.semantic_citation_count ?? article.citations ?? 0}
                     </Button>
-                    <Button variant="link" disabled={isBookmarkLoading} onClick={handleBookmarkToggle} className={`article-detail-action-btn ${isBookmarked ? 'is-active' : ''}`}>
+                    <Button variant="link" onClick={handleBookmarkToggle} className={`article-detail-action-btn ${isBookmarked ? 'is-active' : ''}`}>
                       <Icon icon={isBookmarked ? 'lucide:bookmark-check' : 'lucide:bookmark-plus'} width="15" />
-                      Add to Project
+                      {isBookmarked ? 'Bookmarked' : 'Bookmark'}
                     </Button>
                     <Button variant="link" onClick={handleShareArticle} className="article-detail-action-btn">
                       <Icon icon="lucide:share-2" width="15" />
@@ -509,36 +477,6 @@ export default function ArticleDetailPage() {
         </Modal.Body>
         <Modal.Footer>
           <Button variant="outline-secondary" onClick={() => setShowCitationsModal(false)}>{t("article.dong")}</Button>
-        </Modal.Footer>
-      </Modal>
-
-      <Modal show={showPremiumModal} onHide={() => setShowPremiumModal(false)} centered>
-        <Modal.Header closeButton>
-          <Modal.Title sx={{ fontWeight: 700, display: "flex", alignItems: "center" }} className="font-display text-main">
-            <Icon sx={{ marginInlineEnd: "0.5rem" }} icon="lucide:star"  style={{ color: 'var(--primary)' }} />
-            {t("article.taiPdfPremium")}
-          </Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <MuiBox component="p" sx={{ marginBottom: "1rem" }} className="text-muted-custom" style={{ lineHeight: 1.7 }}>
-            {t("article.banCoChacChanMuonDung2Xu")}
-          </MuiBox>
-          <MuiBox component="div" sx={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "0.5rem", paddingLeft: "1rem", paddingRight: "1rem" }} className="article-modal-stat-box" style={{ background: 'var(--bg-main)', borderRadius: '8px', border: '1px solid var(--border)' }}>
-            <MuiBox component="span" sx={{ fontWeight: 600, display: "flex", alignItems: "center" }} className="text-main">
-              <Icon sx={{ marginInlineEnd: "0.5rem" }} icon="lucide:file-text" className="text-muted-custom" /> {t("article.premiumPdf")}
-            </MuiBox>
-            <MuiBox component="span" sx={{ fontWeight: 700, display: "flex", alignItems: "center" }} className="font-display" style={{ fontSize: '1.25rem', color: 'var(--primary)' }}>
-              -2 <Icon sx={{ marginInlineStart: "0.25rem" }} icon="lucide:coins"  width="18" />
-            </MuiBox>
-          </MuiBox>
-        </Modal.Body>
-        <Modal.Footer sx={{ border: 0 }} >
-          <Button sx={{ paddingLeft: "1rem", paddingRight: "1rem" }} variant="outline-secondary" onClick={() => setShowPremiumModal(false)} className="font-display">
-            {t("admin.huy")}
-          </Button>
-          <Button sx={{ fontWeight: 700, paddingLeft: "1rem", paddingRight: "1rem", display: "flex", alignItems: "center", color: "#fff", border: 0 }} onClick={handleConfirmPremiumDownload} className="font-display" style={{ backgroundColor: 'var(--primary)' }}>
-             {t("article.dongY")}
-          </Button>
         </Modal.Footer>
       </Modal>
 

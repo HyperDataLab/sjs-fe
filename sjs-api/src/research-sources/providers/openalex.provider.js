@@ -3,6 +3,18 @@ import { asInteger, fetchJson, normalizeDoi } from './provider-http.js';
 
 const MAX_PER_PAGE = 100;
 const BASIC_PAGING_LIMIT = 10000;
+const SEARCHABLE_ENTITIES = new Set([
+  'authors',
+  'countries',
+  'fields',
+  'institutions',
+  'keywords',
+  'publishers',
+  'sources',
+  'subfields',
+  'topics',
+  'works',
+]);
 const OPENALEX_SOURCE_FIELDS = 'id,display_name,issn_l,issn,type,host_organization_name,country_code,is_oa,is_in_doaj,summary_stats,topics';
 
 function configurationError() {
@@ -98,13 +110,22 @@ export function createOpenAlexProvider({ apiKey = '', baseUrl, email = '', timeo
   const normalizedApiKey = typeof apiKey === 'string' ? apiKey.trim() : '';
   const normalizedEmail = typeof email === 'string' ? email.trim() : '';
 
-  async function fetchEntityList(entity, { filter, search, sort, page = 1, limit = MAX_PER_PAGE, select } = {}) {
+  async function fetchEntityList(entity, {
+    filter,
+    search,
+    sort,
+    groupBy,
+    page = 1,
+    limit = MAX_PER_PAGE,
+    select,
+  } = {}) {
     const url = entityUrl(baseUrl, entity);
     url.searchParams.set('per_page', String(Math.min(limit, MAX_PER_PAGE)));
-    url.searchParams.set('page', String(page));
+    if (!groupBy) url.searchParams.set('page', String(page));
     if (filter) url.searchParams.set('filter', filter);
     if (search) url.searchParams.set('search', search);
     if (sort) url.searchParams.set('sort', sort);
+    if (groupBy) url.searchParams.set('group_by', groupBy);
     if (select) url.searchParams.set('select', select);
     if (normalizedApiKey) url.searchParams.set('api_key', normalizedApiKey);
     if (normalizedEmail) url.searchParams.set('mailto', normalizedEmail);
@@ -112,6 +133,48 @@ export function createOpenAlexProvider({ apiKey = '', baseUrl, email = '', timeo
   }
 
   return {
+    async listEntity(entity, options = {}) {
+      if (!SEARCHABLE_ENTITIES.has(entity)) {
+        throw new ScholarlySourceError({
+          source: 'openalex',
+          statusCode: 400,
+          code: 'UNSUPPORTED_ENTITY',
+          message: 'The requested OpenAlex entity is not supported.',
+        });
+      }
+      return fetchEntityList(entity, options);
+    },
+
+    async getEntity(entity, id, { select } = {}) {
+      if (!SEARCHABLE_ENTITIES.has(entity) || typeof id !== 'string' || !id.trim()) {
+        throw new ScholarlySourceError({
+          source: 'openalex',
+          statusCode: 400,
+          code: 'INVALID_ENTITY_ID',
+          message: 'The requested OpenAlex entity ID is invalid.',
+        });
+      }
+      const url = entityUrl(baseUrl, entity);
+      url.pathname = `${url.pathname.replace(/\/+$/, '')}/${encodeURIComponent(id.trim())}`;
+      if (select) url.searchParams.set('select', select);
+      if (normalizedApiKey) url.searchParams.set('api_key', normalizedApiKey);
+      if (normalizedEmail) url.searchParams.set('mailto', normalizedEmail);
+      return fetchJson(url, 'openalex', fetchImpl, timeoutMilliseconds(timeout));
+    },
+
+    async groupWorks({ filter, groupBy, limit = 100 } = {}) {
+      const payload = await fetchEntityList('works', {
+        filter,
+        groupBy,
+        page: 1,
+        limit: Math.min(limit, MAX_PER_PAGE),
+      });
+      return {
+        groups: Array.isArray(payload?.group_by) ? payload.group_by : [],
+        count: asInteger(payload?.meta?.count) ?? 0,
+      };
+    },
+
     async searchWorks({ query, limit, cursor }) {
       const url = worksUrl(baseUrl);
       const timeoutMs = timeoutMilliseconds(timeout);

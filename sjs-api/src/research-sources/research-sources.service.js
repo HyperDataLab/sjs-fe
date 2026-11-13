@@ -19,6 +19,15 @@ export function createResearchSourceService({ env = {}, fetchImpl = globalThis.f
     supports(source) {
       return providers.has(source);
     },
+    listEntity(entity, options) {
+      return openAlex.listEntity(entity, options);
+    },
+    getEntity(entity, id, options) {
+      return openAlex.getEntity(entity, id, options);
+    },
+    groupWorks(options) {
+      return openAlex.groupWorks(options);
+    },
     async searchWorks({ source, query, limit = 25, cursor }) {
       const provider = providers.get(source);
       if (!provider) {

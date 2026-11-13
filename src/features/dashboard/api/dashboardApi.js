@@ -4,19 +4,22 @@
  * File: features\dashboard\api\dashboardApi.js
  */
 import api from '../../../shared/services/api';
+import { getProjectsApi, getProjectByIdApi } from '../../project/api/project.api';
 
 /**
  * Get list of user projects (stat cards & recent projects)
  * BE: GET /api/v1/projects  [requireAuth]
  */
-export const getDashboardProjectsApi = () => api.get('/projects');
+export const getDashboardProjectsApi = async () => ({ data: await getProjectsApi() });
 
 /**
  * Get project analytics / publication trend (Deprecated, use getPublicationTrendsApi instead for dashboard)
  * BE: GET /api/v1/projects/:id/analytics  [requireAuth]
  */
-export const getProjectAnalyticsApi = (projectId) =>
-  api.get(`/projects/${projectId}/analytics`);
+export const getProjectAnalyticsApi = async (projectId) => {
+  const project = await getProjectByIdApi(projectId);
+  return { data: { data: project.analysisSummary?.result ?? null } };
+};
 
 /**
  * Get overall or project-specific publication trends
@@ -31,7 +34,7 @@ export const getPublicationTrendsApi = (params = {}) =>
  * (via keyword route mounted under /projects)
  */
 export const getTrendingKeywordsApi = (projectId, limit = 12) =>
-  api.get(`/projects/${projectId}/keywords/trending`, { params: { limit } });
+  api.get('/keywords', { params: { limit, projectId } });
 
 /**
  * Get overall trending keywords for dashboard
@@ -52,4 +55,4 @@ export const getTopAuthorsApi = (limit = 5) =>
  * BE: GET /api/v1/projects/:id/related-articles  [requireAuth]
  */
 export const getRelatedArticlesApi = (projectId, limit = 5) =>
-  api.get(`/projects/${projectId}/related-articles`, { params: { limit } });
+  api.get('/articles', { params: { limit, projectId } });

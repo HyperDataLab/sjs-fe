@@ -11,17 +11,8 @@ import DashboardPage from '../../features/dashboard/pages/DashboardPage';
 import SsoLoginPage from '../../features/auth/pages/SsoLoginPage';
 import SsoCallbackPage from '../../features/auth/pages/SsoCallbackPage';
 import ProfilePage from '../../features/profile/pages/ProfilePage';
-import VerifyEmailPage from '../../features/auth/pages/VerifyEmailPage';
-import WalletLayout from '../../features/wallet/components/WalletLayout';
-import MyWalletPage from '../../features/wallet/pages/MyWalletPage';
-import TopUpPage from '../../features/wallet/pages/TopUpPage';
-import TransactionHistoryPage from '../../features/wallet/pages/TransactionHistoryPage';
-import WalletCheckoutPage from '../../features/wallet/pages/WalletCheckoutPage';
-import PaymentResultPage from '../../features/wallet/pages/PaymentResultPage';
-import ROUTES from './routePaths';
 
 import ProtectedRoute from './ProtectedRoute';
-import AdminRoute from './AdminRoute';
 import PublicRoute from './PublicRoute';
 import AuthLayoutWithUser from '../layouts/AuthLayoutWithUser';
 import LangLayout from '../layouts/LangLayout';
@@ -31,13 +22,6 @@ import ProjectListPage from '../../features/project/pages/ProjectListPage';
 import CreateProjectPage from '../../features/project/pages/CreateProjectPage';
 import ProjectEditPage from '../../features/project/pages/ProjectEditPage';
 import ProjectDetailPage from '../../features/project/pages/ProjectSummaryPage';
-import AcceptInvitePage from '../../features/project/pages/AcceptInvitePage';
-
-import AdminLayout from '../layouts/AdminLayout';
-import UserDirectoryPage from '../../features/admin/pages/account/UserDirectoryPage';
-import AddNewAccountPage from '../../features/admin/pages/account/AddNewAccountPage';
-import UpdateUserAccountPage from '../../features/admin/pages/account/UpdateUserAccountPage';
-import SubmitArticlePage from '../../features/admin/pages/article-submission/SubmitArticlePage';
 
 import {
   KeywordListPage,
@@ -49,18 +33,11 @@ import AuthorDetailPage from '../../features/author/pages/AuthorDetailPage';
 import AuthorListPage from '../../features/author/pages/AuthorListPage';
 
 import TopicDetailPage from '../../features/topic/pages/TopicDetailPage';
-import AdminDashboardPage from '../../features/admin/pages/AdminDashboardPage';
-import UpdateArticlePage from '../../features/admin/pages/UpdateArticlePage';
-import ArticleRepositoryPage from '../../features/admin/pages/ArticleRepositoryPage';
 
 
 import GeographyPage from '../../features/zone/pages/GeographyPage';
 
 // --- ĐỒNG BỘ ĐƯỜNG DẪN IMPORT THEO CHUẨN CỦA NHÓM ---
-import JournalDirectoryPage from '../../features/admin/pages/JournalDirectoryPage';
-import RepositoryManagementPage from '../../features/admin/pages/RepositoryManagementPage';
-import EditJournalPage from '../../features/admin/pages/EditJournalPage';
-import VolumeArchivePage from '../../features/admin/pages/VolumeArchivePage';
 
 export default function AppRoutes() {
   return (
@@ -69,10 +46,6 @@ export default function AppRoutes() {
 
       {/* Root redirect to language-prefixed root */}
       <Route path="/" element={<LanguageRedirect />} />
-
-      {/* PayOS & VNPay redirect route on frontend */}
-      <Route path="/wallet/payment/result" element={<PaymentResultPage />} />
-      <Route path="/api/v1/payments/vnpay/return" element={<PaymentResultPage />} />
 
       {/* Language Prefixed Route Tree */}
       <Route path="/:lang" element={<LangLayout />}>
@@ -99,38 +72,11 @@ export default function AppRoutes() {
             <Route path="projects/create" element={<CreateProjectPage />} />
             <Route path="projects/:id/edit" element={<ProjectEditPage />} />
             <Route path="projects/:id" element={<ProjectDetailPage />} />
-            <Route path="project-invite/accept" element={<AcceptInvitePage />} />
-
-            <Route element={<WalletLayout />}>
-              <Route path={ROUTES.WALLET.substring(1)} element={<MyWalletPage />} />
-              <Route path={ROUTES.WALLET_TOP_UP.substring(1)} element={<TopUpPage />} />
-              <Route path={ROUTES.WALLET_TRANSACTIONS.substring(1)} element={<TransactionHistoryPage />} />
-            </Route>
-
             <Route
               path="authors/leaderboard"
               element={<AuthorLeaderboardPage />}
             />
 
-            {/* Admin layouts & pages (Quản trị viên) - thống nhất namespace /admin/... */}
-            <Route element={<AdminRoute />}>
-              <Route element={<AdminLayout />}>
-                <Route path="admin/dashboard" element={<AdminDashboardPage />} />
-                <Route path="admin/users" element={<UserDirectoryPage />} />
-                <Route path="admin/users/create" element={<AddNewAccountPage />} />
-                <Route path="admin/users/:id/edit" element={<UpdateUserAccountPage />} />
-
-                <Route path="admin/articles" element={<ArticleRepositoryPage />} />
-                <Route path="admin/articles/create" element={<SubmitArticlePage />} />
-                <Route path="admin/articles/:id" element={<UpdateArticlePage />} />
-
-                {/* Quản lý cấu trúc tạp chí dành cho Admin (Issue #76) */}
-                <Route path="admin/journals" element={<JournalDirectoryPage />} />
-                <Route path="admin/journals/repository" element={<RepositoryManagementPage />} />
-                <Route path="admin/journals/archive" element={<VolumeArchivePage />} />
-                <Route path="admin/journals/:id/edit" element={<EditJournalPage />} />
-              </Route>
-            </Route>
           </Route>
 
           {/* Public pages inside layout */}
@@ -145,10 +91,6 @@ export default function AppRoutes() {
           />
 
           <Route path="profile" element={<ProfilePage />} />
-          <Route path="wallet/checkout" element={<WalletCheckoutPage />} />
-          <Route path="wallet/payment/result" element={<PaymentResultPage />} />
-          <Route path="wallet/payment-result" element={<PaymentResultPage />} />
-          <Route path="verify-email" element={<VerifyEmailPage />} />
 
           <Route path="authors" element={<AuthorListPage />} />
           <Route path="authors/:id" element={<AuthorDetailPage />} />
@@ -170,17 +112,6 @@ export default function AppRoutes() {
         </Route>
 
         <Route path="topics/:topicId" element={<TopicDetailPage />} />
-
-        {/* TODO: route tạm để preview UI Admin không cần login.
-            Xóa route này khi vấn đề đăng nhập đã được xử lý xong. */}
-        <Route element={<AdminLayout />}>
-          <Route path="admin-preview" element={<AdminDashboardPage />} />
-          <Route path="admin-preview/articles/:id" element={<UpdateArticlePage />} />
-          <Route path="admin-preview/journals" element={<JournalDirectoryPage />} />
-          <Route path="admin-preview/journals/repository" element={<RepositoryManagementPage />} />
-          <Route path="admin-preview/journals/archive" element={<VolumeArchivePage />} />
-          <Route path="admin-preview/journals/:id/edit" element={<EditJournalPage />} />
-        </Route>
 
         {/* Fallback inside language to LandingPage */}
         <Route path="*" element={<LandingPage />} />
