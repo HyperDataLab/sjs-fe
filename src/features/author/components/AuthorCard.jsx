@@ -28,7 +28,7 @@ export default function AuthorCard({
   const articlesCount = author.article_count ?? author.papers ?? author.article_count ?? 0;
   const tags = Array.isArray(author.subject_areas) ? author.subject_areas : author.subject_area ? [author.subject_area] : [];
   const avatarUrl = author.url_image || author.avatar_url || '';
-  const avatarColor = author.avatar_color ?? '#FF7A33';
+  const avatarColor = author.avatar_color ?? 'var(--primary)';
   const formatLocalNumber = num => {
     if (num == null) return '0';
     return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');

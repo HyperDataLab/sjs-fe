@@ -10,7 +10,7 @@ const variantStyles = {
     '&:hover': {
       backgroundColor: 'primary.dark',
       borderColor: 'primary.dark',
-      boxShadow: '0 4px 18px rgba(255, 122, 51, 0.22)',
+      boxShadow: '0 4px 18px rgba(0, 113, 188, 0.22)',
     },
   },
   outline: {
@@ -22,7 +22,7 @@ const variantStyles = {
       backgroundColor: 'primary.light',
       borderColor: 'primary.main',
       color: 'primary.main',
-      boxShadow: '0 4px 18px rgba(255, 122, 51, 0.12)',
+      boxShadow: '0 4px 18px rgba(0, 113, 188, 0.12)',
     },
   },
   destructive: {

@@ -152,7 +152,7 @@ export const downloadArticlePdf = async (article, options = { withWatermark: tru
   // Footer (e.g., Exported from Scientific Journal System)
   doc.setFontSize(8);
   doc.setTextColor(150, 150, 150);
-  doc.text(`Exported from ResearchPulse on ${new Date().toLocaleDateString()}`, margin, doc.internal.pageSize.getHeight() - 10);
+  doc.text(`Exported from HyperData Lab · ResearchPulse on ${new Date().toLocaleDateString()}`, margin, doc.internal.pageSize.getHeight() - 10);
 
   // Trigger Download
   const safeTitle = (article.title || 'article').substring(0, 30).replace(/[^a-z0-9]/gi, '_').toLowerCase();

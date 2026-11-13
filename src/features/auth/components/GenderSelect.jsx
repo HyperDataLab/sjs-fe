@@ -39,14 +39,14 @@ export default function GenderSelect({
       color: selected ? 'var(--primary)' : 'var(--text-muted)',
       fontWeight: selected ? 600 : 500,
       fontSize: 14,
-      border: selected ? '1px solid rgba(255, 122, 51, 0.15)' : '1px solid transparent',
+      border: selected ? '1px solid rgba(0, 113, 188, 0.15)' : '1px solid transparent',
       opacity: disabled ? 0.6 : 1,
       transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)',
       '&:hover:not(.disabled):not(.selected)': {
-        backgroundColor: 'rgba(255, 122, 51, 0.05)',
+        backgroundColor: 'rgba(0, 113, 188, 0.05)',
         color: 'var(--primary)',
       },
-      '&.selected': { boxShadow: '0 2px 6px rgba(255, 122, 51, 0.12)' },
+      '&.selected': { boxShadow: '0 2px 6px rgba(0, 113, 188, 0.12)' },
     },
   ];
   return <Form.Group sx={{ marginBottom: "1rem" }} >

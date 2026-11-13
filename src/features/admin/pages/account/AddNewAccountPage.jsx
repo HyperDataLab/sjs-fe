@@ -132,7 +132,7 @@ export default function AddNewAccountPage() {
                 width: '32px',
                 height: '32px',
                 backgroundColor: '#ffedd5',
-                color: '#ea580c'
+                color: 'var(--primary)'
               }}>
                   <Icon icon="lucide:shield-check" width="16" />
                 </MuiBox>

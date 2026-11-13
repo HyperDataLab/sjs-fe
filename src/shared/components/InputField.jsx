@@ -51,7 +51,7 @@ export default function InputField({
           transition: 'all 0.2s ease-in-out',
           boxShadow: error
             ? '0 0 0 3px rgba(239, 68, 68, 0.12)'
-            : (isFocused ? '0 0 0 3px rgba(255, 122, 51, 0.15)' : '0 1px 2px rgba(0, 0, 0, 0.02)')
+            : (isFocused ? '0 0 0 3px rgba(0, 113, 188, 0.15)' : '0 1px 2px rgba(0, 0, 0, 0.02)')
         }}
       >
         {icon && (

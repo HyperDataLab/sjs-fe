@@ -19,7 +19,7 @@ const ActivationStatusCard = ({
     <div
       style={{
         backgroundColor: 'var(--bg-card, #ffffff)',
-        border: '1px solid var(--border, #E6E6E6)',
+        border: '1px solid var(--border, #dce4e9)',
         borderRadius: '16px',
         padding: '2.5rem 2rem',
         width: '100%',

@@ -1,4 +1,4 @@
-﻿import { useTranslation } from "react-i18next";
+import { useTranslation } from "react-i18next";
 /**
  * @file AuthorAreasBreakdown.jsx
  * @description Donut chart + ranked area list for the author research distribution.
@@ -9,7 +9,7 @@ import EmptyState from "../../../shared/components/EmptyState";
 
 
 
-const COLORS = ["#FF7A33", "#6366F1", "#0EA5E9", "#10B981", "#F59E0B", "#8B5CF6", "#EC4899"];
+const COLORS = ["var(--primary)", "#6366F1", "#0EA5E9", "#10B981", "#F59E0B", "#8B5CF6", "#EC4899"];
 
 export default function AuthorAreasBreakdown({ breakdown = [], loading = false, error = null }) {
   const { t } = useTranslation();

@@ -6,6 +6,7 @@ import { ThemeProvider } from '@mui/material/styles';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { PersistQueryClientProvider } from '@tanstack/react-query-persist-client';
+import './assets/fonts/manrope.css';
 import './shared/i18n/i18n';
 import App from './App.jsx';
 import theme from './shared/theme/theme.js';

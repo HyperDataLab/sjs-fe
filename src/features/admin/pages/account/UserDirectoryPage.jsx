@@ -141,7 +141,7 @@ export default function UserDirectoryPage() {
           <MuiBox component="p" sx={{ fontSize: "0.875em", marginBottom: "0" }} className="text-muted-custom" style={{
           maxWidth: '680px'
         }}>
-            Manage platform contributors, their access levels, and account status within the ResearchPulse ecosystem.
+            Manage platform contributors, their access levels, and account status within the HyperData Lab ResearchPulse ecosystem.
           </MuiBox>
         </div>
 
@@ -177,7 +177,7 @@ export default function UserDirectoryPage() {
         <Col sx={{ "@media (min-width:992px)": { gridColumn: "span 4" }, display: "flex", flexDirection: "column", gap: "1.5rem" }} xs={12} lg={3.5} >
           {/* Access Control Information box */}
           <Card sx={{ padding: "1.5rem", borderRadius: "0.75rem", border: 0, color: "#fff" }}  style={{
-          background: 'linear-gradient(135deg, #ff7a33 0%, #ea580c 100%)',
+          background: 'linear-gradient(135deg, var(--primary) 0%, var(--primary) 100%)',
           boxShadow: '0 4px 20px rgba(234, 88, 12, 0.15)'
         }}>
             <MuiBox component="div" sx={{ display: "flex", alignItems: "center", gap: "0.5rem" }} className="mb-2.5">

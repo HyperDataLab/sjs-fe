@@ -28,7 +28,7 @@ function StepItem({ number, title, description }) {
           background: 'var(--btn-dark)',
           fontWeight: 800,
           fontSize: '1.25rem',
-          boxShadow: '0 4px 16px rgba(7, 26, 28, 0.2)'
+          boxShadow: '0 4px 16px rgba(18, 35, 49, 0.2)'
         }}
       >
         {number}

@@ -125,7 +125,7 @@ export default function Sandbox() {
           style={{
             background:
               "linear-gradient(135deg, var(--primary-light) 0%, rgba(255, 255, 255, 0.5) 50%, var(--primary-light) 100%)",
-            boxShadow: "0 15px 45px rgba(255, 122, 51, 0.05)",
+            boxShadow: "0 15px 45px rgba(0, 113, 188, 0.05)",
           }}
         >
           {/* Card Body */}
@@ -357,7 +357,7 @@ export default function Sandbox() {
                                 "var(--primary-light)";
                             } else {
                               e.currentTarget.style.backgroundColor =
-                                "rgba(255, 122, 51, 0.05)";
+                                "rgba(0, 113, 188, 0.05)";
                             }
                           }}
                           onMouseLeave={(e) => {

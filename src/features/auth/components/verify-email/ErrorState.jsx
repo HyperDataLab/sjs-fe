@@ -25,13 +25,13 @@ const ErrorState = ({
       <MuiBox component="h4" sx={{ textAlign: "center", marginBottom: "0.5rem" }}  style={{
       fontFamily: "var(--font-display)",
       fontWeight: 600,
-      color: 'var(--text-main, #0D1B1C)'
+      color: 'var(--text-main, #122331)'
     }}>{t("auth.kichHoatTaiKhoanThatBai")}</MuiBox>
 
       {/* Message lỗi — từ BE hoặc default */}
       <MuiBox component="p" sx={{ textAlign: "center", marginBottom: "1.5rem" }}  style={{
       fontSize: '0.93rem',
-      color: 'var(--text-muted, #6B6B6B)',
+      color: 'var(--text-muted, #647381)',
       lineHeight: 1.6
     }}>
         {message || t("auth.lienKetKichHoatKhongHopLeHoacD")}

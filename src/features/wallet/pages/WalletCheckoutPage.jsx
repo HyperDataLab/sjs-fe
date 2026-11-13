@@ -15,13 +15,13 @@ const METHOD_UI = {
     name: 'PayOS (VietQR)',
     desc: t("wallet.thanhToanNhanhQuaCongPayos") || 'Quét mã VietQR thanh toán nhanh qua ứng dụng ngân hàng',
     icon: 'solar:qr-code-bold',
-    iconColor: '#0066cc'
+    iconColor: 'var(--primary)'
   },
   vnpay: {
     name: 'PayOS (VietQR)',
     desc: t("wallet.thanhToanNhanhQuaCongPayos") || 'Quét mã VietQR thanh toán nhanh qua ứng dụng ngân hàng',
     icon: 'solar:qr-code-bold',
-    iconColor: '#0066cc'
+    iconColor: 'var(--primary)'
   },
   momo: {
     name: 'MoMo',
@@ -130,7 +130,7 @@ export default function WalletCheckoutPage() {
         {loading ? <div className="checkout-state">
             <div>
               <MuiBox component="div" sx={{ display: "inline-block", width: "1rem", height: "1rem", verticalAlign: "-0.125em", border: "0.25em solid currentColor", borderRightColor: "transparent", borderRadius: "50%", animation: "spin .75s linear infinite", borderWidth: "0.2em" }}  role="status" style={{
-            color: '#ff7a33'
+            color: 'var(--primary)'
           }} />
               <div style={{
             marginTop: 12
@@ -189,7 +189,7 @@ export default function WalletCheckoutPage() {
                         <div className="checkout-method-desc">{methodMeta.desc}</div>
                       </div>
                     </div>
-                    <Icon icon="lucide:badge-check" width={20} color="#ff7a33" />
+                    <Icon icon="lucide:badge-check" width={20} color="var(--primary)" />
                   </MuiBox>
 
                   <div className="checkout-method-item" style={{

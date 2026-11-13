@@ -31,7 +31,7 @@ const PAYMENT_METHODS = [{
   key: 'payos',
   label: 'PayOS (VietQR)',
   icon: 'solar:qr-code-bold',
-  color: '#0066cc'
+  color: 'var(--primary)'
 }, {
   key: 'momo',
   label: 'MoMo',
@@ -43,8 +43,8 @@ const PAYMENT_METHODS = [{
 // Lợi ích khi dùng ResearchPulse Coins
 const BENEFITS = [{
   icon: 'lucide:file-text',
-  iconBg: 'rgba(255, 122, 51, 0.12)',
-  iconColor: '#ff7a33',
+  iconBg: 'rgba(0, 113, 188, 0.12)',
+  iconColor: 'var(--primary)',
   title: t("wallet.taiLieuPremium"),
   desc: t("wallet.truyCapHangNganBaoCaoNghienCuu")
 }, {
@@ -150,7 +150,7 @@ export default function TopUpPage() {
         <div className="topup-wallet-bar">
           <div className="topup-wallet-bar__left">
             <div className="topup-wallet-bar__icon">
-              <Icon icon="solar:wallet-bold" width={22} color="#ff7a33" />
+              <Icon icon="solar:wallet-bold" width={22} color="var(--primary)" />
             </div>
             <div>
               <div className="topup-wallet-bar__label">{t("wallet.soDuHienTai")}</div>
@@ -170,7 +170,7 @@ export default function TopUpPage() {
 
         {loadingPackages && <div className="topup-loading-area">
             <MuiBox component="div" sx={{ display: "inline-block", width: "1rem", height: "1rem", verticalAlign: "-0.125em", border: "0.25em solid currentColor", borderRightColor: "transparent", borderRadius: "50%", animation: "spin .75s linear infinite", borderWidth: "0.2em" }}  role="status" style={{
-          color: '#ff7a33'
+          color: 'var(--primary)'
         }} />
             <span>{t("wallet.dangTaiGoiCoin")}</span>
           </div>}
@@ -203,7 +203,7 @@ export default function TopUpPage() {
                   <div className="topup-pkg-card__top-row">
                     <div className="topup-pkg-card__icon-wrap">
                       <div className="topup-pkg-card__icon">
-                        <Icon icon="lucide:circle-dollar-sign" width={24} color="#ff7a33" />
+                        <Icon icon="lucide:circle-dollar-sign" width={24} color="var(--primary)" />
                       </div>
                     </div>
                     <div className="topup-pkg-card__meta">

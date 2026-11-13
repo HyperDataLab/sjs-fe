@@ -1,5 +1,6 @@
 import { NavLink, useLocation } from 'react-router-dom';
 import Icon from '../../../shared/components/Icon';
+import Logo from '@/shared/components/Logo';
 import ADMIN_MENU from '../constants/adminMenu';
 
 export default function AdminSidebar() {
@@ -19,10 +20,7 @@ export default function AdminSidebar() {
       {/* Logo / tên hệ thống - dùng font-display theo quy tắc DESIGN_SYSTEM */}
       <div>
         <div className="admin-sidebar__brand">
-          <span className="admin-sidebar__brand-icon">
-            <Icon icon="lucide:activity" />
-          </span>
-          <span>ResearchPulse</span>
+          <Logo size={28} fontSize="1.15rem" />
         </div>
 
         {/* Danh sách menu chính - map từ ADMIN_MENU để dễ thêm/sửa */}

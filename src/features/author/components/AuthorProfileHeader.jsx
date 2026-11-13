@@ -1,4 +1,4 @@
-﻿import { useState } from "react";
+import { useState } from "react";
 import { useTranslation } from "react-i18next";
 /**
  * @file AuthorProfileHeader.jsx
@@ -44,7 +44,7 @@ export default function AuthorProfileHeader({ author, loading = false }) {
   const orcid = author.orcid ?? "";
   const bio = author.bio ?? author.description ?? "";
   const homepage = author.homepage ?? author.homepage_url ?? "";
-  const avatarColor = author.avatar_color ?? "#FF7A33";
+  const avatarColor = author.avatar_color ?? "var(--primary)";
 
   const handleCopyOrcid = () => {
     if (!orcid) return;

@@ -1,20 +1,10 @@
-/**
- * File source thuộc hệ thống FE ResearchPulse.
- *
- * File: features\landing\components\Footer.jsx
- */
+import { Box, Container, Typography } from '@mui/material';
 import { useTranslation } from 'react-i18next';
-import { Container } from '@/shared/components/ui/muiAdapters';
-import Icon from '../../../shared/components/Icon';
-
-
-import MuiBox from '@mui/material/Box';
-
+import Logo from '../../../shared/components/Logo';
 
 export default function Footer() {
   const { t } = useTranslation();
   const currentYear = new Date().getFullYear();
-
   const links = [
     { labelKey: 'footerAbout', href: '#' },
     { labelKey: 'footerTerms', href: '#' },
@@ -23,63 +13,34 @@ export default function Footer() {
   ];
 
   return (
-    <MuiBox component="footer" sx={{ paddingTop: "1.5rem", paddingBottom: "1.5rem" }}
+    <Box component="footer" sx={{ py: 3, bgcolor: 'background.paper', borderTop: '1px solid', borderColor: 'divider' }}>
+      <Container maxWidth="xl">
+        <Box sx={{ display: 'flex', flexDirection: { xs: 'column', md: 'row' }, alignItems: { xs: 'center', md: 'flex-start' }, justifyContent: 'space-between', gap: 3 }}>
+          <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: { xs: 'center', md: 'flex-start' }, gap: 1 }}>
+            <Logo size={38} fontSize="1.2rem" />
+            <Typography variant="body2" color="text.secondary" sx={{ maxWidth: 320, textAlign: { xs: 'center', md: 'left' } }}>
+              {t('footerDesc')}
+            </Typography>
+          </Box>
 
-      style={{
-        backgroundColor: 'var(--bg-section)',
-        borderTop: '1px solid var(--border)'
-      }}
-    >
-      <Container>
-        <MuiBox component="div" sx={{ display: "flex", flexDirection: "column", "@media (min-width:768px)": { flexDirection: "row" }, alignItems: "center", justifyContent: "space-between", gap: "1.5rem" }} >
-          {/* Brand and Description */}
-          <MuiBox component="div" sx={{ display: "flex", alignItems: "center", gap: "1rem" }} >
-            <MuiBox component="div" sx={{ display: "flex", alignItems: "center", justifyContent: "center", borderRadius: "50%" }}
-
-              style={{
-                width: '40px',
-                height: '40px',
-                backgroundColor: 'var(--text-main)',
-                color: 'white'
-              }}
-            >
-              <Icon sx={{ fontSize: "1.25rem" }} icon="lucide:line-chart"  />
-            </MuiBox>
-            <div>
-              <div className="font-display text-main" style={{ fontWeight: 800, fontSize: '1.25rem' }}>
-                ResearchPulse
-              </div>
-              <div className="text-muted-custom" style={{ fontSize: '0.8rem', maxWidth: '300px' }}>
-                {t('footerDesc')}
-              </div>
-            </div>
-          </MuiBox>
-
-          {/* Navigation Links */}
-          <MuiBox component="nav" sx={{ display: "flex", flexWrap: "wrap", justifyContent: "center", gap: "1.5rem" }} >
+          <Box component="nav" aria-label={t('home')} sx={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: { xs: 1.5, sm: 2.5 } }}>
             {links.map((link) => (
-              <MuiBox component="a" sx={{ textDecoration: "none" }}
+              <Box
+                component="a"
                 key={link.labelKey}
                 href={link.href}
-                className="text-muted-custom"
-                style={{ fontSize: '0.85rem', transition: 'color 0.2s ease' }}
-                onMouseEnter={(e) => (e.currentTarget.style.color = 'var(--primary)')}
-                onMouseLeave={(e) => (e.currentTarget.style.color = 'var(--text-muted)')}
+                sx={{ color: 'text.secondary', textDecoration: 'none', fontSize: '0.875rem', transition: 'color 180ms ease', '&:hover': { color: 'primary.main' }, '&:focus-visible': { outline: '3px solid', outlineColor: 'primary.main', outlineOffset: 3 } }}
               >
                 {t(link.labelKey)}
-              </MuiBox>
+              </Box>
             ))}
-          </MuiBox>
-        </MuiBox>
+          </Box>
+        </Box>
 
-        {/* Copyright */}
-        <MuiBox component="div" sx={{ textAlign: "center", marginTop: "1.5rem", paddingTop: "1.5rem" }}
-          className="text-muted-custom"
-          style={{ borderTop: '1px solid var(--border)', fontSize: '0.75rem' }}
-        >
-          © {currentYear} ResearchPulse. {t('footerRights')}
-        </MuiBox>
+        <Typography component="p" variant="caption" color="text.secondary" sx={{ mt: 3, pt: 2, mb: 0, textAlign: 'center', borderTop: '1px solid', borderColor: 'divider' }}>
+          © {currentYear} HyperData Lab · ResearchPulse. {t('footerRights')}
+        </Typography>
       </Container>
-    </MuiBox>
+    </Box>
   );
 }

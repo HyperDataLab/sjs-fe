@@ -146,9 +146,9 @@ export default function UserAccountForm({
           <MuiBox component="div" sx={{ borderRadius: "0.75rem", display: "flex", alignItems: "center", justifyContent: "center", color: "#fff", fontWeight: 700, flexShrink: 0 }}  style={{
         width: '80px',
         height: '80px',
-        background: 'linear-gradient(135deg, #fb923c 0%, #ea580c 100%)',
+        background: 'var(--primary)',
         fontSize: '2rem',
-        boxShadow: '0 12px 24px rgba(234, 88, 12, 0.18)'
+        boxShadow: '0 12px 24px rgba(0, 113, 188, 0.14)'
       }} aria-label={`Avatar chữ cái đầu của ${displayName || email || t("admin.nguoiDung")}`}>
             {avatarInitial}
           </MuiBox>
@@ -164,11 +164,11 @@ export default function UserAccountForm({
       <div>
         <MuiBox component="h6" sx={{ fontWeight: 700, display: "flex", alignItems: "center", gap: "0.5rem", textTransform: "uppercase" }} className="mb-3.5 tracking-wider" style={{
         fontSize: '0.85rem',
-        color: '#ea580c',
+        color: 'var(--primary)',
         letterSpacing: '0.03em'
       }}>
           <Icon icon="lucide:user" width="16" style={{
-          color: '#ea580c'
+          color: 'var(--primary)'
         }} />{t("admin.thongTinCaNhan")}</MuiBox>
 
         <Row sx={{ gap: "1rem" }} >
@@ -230,11 +230,11 @@ export default function UserAccountForm({
       <MuiBox component="div" sx={{ paddingTop: "1rem", paddingBottom: "1rem", borderTop: "1px solid #dee2e6" }} >
         <MuiBox component="h6" sx={{ fontWeight: 700, display: "flex", alignItems: "center", gap: "0.5rem", textTransform: "uppercase" }} className="mb-3.5 tracking-wider" style={{
         fontSize: '0.85rem',
-        color: '#ea580c',
+        color: 'var(--primary)',
         letterSpacing: '0.03em'
       }}>
           <Icon icon="lucide:shield" width="16" style={{
-          color: '#ea580c'
+          color: 'var(--primary)'
         }} />{t("admin.vaiTroTrangThai")}</MuiBox>
 
         <Row sx={{ gap: "1rem", alignItems: "center" }} >
@@ -279,11 +279,11 @@ export default function UserAccountForm({
       <MuiBox component="div" sx={{ paddingTop: "1rem", paddingBottom: "1rem", borderTop: "1px solid #dee2e6" }} >
         <MuiBox component="h6" sx={{ fontWeight: 700, display: "flex", alignItems: "center", gap: "0.5rem", textTransform: "uppercase" }} className="mb-3.5 tracking-wider" style={{
         fontSize: '0.85rem',
-        color: '#ea580c',
+        color: 'var(--primary)',
         letterSpacing: '0.03em'
       }}>
           <Icon icon="lucide:lock" width="16" style={{
-          color: '#ea580c'
+          color: 'var(--primary)'
         }} />{t("admin.thongTinDangNhap")}</MuiBox>
 
         <Row sx={{ gap: "1rem" }} >

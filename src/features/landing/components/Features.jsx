@@ -121,7 +121,7 @@ export default function Features() {
           left: '10%',
           width: '300px',
           height: '300px',
-          backgroundColor: 'rgba(255, 122, 51, 0.03)',
+          backgroundColor: 'rgba(0, 113, 188, 0.03)',
           borderRadius: '50%',
           filter: 'blur(100px)'
         }}

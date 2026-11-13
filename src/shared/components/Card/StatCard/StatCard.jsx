@@ -64,7 +64,7 @@ export default function StatCard({
           transition: 'border-color 180ms ease, box-shadow 180ms ease',
           '&:hover': onClick ? {
             borderColor: 'primary.main',
-            boxShadow: '0 8px 24px rgba(255, 122, 51, 0.1)',
+            boxShadow: '0 8px 24px rgba(0, 113, 188, 0.1)',
           } : undefined,
           '&:focus-visible': onClick ? {
             outline: '3px solid',

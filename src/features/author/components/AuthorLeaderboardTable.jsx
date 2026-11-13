@@ -76,7 +76,7 @@ export default function AuthorLeaderboardTable({
           const articles = author.article_count ?? author.papers ?? author.works_count ?? 0;
           const citations = author.citation_count ?? author.citations ?? author.cited_by_count ?? 0;
           const rank = author.final_rank ?? idx + 1;
-          const avatarColor = author.avatar_color ?? (rank === 1 ? '#FF7A33' : rank === 2 ? '#6366F1' : rank === 3 ? '#0EA5E9' : '#071A1C');
+          const avatarColor = author.avatar_color ?? (rank === 1 ? 'var(--primary)' : rank === 2 ? '#6366F1' : rank === 3 ? '#0EA5E9' : '#122331');
           return <tr key={id ?? idx} onClick={() => handleAuthorClick(author)} className="author-leaderboard-row">
                   <MuiBox component="td" sx={{ textAlign: "center", paddingTop: "1rem", paddingBottom: "1rem" }} >
                     <MuiBox component="div" sx={{ display: "flex", justifyContent: "center" }} >

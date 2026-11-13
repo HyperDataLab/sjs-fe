@@ -40,7 +40,7 @@ export default function LoginRequiredModal({
         height: '64px',
         borderRadius: '50%',
         backgroundColor: 'var(--primary-light)',
-        border: '1px solid rgba(255, 122, 51, 0.2)'
+        border: '1px solid rgba(0, 113, 188, 0.2)'
       }}>
           <Icon sx={{ color: "primary.main" }} icon="lucide:lock"  width="30" />
         </MuiBox>

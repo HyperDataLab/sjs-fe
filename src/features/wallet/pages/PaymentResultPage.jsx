@@ -173,7 +173,7 @@ export default function PaymentResultPage() {
         ];
 
   return (
-    <Box component="main" sx={{ minHeight: '100vh', pt: '80px', color: 'text.primary', background: 'radial-gradient(circle at top, rgba(255, 122, 51, 0.055), transparent 34%), #f8fafc' }}>
+    <Box component="main" sx={{ minHeight: '100vh', pt: '80px', color: 'text.primary', background: 'radial-gradient(circle at top, rgba(0, 113, 188, 0.055), transparent 34%), #f8fafc' }}>
       <Header />
       <MotionBox initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.3 }} sx={{ maxWidth: 980, mx: 'auto', px: 2, py: { xs: 4, sm: 5, md: 7 } }}>
         <Stack alignItems="center" textAlign="center" spacing={2} sx={{ maxWidth: 620, mx: 'auto' }}>
@@ -219,7 +219,7 @@ export default function PaymentResultPage() {
                 variant={action.primary ? 'contained' : 'outlined'}
                 startIcon={<Icon icon={action.icon} width={16} />}
                 onClick={action.onClick}
-                sx={{ minHeight: 44, px: 2.5, borderRadius: 99, fontWeight: 800, ...(action.primary ? { boxShadow: '0 8px 18px rgba(255, 122, 51, 0.18)' } : {}) }}
+                sx={{ minHeight: 44, px: 2.5, borderRadius: 99, fontWeight: 800, ...(action.primary ? { boxShadow: '0 8px 18px rgba(0, 113, 188, 0.18)' } : {}) }}
               >
                 {action.label}
               </Button>

@@ -77,7 +77,7 @@ export default function AuthorDetailPage() {
           <MuiBox component="ol" sx={{ display: "flex", flexWrap: "wrap", padding: 0, marginBottom: "1rem", listStyle: "none" }} >
             <MuiBox component="li" sx={{ display: "flex", alignItems: "center", "&:not(:last-of-type)::after": { content: "\"/\"", px: "0.5rem", color: "text.secondary" } }} >
               <span className="ap-breadcrumb__link" onClick={() => navigate("/")}>
-                ResearchPulse
+                HyperData Lab
               </span>
             </MuiBox>
             <MuiBox component="li" sx={{ display: "flex", alignItems: "center", "&:not(:last-of-type)::after": { content: "\"/\"", px: "0.5rem", color: "text.secondary" } }} >

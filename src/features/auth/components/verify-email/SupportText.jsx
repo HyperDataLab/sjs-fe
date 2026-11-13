@@ -9,7 +9,7 @@ const SupportText = () => {
   } = useTranslation();
   return <MuiBox component="p" sx={{ textAlign: "center", marginTop: "1.5rem" }}  style={{
     fontSize: '0.85rem',
-    color: 'var(--text-muted, #6B6B6B)'
+    color: 'var(--text-muted, #647381)'
   }}>
       <span>{t("auth.canHoTro")}</span>{' '}
       <a href="mailto:support@researchpulse.io" className="transition-all" style={{

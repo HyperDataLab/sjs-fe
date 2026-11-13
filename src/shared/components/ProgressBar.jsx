@@ -11,7 +11,7 @@ const ProgressBar = ({ current, total }) => {
       style={{
         width: '100%',
         height: '6px',
-        backgroundColor: 'var(--bg-section, #ececec)',
+        backgroundColor: 'var(--bg-section, #f3f6f9)',
         borderRadius: '999px',
         overflow: 'hidden',
       }}
@@ -20,7 +20,7 @@ const ProgressBar = ({ current, total }) => {
         style={{
           width: `${percentage}%`,
           height: '100%',
-          backgroundColor: 'var(--primary, #FF7A33)',
+          backgroundColor: 'var(--primary, #0071bc)',
           borderRadius: '999px',
           // Animation mượt — chạy đúng 1 giây mỗi bước
           transition: 'width 1s linear',

@@ -220,7 +220,7 @@ export default function MyWalletPage() {
               <Icon icon="lucide:link-2" width={18} />{t("wallet.taiKhoanLienKet")}</div>
             <div className="my-wallet-account-list">
               <MuiBox component="div" className="my-wallet-account-item active">
-                <Icon icon="solar:qr-code-bold" width={22} color="#0066cc" />
+                <Icon icon="solar:qr-code-bold" width={22} color="var(--primary)" />
                 <div style={{
                 flex: 1
               }}>

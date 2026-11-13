@@ -1,4 +1,4 @@
-﻿import Icon from "../../../shared/components/Icon";
+import Icon from "../../../shared/components/Icon";
 
 /**
  * @file AuthorResearchAreas.jsx
@@ -10,7 +10,7 @@ export default function AuthorResearchAreas({ areas = [] }) {
 
   // Palette: primary orange, dark navy, slate gray, charcoal, muted amber, steel
   const PALETTE = [
-    "#FF7A33", // Orange accent
+    "var(--primary)", // Orange accent
     "#0F172A", // Dark navy
     "#475569", // Slate
     "#64748B", // Gray

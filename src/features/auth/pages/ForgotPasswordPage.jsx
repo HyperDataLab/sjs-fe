@@ -7,7 +7,7 @@ import AuthLayout from '../../../app/layouts/AuthLayout';
 import AuthBanner from '../components/AuthBanner';
 import ForgotPasswordForm from '../components/ForgotPasswordForm';
 import ForgotPasswordSuccess from '../components/ForgotPasswordSuccess';
-import Icon from '../../../shared/components/Icon';
+import Logo from '../../../shared/components/Logo';
 
 
 import MuiBox from '@mui/material/Box';
@@ -49,21 +49,7 @@ export default function ForgotPasswordPage() {
       {!isSubmitted ? <>
           {/* Logo on mobile only */}
           <MuiBox component="div" sx={{ display: "flex", "@media (min-width:768px)": { display: "none" }, alignItems: "center", gap: "0.5rem", marginBottom: "1.5rem" }} >
-            <MuiBox component="div" sx={{ display: "flex", alignItems: "center", justifyContent: "center" }}  style={{
-          width: '36px',
-          height: '36px',
-          borderRadius: '8px',
-          background: 'var(--btn-dark)',
-          boxShadow: '0 4px 10px rgba(7, 26, 28, 0.15)'
-        }}>
-              <Icon sx={{ color: "#fff" }} icon="lucide:activity" className="text-sm" />
-            </MuiBox>
-            <MuiBox component="span" sx={{ fontSize: "1.25rem", fontWeight: 700 }} className="font-display" style={{
-          letterSpacing: '0.03em',
-          color: 'var(--text-main)'
-        }}>
-              ResearchPulse
-            </MuiBox>
+            <Logo size={32} fontSize="1.125rem" />
           </MuiBox>
 
           <MuiBox component="div" sx={{ marginBottom: "1.5rem" }} >

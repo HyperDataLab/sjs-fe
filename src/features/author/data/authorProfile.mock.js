@@ -1,4 +1,4 @@
-﻿/**
+/**
  * @file authorProfile.mock.js
  * @description Frontend mock data for the Academic Researcher Profile UI prototype.
  *
@@ -19,7 +19,7 @@ export const MOCK_AUTHOR = {
   orcid: '0000-0002-5523-0380',
   homepage: 'https://wang.gatech.edu',
   location: 'Atlanta, Georgia, United States',
-  avatar_color: '#FF7A33',
+  avatar_color: 'var(--primary)',
   bio: 'Zhong Lin (ZL) Wang is the Hightower Chair in Materials Science and Engineering, Regents Professor, Engineering Distinguished Professor at Georgia Institute of Technology, and the Chief Scientist and Director of the Beijing Institute of Nanoenergy and Nanosystems, Chinese Academy of Sciences. His research has led to the development of piezoelectric nanogenerators, triboelectric nanogenerators, and self-powered nanosystems. He has been ranked the #1 most cited scientist in the world in Materials Science for multiple consecutive years.',
   research_focus: ['Nanotechnology', 'Nanoenergy', 'Sensors', 'Energy Harvesting'],
   subject_areas: [

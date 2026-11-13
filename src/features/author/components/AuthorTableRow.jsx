@@ -29,7 +29,7 @@ export default function AuthorTableRow({
   const hIndex = author.h_index ?? '—';
   const citations = author.citation_count ?? author.citations ?? 0;
   const articlesCount = author.article_count ?? author.papers ?? 0;
-  const avatarColor = author.avatar_color ?? '#FF7A33';
+  const avatarColor = author.avatar_color ?? 'var(--primary)';
   const formatLocalNumber = num => {
     if (num == null || isNaN(num)) return '0';
     return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');

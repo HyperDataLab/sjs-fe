@@ -18,7 +18,7 @@ const CountdownRedirect = ({
   return <MuiBox component="div" sx={{ marginBottom: "1.5rem" }} >
       <MuiBox component="p" sx={{ textAlign: "center", marginBottom: "0.5rem" }}  style={{
       fontSize: '0.875rem',
-      color: 'var(--text-muted, #6B6B6B)'
+      color: 'var(--text-muted, #647381)'
     }}>
         {t("common.tuDongChuyenDenTrangDangNhapSa")}
         <span style={{

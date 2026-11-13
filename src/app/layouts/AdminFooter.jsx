@@ -15,7 +15,7 @@ export default function AdminFooter() {
     >
       {/* Copyright branding */}
       <MuiBox component="div" sx={{ marginBottom: "0.5rem", "@media (min-width:768px)": { marginBottom: "0" } }} >
-        © {currentYear} ResearchPulse Admin. All rights reserved.
+        © {currentYear} HyperData Lab · ResearchPulse. All rights reserved.
       </MuiBox>
 
       {/* Useful helper links matching the mockup footer */}

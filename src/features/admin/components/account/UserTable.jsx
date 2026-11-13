@@ -76,7 +76,7 @@ export default function UserTable({
                   <MuiBox component="div" sx={{ borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, color: "#fff", fontWeight: 700 }}  style={{
                 width: '42px',
                 height: '42px',
-                background: 'linear-gradient(135deg, #fb923c 0%, #ea580c 100%)',
+                background: 'var(--primary)',
                 fontSize: '0.95rem',
                 boxShadow: '0 8px 18px rgba(234, 88, 12, 0.14)'
               }} aria-label={`Avatar chữ cái đầu của ${user.name || user.email || t("admin.nguoiDung")}`}>

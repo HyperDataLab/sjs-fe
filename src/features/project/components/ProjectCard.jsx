@@ -71,7 +71,7 @@ const ProjectCard = ({
 
             style={{
               width: '26px', height: '26px', fontSize: '10px',
-              backgroundColor: u.isOwner ? '#ff7a33' : '#6b7280',
+              backgroundColor: u.isOwner ? 'var(--primary)' : '#6b7280',
               marginLeft: idx > 0 ? '-8px' : '0',
               border: '2px solid white',
               zIndex: 10 - idx

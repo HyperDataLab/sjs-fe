@@ -13,6 +13,7 @@ import { Offcanvas } from '@/shared/components/ui/muiAdapters';
 import { Dropdown } from '@/shared/components/ui/muiAdapters';
 import { Button } from '@/shared/components/ui/muiAdapters';
 import Icon from "../../../shared/components/Icon";
+import Logo from "../../../shared/components/Logo";
 import useAuth from "../../auth/hooks/useAuth";
 import { useUserStore } from "../../../app/store/userStore";
 import ROUTES from "../../../app/routes/routePaths";
@@ -133,15 +134,13 @@ export default function Header() {
   };
   return (
     <>
-      <Navbar sx={{ paddingTop: "1rem", paddingBottom: "1rem" }}
+      <Navbar sx={{ minHeight: 76, paddingTop: 0, paddingBottom: 0 }}
         expand="md"
         fixed="top"
         className="transition-all duration-300 sticky-scrolled"
         style={{
           borderBottom: "1px solid var(--border)",
           background: "var(--bg-card)",
-          backdropFilter: "blur(12px)",
-          boxShadow: "0 4px 20px rgba(0, 0, 0, 0.05)",
         }}
       >
         <Container>
@@ -155,19 +154,7 @@ export default function Header() {
               cursor: "pointer",
             }}
           >
-            <MuiBox component="div" sx={{ display: "flex", alignItems: "center", justifyContent: "center", marginInlineEnd: "0.5rem" }}
-
-              style={{
-                width: "32px",
-                height: "32px",
-                borderRadius: "8px",
-                background: "var(--btn-dark)",
-                boxShadow: "0 0 10px rgba(7, 26, 28, 0.15)",
-              }}
-            >
-              <Icon sx={{ color: "#fff" }} icon="lucide:activity" className="text-sm" />
-            </MuiBox>
-            ResearchPulse
+            <Logo size={40} fontSize="1.25rem" />
           </Navbar.Brand>
 
           {/* Hamburger toggle for mobile */}
@@ -326,14 +313,14 @@ export default function Header() {
                 </>
               ) : (
                 <>
-                  <Button sx={{ borderRadius: "50rem", paddingLeft: "1rem", paddingRight: "1rem" }}
+                  <Button sx={{ borderRadius: 12, paddingLeft: "1rem", paddingRight: "1rem" }}
                     variant="outline-secondary"
                     className="text-xs"
                     onClick={handleAuthLogin}
                   >
                     {t("signIn")}
                   </Button>
-                  <Button sx={{ border: 0, color: "#fff", borderRadius: "50rem", paddingLeft: "1rem", paddingRight: "1rem" }}
+                  <Button sx={{ border: 0, color: "#fff", borderRadius: 12, paddingLeft: "1rem", paddingRight: "1rem" }}
                     className="btn-primary-glow text-xs"
                     onClick={handleAuthRegister}
                   >
@@ -371,18 +358,7 @@ export default function Header() {
               fontWeight: 800,
             }}
           >
-            <MuiBox component="div" sx={{ display: "flex", alignItems: "center", justifyContent: "center", marginInlineEnd: "0.5rem" }}
-
-              style={{
-                width: "28px",
-                height: "28px",
-                borderRadius: "6px",
-                background: "var(--btn-dark)",
-              }}
-            >
-              <Icon sx={{ color: "#fff" }} icon="lucide:activity" className="text-xs" />
-            </MuiBox>
-            ResearchPulse
+            <Logo size={32} fontSize="1.1rem" />
           </Offcanvas.Title>
         </Offcanvas.Header>
 
@@ -424,7 +400,7 @@ export default function Header() {
                   height: "36px",
                   borderRadius: "50%",
                   background: "var(--primary)",
-                  boxShadow: "0 0 6px rgba(255, 122, 51, 0.15)",
+                  boxShadow: "0 0 6px rgba(0, 113, 188, 0.15)",
                 }}
               >
                 <Icon icon="lucide:user" width="16" />
@@ -547,7 +523,7 @@ export default function Header() {
 
               {/* Mobile Auth options */}
               {email ? (
-                <Button sx={{ width: "100%", borderRadius: "50rem", paddingTop: "0.5rem", paddingBottom: "0.5rem" }}
+                <Button sx={{ width: "100%", borderRadius: 12, paddingTop: "0.5rem", paddingBottom: "0.5rem" }}
                   variant="danger"
                   className="text-xs font-bold"
                   onClick={() => {
@@ -561,7 +537,7 @@ export default function Header() {
                 </Button>
               ) : (
                 <MuiBox component="div" sx={{ display: "flex", flexDirection: "column", gap: "0.5rem" }} >
-                  <Button sx={{ width: "100%", borderRadius: "50rem" }}
+                  <Button sx={{ width: "100%", borderRadius: 12 }}
                     variant="outline-primary"
                     className="py-2.5 text-xs font-bold"
                     onClick={() => {
@@ -571,7 +547,7 @@ export default function Header() {
                   >
                     {t("signIn")}
                   </Button>
-                  <Button sx={{ width: "100%", borderRadius: "50rem", border: 0, color: "#fff" }}
+                  <Button sx={{ width: "100%", borderRadius: 12, border: 0, color: "#fff" }}
                     className="btn-primary-glow py-2.5 text-xs font-bold"
                     onClick={() => {
                       setShowMobileMenu(false);

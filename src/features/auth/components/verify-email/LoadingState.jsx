@@ -14,7 +14,7 @@ const LoadingState = () => {
   return <MuiBox component="div" sx={{ textAlign: "center", paddingTop: "1rem", paddingBottom: "1rem" }} >
       {/* Circular loading indicator styled through MUI sx. */}
       <MuiBox component="div" sx={{ display: "inline-block", width: "2rem", height: "2rem", verticalAlign: "-0.125em", border: "0.25em solid currentColor", borderRightColor: "transparent", borderRadius: "50%", animation: "spin .75s linear infinite", marginBottom: "1.5rem" }}  role="status" style={{
-      color: 'var(--primary, #FF7A33)',
+      color: 'var(--primary, #0071bc)',
       width: '3rem',
       height: '3rem'
     }}>
@@ -25,14 +25,14 @@ const LoadingState = () => {
       <h5 style={{
       fontFamily: "var(--font-display)",
       fontWeight: 600,
-      color: 'var(--text-main, #0D1B1C)',
+      color: 'var(--text-main, #122331)',
       marginBottom: '0.5rem'
     }}>{t("auth.dangXacThucTaiKhoan")}</h5>
 
       {/* Mô tả */}
       <p style={{
       fontSize: '0.9rem',
-      color: 'var(--text-muted, #6B6B6B)',
+      color: 'var(--text-muted, #647381)',
       marginBottom: 0
     }}>{t("auth.vuiLongChoTrongGiayLat")}</p>
     </MuiBox>;

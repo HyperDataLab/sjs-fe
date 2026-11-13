@@ -45,7 +45,7 @@ export default function CoinBalanceBadge({ className = '' }) {
         transition: 'background 0.2s ease, transform 0.1s ease',
       }}
       onMouseEnter={(e) => {
-        e.currentTarget.style.background = 'rgba(255, 122, 51, 0.08)';
+        e.currentTarget.style.background = 'rgba(0, 113, 188, 0.08)';
       }}
       onMouseLeave={(e) => {
         e.currentTarget.style.background = 'rgba(0, 0, 0, 0.04)';
@@ -57,13 +57,13 @@ export default function CoinBalanceBadge({ className = '' }) {
           width: '20px',
           height: '20px',
           borderRadius: '50%',
-          background: 'rgba(255, 122, 51, 0.1)',
+          background: 'rgba(0, 113, 188, 0.1)',
         }}
       >
         <Icon
           icon="solar:wallet-bold"
           width="12"
-          style={{ color: '#ff7a33' }}
+          style={{ color: 'var(--primary)' }}
         />
       </MuiBox>
       <span

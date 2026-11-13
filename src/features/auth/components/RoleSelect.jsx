@@ -74,9 +74,9 @@ export default function RoleSelect({
                   '&:hover:not(.disabled):not(.selected)': {
                     borderColor: 'primary.main',
                     transform: 'translateY(-2px)',
-                    boxShadow: '0 6px 16px rgba(255, 122, 51, 0.08)',
+                    boxShadow: '0 6px 16px rgba(0, 113, 188, 0.08)',
                   },
-                  '&.selected': { borderColor: 'primary.main', boxShadow: '0 0 0 3px rgba(255, 122, 51, 0.15)' },
+                  '&.selected': { borderColor: 'primary.main', boxShadow: '0 0 0 3px rgba(0, 113, 188, 0.15)' },
                   '&.selected .icon-container': { transform: 'scale(1.08)', color: 'primary.main' },
                 },
               ]} onClick={() => handleSelect(role.key)} className={stripMappedClassNames(`role-card-item ${isSelected ? 'selected' : ''} ${disabled ? 'disabled' : ''} w-100 p-3 rounded-3 text-center d-flex flex-column align-items-center justify-content-center gap-2 select-none`)}>

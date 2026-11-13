@@ -128,7 +128,7 @@ export const Button = forwardRef(function Button(
         : 'primary';
   const sxByVariant = {
     light: { color: 'text.primary', borderColor: 'divider', bgcolor: 'background.paper' },
-    dark: { bgcolor: '#071a1c', '&:hover': { bgcolor: '#10292b' } },
+    dark: { bgcolor: '#122331', '&:hover': { bgcolor: '#10292b' } },
     success: { bgcolor: '#2e7d32' },
     warning: { bgcolor: '#ed6c02' },
     info: { bgcolor: '#0288d1' },

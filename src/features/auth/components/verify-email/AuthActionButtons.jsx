@@ -21,7 +21,7 @@ const AuthActionButtons = ({
     return <MuiBox component="div" sx={{ display: "grid", gap: "0.5rem" }} >
         {/* Button chính — đi thẳng đến login không chờ countdown */}
         <MuiBox component="button" sx={{ display: "inline-flex", alignItems: "center", justifyContent: "center", px: "0.75rem", py: "0.375rem", border: "1px solid transparent", borderRadius: "0.375rem", fontSize: "1rem", fontWeight: 400, lineHeight: 1.5, cursor: "pointer", textDecoration: "none" }} onClick={onLogin}  style={{
-        backgroundColor: 'var(--primary, #FF7A33)',
+        backgroundColor: 'var(--primary, #0071bc)',
         color: '#fff',
         border: 'none',
         borderRadius: '8px',
@@ -32,7 +32,7 @@ const AuthActionButtons = ({
 
         {/* Link phụ — về trang chủ */}
         <MuiBox component="button" sx={{ display: "inline-flex", alignItems: "center", justifyContent: "center", px: "0.75rem", py: "0.375rem", border: 0, borderRadius: "0.375rem", fontSize: "1rem", fontWeight: 400, lineHeight: 1.5, cursor: "pointer", textDecoration: "underline", bgcolor: "transparent", color: "primary.main" }} onClick={onHome}  style={{
-        color: 'var(--text-muted, #6B6B6B)',
+        color: 'var(--text-muted, #647381)',
         textDecoration: 'none',
         fontSize: '0.9rem'
       }}>{t("auth.veTrangChu")}</MuiBox>
@@ -55,7 +55,7 @@ const AuthActionButtons = ({
 
         {/* Link phụ — về trang đăng nhập */}
         <MuiBox component="button" sx={{ display: "inline-flex", alignItems: "center", justifyContent: "center", px: "0.75rem", py: "0.375rem", border: 0, borderRadius: "0.375rem", fontSize: "1rem", fontWeight: 400, lineHeight: 1.5, cursor: "pointer", textDecoration: "underline", bgcolor: "transparent", color: "primary.main" }} onClick={onLogin}  style={{
-        color: 'var(--text-muted, #6B6B6B)',
+        color: 'var(--text-muted, #647381)',
         textDecoration: 'none',
         fontSize: '0.9rem'
       }}>{t("auth.veTrangDangNhap")}</MuiBox>
