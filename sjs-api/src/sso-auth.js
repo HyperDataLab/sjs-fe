@@ -14,7 +14,7 @@ function bridgeError(code, status = 503) {
 	return error;
 }
 
-function serviceAccountConfig(env) {
+export function serviceAccountConfig(env) {
 	const email = env.FIREBASE_SERVICE_ACCOUNT_EMAIL?.trim();
 	const privateKey = env.FIREBASE_SERVICE_ACCOUNT_PRIVATE_KEY?.replace(/\\n/g, '\n').trim();
 	if (!email || !privateKey || !env.FIREBASE_PROJECT_ID) {
@@ -23,7 +23,7 @@ function serviceAccountConfig(env) {
 	return { email, privateKey, projectId: env.FIREBASE_PROJECT_ID };
 }
 
-async function importServiceAccountKey(config) {
+export async function importServiceAccountKey(config) {
 	try {
 		return await importPKCS8(config.privateKey, 'RS256');
 	} catch {
@@ -31,7 +31,7 @@ async function importServiceAccountKey(config) {
 	}
 }
 
-async function createGoogleAccessToken(config, privateKey) {
+export async function createGoogleAccessToken(config, privateKey) {
 	const now = Math.floor(Date.now() / 1000);
 	const assertion = await new SignJWT({ scope: GOOGLE_SCOPES })
 		.setProtectedHeader({ alg: 'RS256', typ: 'JWT' })
@@ -114,6 +114,41 @@ function authApiUrl(projectId, action) {
 	return `https://identitytoolkit.googleapis.com/v1/projects/${encodeURIComponent(projectId)}/${action}`;
 }
 
+function parseCustomAttributes(value) {
+	if (typeof value !== 'string' || !value) return {};
+	try {
+		const parsed = JSON.parse(value);
+		return parsed && typeof parsed === 'object' && !Array.isArray(parsed) ? parsed : {};
+	} catch {
+		return {};
+	}
+}
+
+async function syncSsoRoleClaim(config, googleToken, uid, isAdmin) {
+	const user = await lookupFirebaseUser(config, googleToken, { localId: [uid] });
+	if (!user || user.disabled) throw bridgeError('firebase_user_disabled', 403);
+	const claims = parseCustomAttributes(user.customAttributes);
+	if (isAdmin) claims.role = 'ADMINISTRATOR';
+	else delete claims.role;
+	const customAttributes = JSON.stringify(claims);
+	if (customAttributes.length > 1000) throw bridgeError('firebase_custom_claims_too_large', 400);
+	if (customAttributes === JSON.stringify(parseCustomAttributes(user.customAttributes))) return;
+	let response;
+	try {
+		response = await fetch(authApiUrl(config.projectId, 'accounts:update'), {
+			method: 'POST',
+			headers: {
+				Authorization: `Bearer ${googleToken}`,
+				'Content-Type': 'application/json',
+			},
+			body: JSON.stringify({ localId: uid, customAttributes }),
+		});
+	} catch {
+		throw bridgeError('firebase_auth_admin_unavailable');
+	}
+	if (!response.ok) throw bridgeError('firebase_auth_admin_unavailable');
+}
+
 async function lookupFirebaseUser(config, googleToken, criteria) {
 	let response;
 	try {
@@ -174,8 +209,191 @@ async function hashSubject(subject) {
 	return btoa(binary).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/g, '');
 }
 
-function firestoreDocumentsUrl(projectId) {
+export function firestoreDocumentsUrl(projectId, emulatorHost) {
+	if (emulatorHost) {
+		const host = emulatorHost.includes('://') ? new URL(emulatorHost) : new URL(`http://${emulatorHost}`);
+		if (!['localhost', '127.0.0.1', '[::1]'].includes(host.hostname)) {
+			throw bridgeError('firebase_firestore_emulator_invalid');
+		}
+		return `${host.origin}/v1/projects/${encodeURIComponent(projectId)}/databases/(default)/documents`;
+	}
 	return `https://firestore.googleapis.com/v1/projects/${encodeURIComponent(projectId)}/databases/(default)/documents`;
+}
+
+async function readSsoUserProfile(config, googleToken, uid, env) {
+	let response;
+	try {
+		response = await fetch(`${firestoreDocumentsUrl(config.projectId, env.FIRESTORE_EMULATOR_HOST)}/users/${encodeURIComponent(uid)}`, {
+			headers: googleToken ? { Authorization: `Bearer ${googleToken}` } : {},
+		});
+	} catch {
+		throw bridgeError('firebase_user_profile_unavailable');
+	}
+	if (response.status === 404) return null;
+	if (!response.ok) throw bridgeError('firebase_user_profile_unavailable');
+	const document = await response.json().catch(() => null);
+	return Object.fromEntries(Object.entries(document?.fields ?? {}).map(([name, value]) => [name, decodeFirestoreValue(value)]));
+}
+
+function decodeFirestoreValue(value) {
+	if ('nullValue' in value) return null;
+	if ('booleanValue' in value) return value.booleanValue;
+	if ('integerValue' in value) return Number(value.integerValue);
+	if ('doubleValue' in value) return Number(value.doubleValue);
+	if ('stringValue' in value) return value.stringValue;
+	if ('timestampValue' in value) return value.timestampValue;
+	if ('arrayValue' in value) return (value.arrayValue.values ?? []).map(decodeFirestoreValue);
+	if ('mapValue' in value) return Object.fromEntries(Object.entries(value.mapValue.fields ?? {}).map(([key, item]) => [key, decodeFirestoreValue(item)]));
+	return null;
+}
+
+function encodeFirestoreValue(value) {
+	if (value === null || value === undefined) return { nullValue: 'NULL_VALUE' };
+	if (typeof value === 'boolean') return { booleanValue: value };
+	if (typeof value === 'number') return Number.isInteger(value) ? { integerValue: String(value) } : { doubleValue: value };
+	if (typeof value === 'string') return { stringValue: value };
+	if (Array.isArray(value)) return { arrayValue: { values: value.map(encodeFirestoreValue) } };
+	if (typeof value === 'object') return { mapValue: { fields: Object.fromEntries(Object.entries(value).map(([key, item]) => [key, encodeFirestoreValue(item)])) } };
+	return { nullValue: 'NULL_VALUE' };
+}
+
+async function hashEmail(email) {
+	const digest = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(email.trim().toLowerCase()));
+	let binary = '';
+	for (const byte of new Uint8Array(digest)) binary += String.fromCharCode(byte);
+	return btoa(binary).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/g, '');
+}
+
+async function readPendingSsoProfile(config, googleToken, uid, email, env) {
+	const pendingId = await hashEmail(email);
+	let response;
+	try {
+		response = await fetch(`${firestoreDocumentsUrl(config.projectId, env.FIRESTORE_EMULATOR_HOST)}/pendingSsoProfiles/${encodeURIComponent(pendingId)}`, {
+			headers: googleToken ? { Authorization: `Bearer ${googleToken}` } : {},
+		});
+	} catch {
+		throw bridgeError('firebase_user_profile_unavailable');
+	}
+	if (response.status === 404) return null;
+	if (!response.ok) throw bridgeError('firebase_user_profile_unavailable');
+	const document = await response.json().catch(() => null);
+	const profile = Object.fromEntries(Object.entries(document?.fields ?? {}).map(([name, value]) => [name, decodeFirestoreValue(value)]));
+	return { id: pendingId, uid, profile, updateTime: document?.updateTime };
+}
+
+async function adoptPendingSsoProfile(config, googleToken, uid, profile, env, pending) {
+	const now = new Date().toISOString();
+	const { pending_sso: _pendingSso, ...pendingFields } = pending.profile;
+	const fields = {
+		...pendingFields,
+		email: profile.email,
+		display_name: pending.profile.display_name || pending.profile.name || profile.name || '',
+		url_image: profile.photoUrl || pending.profile.url_image || '',
+		role: pending.profile.role || 'RESEARCHER',
+		status: pending.profile.status || 'ACTIVE',
+		type: 'SSO',
+		created_at: pending.profile.created_at || now,
+		updated_at: now,
+	};
+	const base = `projects/${encodeURIComponent(config.projectId)}/databases/(default)/documents`;
+	const userName = `${base}/users/${encodeURIComponent(uid)}`;
+	const pendingName = `${base}/pendingSsoProfiles/${encodeURIComponent(pending.id)}`;
+	let response;
+	try {
+		response = await fetch(`${firestoreDocumentsUrl(config.projectId, env.FIRESTORE_EMULATOR_HOST)}:commit`, {
+			method: 'POST',
+			headers: {
+				...(googleToken ? { Authorization: `Bearer ${googleToken}` } : {}),
+				'Content-Type': 'application/json',
+			},
+			body: JSON.stringify({
+				writes: [
+					{
+						update: { name: userName, fields: Object.fromEntries(Object.entries(fields).map(([name, value]) => [name, encodeFirestoreValue(value)])) },
+						currentDocument: { exists: false },
+					},
+					{
+						delete: pendingName,
+						currentDocument: pending.updateTime ? { updateTime: pending.updateTime } : { exists: true },
+					},
+				],
+			}),
+		});
+	} catch {
+		throw bridgeError('firebase_user_profile_unavailable');
+	}
+	if (response.ok) return fields;
+	if (response.status === 409 || response.status === 400 || response.status === 412) {
+		const racedProfile = await readSsoUserProfile(config, googleToken, uid, env);
+		if (racedProfile) return racedProfile;
+	}
+	throw bridgeError('firebase_user_profile_unavailable');
+}
+
+async function writeSsoUserProfile(config, googleToken, uid, profile, env, existingProfile) {
+	const now = new Date().toISOString();
+	const userFields = existingProfile
+		? { email: profile.email, display_name: profile.name ?? existingProfile.display_name ?? '', url_image: profile.photoUrl ?? existingProfile.url_image ?? '', updated_at: now }
+		: {
+			email: profile.email,
+			display_name: profile.name ?? '',
+			first_name: profile.name?.split(/\s+/).slice(0, -1).join(' ') ?? '',
+			last_name: profile.name?.split(/\s+/).slice(-1).join(' ') ?? '',
+			url_image: profile.photoUrl ?? '',
+			type: 'SSO',
+			role: 'RESEARCHER',
+			status: 'ACTIVE',
+			created_at: now,
+			updated_at: now,
+		};
+	const fields = Object.fromEntries(Object.entries(userFields).map(([name, value]) => [name, { stringValue: value }]));
+	let response;
+	try {
+		if (!existingProfile) {
+			const createUrl = new URL(`${firestoreDocumentsUrl(config.projectId, env.FIRESTORE_EMULATOR_HOST)}/users`);
+			createUrl.searchParams.set('documentId', uid);
+			response = await fetch(createUrl, {
+				method: 'POST',
+				headers: {
+					...(googleToken ? { Authorization: `Bearer ${googleToken}` } : {}),
+					'Content-Type': 'application/json',
+				},
+				body: JSON.stringify({ fields }),
+			});
+			if (response.status === 409) return readSsoUserProfile(config, googleToken, uid, env);
+		} else {
+			const patchUrl = new URL(`${firestoreDocumentsUrl(config.projectId, env.FIRESTORE_EMULATOR_HOST)}/users/${encodeURIComponent(uid)}`);
+			for (const field of Object.keys(userFields)) patchUrl.searchParams.append('updateMask.fieldPaths', field);
+			response = await fetch(patchUrl, {
+				method: 'PATCH',
+				headers: {
+					...(googleToken ? { Authorization: `Bearer ${googleToken}` } : {}),
+					'Content-Type': 'application/json',
+				},
+				body: JSON.stringify({ name: `projects/${encodeURIComponent(config.projectId)}/databases/(default)/documents/users/${encodeURIComponent(uid)}`, fields }),
+			});
+		}
+	} catch {
+		throw bridgeError('firebase_user_profile_unavailable');
+	}
+	if (!response.ok) throw bridgeError('firebase_user_profile_unavailable');
+	return { ...existingProfile, ...userFields };
+}
+
+async function ensureSsoUserProfile(config, googleToken, uid, profile, env) {
+	if (env.FIREBASE_AUTH_EMULATOR_HOST && !env.FIRESTORE_EMULATOR_HOST) {
+		throw bridgeError('firebase_firestore_emulator_not_configured');
+	}
+	let userProfile = await readSsoUserProfile(config, googleToken, uid, env);
+	if (!userProfile) {
+		const pending = await readPendingSsoProfile(config, googleToken, uid, profile.email, env);
+		userProfile = pending
+			? await adoptPendingSsoProfile(config, googleToken, uid, profile, env, pending)
+			: await writeSsoUserProfile(config, googleToken, uid, profile, env, null);
+	} else {
+		userProfile = await writeSsoUserProfile(config, googleToken, uid, profile, env, userProfile);
+	}
+	return userProfile;
 }
 
 async function readSsoMapping(config, googleToken, mappingId) {
@@ -249,9 +467,14 @@ export async function createFirebaseCustomTokenForSso(accessToken, env) {
 	const emulatorMode = Boolean(env.FIREBASE_AUTH_EMULATOR_HOST);
 	const googleToken = emulatorMode ? null : await createGoogleAccessToken(config, privateKey);
 	const uid = await resolveFirebaseUid(profile, config, googleToken, emulatorMode);
+	const userProfile = await ensureSsoUserProfile(config, googleToken, uid, profile, env);
+	const isActiveAdmin = userProfile.status === 'ACTIVE' && userProfile.role === 'ADMINISTRATOR';
+	if (!emulatorMode) await syncSsoRoleClaim(config, googleToken, uid, isActiveAdmin);
+	if (userProfile.status !== 'ACTIVE') throw bridgeError('user_account_not_active', 403);
 	const now = Math.floor(Date.now() / 1000);
 	return new SignJWT({
 		uid,
+		...(isActiveAdmin ? { role: 'ADMINISTRATOR' } : {}),
 	})
 		.setProtectedHeader({ alg: 'RS256', typ: 'JWT' })
 		.setIssuer(config.email)

@@ -1,5 +1,7 @@
+import { decodeJwt } from 'jose';
 import { FirebaseCertificateError, verifyFirebaseIdToken } from './firebase-auth.js';
 import { createFirebaseCustomTokenForSso } from './sso-auth.js';
+import { handleAdminApiRequest } from './admin-api.js';
 import { ScholarlySourceError } from './research-sources/scholarly-source.errors.js';
 import { createResearchSourceService } from './research-sources/research-sources.service.js';
 import { handleResearchApiRequest } from './research-api.js';
@@ -15,7 +17,7 @@ function corsHeaders(request, env) {
   const headers = new Headers({ Vary: 'Origin' });
   if (origin && allowedOrigins(env).has(origin)) {
     headers.set('Access-Control-Allow-Origin', origin);
-    headers.set('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+		headers.set('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
     headers.set('Access-Control-Allow-Headers', 'Authorization, Content-Type');
     if (request.method === 'OPTIONS') headers.set('Access-Control-Max-Age', '86400');
   }
@@ -37,7 +39,8 @@ function bearerToken(request) {
 async function verifyEmulatorIdToken(token, env) {
   let emulatorUrl;
   try {
-    emulatorUrl = new URL(env.FIREBASE_AUTH_EMULATOR_HOST);
+    const emulatorHost = env.FIREBASE_AUTH_EMULATOR_HOST;
+    emulatorUrl = new URL(emulatorHost.includes('://') ? emulatorHost : `http://${emulatorHost}`);
   } catch {
     throw new FirebaseCertificateError('Firebase Auth Emulator URL is invalid');
   }
@@ -61,7 +64,19 @@ async function verifyEmulatorIdToken(token, env) {
   const payload = await response.json();
   const user = payload?.users?.[0];
   if (typeof user?.localId !== 'string' || !user.localId) throw new Error('Invalid Firebase Auth Emulator token');
-  return { uid: user.localId, email: typeof user.email === 'string' ? user.email : undefined };
+	let verifiedClaims;
+	try {
+		verifiedClaims = decodeJwt(token);
+	} catch {
+		throw new Error('Invalid Firebase Auth Emulator token');
+	}
+	if (verifiedClaims.sub !== user.localId) throw new Error('Invalid Firebase Auth Emulator token');
+	return {
+		uid: user.localId,
+		email: typeof user.email === 'string' ? user.email : undefined,
+		// The Auth Emulator validated this token via accounts:lookup before its claims are read.
+		role: typeof verifiedClaims.role === 'string' ? verifiedClaims.role : undefined,
+	};
 }
 
 async function authenticate(request, env) {
@@ -162,6 +177,13 @@ async function handleRequest(request, env) {
       return jsonResponse(request, env, { error: code }, status);
     }
   }
+
+	if (url.pathname === '/api/v1/admin' || url.pathname.startsWith('/api/v1/admin/')) {
+		const auth = await authenticate(request, env);
+		if (auth.response) return auth.response;
+		if (auth.user.role !== 'ADMINISTRATOR') return jsonResponse(request, env, { success: false, error: 'forbidden', message: 'Administrator access is required.' }, 403);
+		return handleAdminApiRequest(request, env, auth.user, (corsRequest) => corsHeaders(corsRequest, env));
+	}
 
   const service = createResearchSourceService({ env });
   const catalogCacheHeaders = { 'Cache-Control': 'public, max-age=300' };

@@ -74,7 +74,7 @@ export default function AddNewAccountPage() {
         maxWidth: '750px',
         fontSize: '0.85rem',
         lineHeight: '1.5'
-      }}>{t("admin.vuiLongDienDayDuCacThongTinBen")}</MuiBox>
+      }}>Create a profile for a person who will sign in through HyperDataLab SSO. The profile is linked on their first sign-in; no separate password or sign-in method is created.</MuiBox>
       </MuiBox>
 
       <MuiBox component="div" sx={{ mx: "auto" }}  style={{
@@ -110,12 +110,12 @@ export default function AddNewAccountPage() {
                   <MuiBox component="h6" sx={{ fontWeight: 700 }} className="mb-1.5" style={{
                   fontSize: '0.85rem',
                   color: '#7f1d1d'
-                }}>{t("admin.thongBaoTuDong")}</MuiBox>
+                }}>SSO account required</MuiBox>
                   <MuiBox component="p" sx={{ fontSize: "0.875em", marginBottom: "0", lineHeight: 1.25 }}  style={{
                   fontSize: '0.78rem',
                   color: '#991b1b',
                   opacity: 0.95
-                }}>{t("admin.heThongSeTuDongGuiEmailKichHoa")}</MuiBox>
+                }}>The email must match the verified email returned by HyperDataLab SSO when the person signs in.</MuiBox>
                 </div>
               </MuiBox>
             </Card>

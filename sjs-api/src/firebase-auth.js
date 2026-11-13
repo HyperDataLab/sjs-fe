@@ -88,5 +88,6 @@ export async function verifyFirebaseIdToken(token, projectId, fetcher = fetch) {
 	return {
 		uid: payload.sub,
 		email: typeof payload.email === "string" ? payload.email : undefined,
+		role: typeof payload.role === "string" ? payload.role : undefined,
 	};
 }

@@ -124,7 +124,7 @@ export default function UpdateUserAccountPage() {
         <MuiBox component="p" sx={{ fontSize: "0.875em", marginBottom: "0" }} className="text-muted-custom" style={{
         maxWidth: '750px'
       }}>
-          Modify profile settings, adjust organizational roles, and update security credentials for this platform contributor.
+          Update the profile, access role, and account status. Sign-in credentials remain managed by HyperDataLab SSO.
         </MuiBox>
       </MuiBox>
 

@@ -19,11 +19,11 @@ export const SYSTEM_ROLES = [
  * Danh sách trạng thái của tài khoản người dùng trên hệ thống.
  * 'Active' - Tài khoản đang hoạt động bình thường.
  * 'Inactive' - Tài khoản đã bị vô hiệu hóa bởi quản trị viên.
- * 'Pending' - Tài khoản đang trong hàng đợi chờ được duyệt kích hoạt.
+ * 'BANNED' - Tài khoản bị chặn đăng nhập qua HyperDataLab SSO.
  */
 export const ACCOUNT_STATUSES = [
   { value: 'Active', label: 'Hoạt động (Active)' },
   { value: 'Inactive', label: 'Vô hiệu hóa (Inactive)' },
-  { value: 'Pending', label: 'Chờ duyệt (Pending)' }
+  { value: 'BANNED', label: 'Banned' }
 ];
 

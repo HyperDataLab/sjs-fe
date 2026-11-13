@@ -16,7 +16,7 @@ const getUserInitial = (name = '', email = '') => {
 
 /**
  * UserAccountForm Component
- * Unified form for adding new user accounts or updating profile details.
+ * Unified form for linking SSO profiles and updating profile details.
  * Styled in high-fidelity to match the mockup.
  */
 export default function UserAccountForm({
@@ -37,11 +37,6 @@ export default function UserAccountForm({
   const [role, setRole] = useState(isEdit ? 'RESEARCHER' : '');
   const [status, setStatus] = useState('Active'); // Active, Inactive
 
-  // Passwords states
-  const [currentPassword, setCurrentPassword] = useState('');
-  const [newPassword, setNewPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
-
   // Validation / status feedback
   const [error, setError] = useState('');
 
@@ -54,8 +49,8 @@ export default function UserAccountForm({
       setEmail(initialData.email || '');
       setPhone(initialData.phone || '');
       setInstitution(initialData.institution || '');
-      setRole(initialData.role || 'RESEARCHER');
-      setStatus(initialData.status || 'Active');
+      setRole(String(initialData.role || 'RESEARCHER').trim().toUpperCase().replace(/\s+/g, '_'));
+      setStatus(String(initialData.status || 'ACTIVE').trim().toUpperCase().replace(/\s+/g, '_'));
     }
   }, [isEdit, initialData]);
 
@@ -92,22 +87,6 @@ export default function UserAccountForm({
       }
     }
 
-    // Password validation (only if added or if new password was keyed during edit)
-    if (!isEdit || newPassword || confirmPassword) {
-      if (!isEdit && !newPassword) {
-        setError(t("admin.matKhauLaBatBuoc"));
-        return;
-      }
-      if (newPassword.length < 8) {
-        setError(t("admin.matKhauPhaiChuaItNhat8KyTu"));
-        return;
-      }
-      if (newPassword !== confirmPassword) {
-        setError(t("admin.matKhauXacNhanKhongKhop"));
-        return;
-      }
-    }
-
     // Construct request payload
     const payload = {
       email: email.trim(),
@@ -121,14 +100,10 @@ export default function UserAccountForm({
       payload.first_name = names[0] || '';
       payload.last_name = names.slice(1).join(' ') || '';
       payload.name = fullName.trim();
-      if (newPassword) {
-        payload.password = newPassword;
-      }
     } else {
       payload.first_name = firstName.trim();
       payload.last_name = lastName.trim();
       payload.name = `${firstName.trim()} ${lastName.trim()}`;
-      payload.password = newPassword;
     }
 
     // Bubble up to parent
@@ -204,9 +179,15 @@ export default function UserAccountForm({
             <Form.Group controlId="emailAddress">
               <Form.Label className="account-form-label">{t("admin.diaChiEmail")}<MuiBox component="span" sx={{ color: "error.main" }} >*</MuiBox>
               </Form.Label>
-              <Form.Control type="email" placeholder={t("admin.nameuniversityeduvn")} value={email} onChange={e => setEmail(e.target.value)} required className="account-form-input" />
+              <Form.Control type="email" placeholder={t("admin.nameuniversityeduvn")} value={email} onChange={e => setEmail(e.target.value)} required disabled={isEdit} className="account-form-input" />
             </Form.Group>
           </Col>
+
+          {!isEdit && <Col xs={12}>
+            <MuiBox component="p" sx={{ mt: "-0.5rem", mb: 0, fontSize: "0.8rem", color: "text.secondary" }}>
+              Create a profile that will be linked when this person signs in through HyperDataLab SSO. Sign-in credentials stay with SSO.
+            </MuiBox>
+          </Col>}
 
           {/* Phone field */}
           <Col xs={12} md={6}>
@@ -256,70 +237,16 @@ export default function UserAccountForm({
 
           {/* Status switch toggle container - mockup high fidelity styling */}
           <Col xs={12} md={6}>
-            <MuiBox component="div" sx={{ display: "flex", alignItems: "center", justifyContent: "space-between", paddingLeft: "1rem", paddingRight: "1rem", borderRadius: "0.5rem" }}  style={{
-            height: '46px',
-            backgroundColor: '#f1f5f9',
-            marginTop: '28px' // Align vertical alignment with label spacing
-          }}>
-              <MuiBox component="span" sx={{ fontSize: "0.875em", fontWeight: 600 }} className="text-muted-custom" style={{
-              fontSize: '0.85rem'
-            }}>{t("admin.trangThaiTaiKhoan")}</MuiBox>
-              <MuiBox component="div" sx={{ display: "flex", alignItems: "center" }} className="gap-2.5 orange-switch-toggle">
-                <Form.Check type="switch" id="status-toggle" checked={status === 'Active'} onChange={e => setStatus(e.target.checked ? 'Active' : 'Inactive')} />
-                <MuiBox component="span" sx={{ fontSize: "0.875em", fontWeight: 700 }} className="text-main" style={{
-                fontSize: '0.85rem'
-              }}>{status === 'Active' ? t("admin.hoatDong") : t("admin.voHieuHoa")}</MuiBox>
-              </MuiBox>
-            </MuiBox>
-          </Col>
-        </Row>
-      </MuiBox>
-
-      {/* Section 3: Identity & Password */}
-      <MuiBox component="div" sx={{ paddingTop: "1rem", paddingBottom: "1rem", borderTop: "1px solid #dee2e6" }} >
-        <MuiBox component="h6" sx={{ fontWeight: 700, display: "flex", alignItems: "center", gap: "0.5rem", textTransform: "uppercase" }} className="mb-3.5 tracking-wider" style={{
-        fontSize: '0.85rem',
-        color: '#ea580c',
-        letterSpacing: '0.03em'
-      }}>
-          <Icon icon="lucide:lock" width="16" style={{
-          color: '#ea580c'
-        }} />{t("admin.thongTinDangNhap")}</MuiBox>
-
-        <Row sx={{ gap: "1rem" }} >
-          {/* Current Password - Only required for updating existing profile */}
-          {isEdit && <Col xs={12} md={4}>
-              <Form.Group controlId="currentPassword">
-                <Form.Label className="account-form-label">{t("admin.matKhauHienTai")}</Form.Label>
-                <Form.Control type="password" placeholder={t("admin.key")} value={currentPassword} onChange={e => setCurrentPassword(e.target.value)} className="account-form-input" />
-              </Form.Group>
-            </Col>}
-
-          {/* New Password field */}
-          <Col xs={12} md={isEdit ? 4 : 6}>
-            <Form.Group controlId="newPassword">
-              <Form.Label className="account-form-label">
-                {isEdit ? t("admin.matKhauMoi") : t("admin.matKhauMoi1")}
-              </Form.Label>
-              <Form.Control type="password" placeholder={t("admin.key1")} value={newPassword} onChange={e => setNewPassword(e.target.value)} required={!isEdit} className="account-form-input" />
-            </Form.Group>
-          </Col>
-
-          {/* Confirm password field */}
-          <Col xs={12} md={isEdit ? 4 : 6}>
-            <Form.Group controlId="confirmPassword">
-              <Form.Label className="account-form-label">
-                {isEdit ? t("admin.xacNhanMatKhau") : t("admin.xacNhanMatKhau1")}
-              </Form.Label>
-              <Form.Control type="password" placeholder={t("admin.key1")} value={confirmPassword} onChange={e => setConfirmPassword(e.target.value)} required={!isEdit} className="account-form-input" />
+            <Form.Group controlId="accountStatus">
+              <Form.Label className="account-form-label">{t("admin.trangThaiTaiKhoan")}</Form.Label>
+              <Form.Select value={status.toUpperCase()} onChange={e => setStatus(e.target.value)} className="account-form-input" required>
+                <option value="ACTIVE">Active</option>
+                <option value="INACTIVE">Inactive</option>
+                <option value="BANNED">Banned</option>
+              </Form.Select>
             </Form.Group>
           </Col>
         </Row>
-
-        {/* Password complexity helper note */}
-        <MuiBox component="div" sx={{ display: "block", marginTop: "0.25rem", fontSize: "0.875em", color: "text.secondary" }} className="text-muted-custom mt-2.5" style={{
-        fontSize: '0.78rem'
-      }}>{t("admin.matKhauPhaiChuaItNhat8KyTuBaoG")}</MuiBox>
       </MuiBox>
 
       {/* Form Action buttons */}
