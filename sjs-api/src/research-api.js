@@ -18,6 +18,8 @@ const INSTITUTION_SELECT = [
   'ror', 'geo', 'associated_institutions',
 ].join(',');
 const PUBLISHER_SELECT = 'id,display_name,works_count,cited_by_count,country_codes,hierarchy_level';
+// Reserve three OpenAlex requests for the other aggregates under the Workers Free 50-subrequest limit.
+const PROJECT_OVERVIEW_SOURCE_PAGE_LIMIT = 45;
 
 function pageOptions(params, defaultLimit = 10) {
   const page = params.get('page') === null ? 1 : Number(params.get('page'));
@@ -369,6 +371,103 @@ function collectFacetGroups(groups, depth) {
   return items.flatMap((group) => collectFacetGroups(group?.groups, depth - 1));
 }
 
+function projectSourceTypeGroups(groups) {
+  const counts = new Map([['Journal', 0], ['Conference', 0], ['Other', 0], ['Unknown', 0]]);
+  for (const group of Array.isArray(groups) ? groups : []) {
+    const rawType = String(group?.key_display_name ?? group?.key ?? '').trim().toLowerCase();
+    const type = rawType.split('/').pop();
+    const label = type === 'journal' ? 'Journal'
+      : type === 'conference' ? 'Conference'
+        : !type || type === 'unknown' ? 'Unknown' : 'Other';
+    counts.set(label, (counts.get(label) ?? 0) + (Number(group?.count) || 0));
+  }
+  return [...counts].map(([label, count]) => ({ label, count }));
+}
+
+function projectSubjectGroups(groups) {
+  const counts = new Map();
+  let unknownCount = 0;
+  for (const group of Array.isArray(groups) ? groups : []) {
+    const rawLabel = String(group?.key_display_name ?? group?.key ?? '').trim();
+    const label = rawLabel.split('/').pop();
+    const count = Number(group?.count) || 0;
+    if (!label || label.toLowerCase() === 'unknown') {
+      unknownCount += count;
+      continue;
+    }
+    counts.set(label, (counts.get(label) ?? 0) + count);
+  }
+
+  const sorted = [...counts].map(([label, count]) => ({ label, count }))
+    .sort((left, right) => right.count - left.count);
+  const topSubjects = sorted.slice(0, 3);
+  const otherCount = sorted.slice(3).reduce((total, subject) => total + subject.count, 0);
+  return [
+    ...topSubjects,
+    ...(otherCount ? [{ label: 'Others', count: otherCount }] : []),
+    ...(unknownCount ? [{ label: 'Unknown', count: unknownCount }] : []),
+  ];
+}
+
+async function countProjectJournalSources(service, search) {
+  let cursor = '*';
+  let count = 0;
+  let pages = 0;
+  while (cursor && pages < PROJECT_OVERVIEW_SOURCE_PAGE_LIMIT) {
+    const result = await service.groupWorks({
+      search,
+      filter: 'primary_location.source.type:journal',
+      groupBy: 'primary_location.source.id',
+      limit: 200,
+      cursor,
+    });
+    count += result.groups.length;
+    cursor = result.nextCursor;
+    pages += 1;
+  }
+  return { count, complete: cursor === null };
+}
+
+async function projectOverview(search, service) {
+  const currentYear = new Date().getUTCFullYear();
+  const firstTrendYear = currentYear - 4;
+  const [sourceTypes, yearsResult, subjectsResult, journalSources] = await Promise.all([
+    service.groupWorks({ search, groupBy: 'primary_location.source.type:include_unknown', limit: 200 }),
+    service.groupWorks({
+      search,
+      filter: `publication_year:${firstTrendYear}-${currentYear}`,
+      groupBy: 'publication_year',
+      limit: 10,
+    }),
+    service.groupWorks({ search, groupBy: 'primary_topic.field.id:include_unknown', limit: 200 }),
+    countProjectJournalSources(service, search),
+  ]);
+
+  const yearCounts = new Map(yearsResult.groups.map((group) => [
+    Number(group.key), Number(group.count) || 0,
+  ]));
+  const years = Array.from({ length: 5 }, (_, index) => {
+    const year = firstTrendYear + index;
+    return { year, count: yearCounts.get(year) ?? 0 };
+  });
+  const previousCompleteYear = yearCounts.get(currentYear - 2) ?? 0;
+  const latestCompleteYear = yearCounts.get(currentYear - 1) ?? 0;
+  const growthRate = previousCompleteYear > 0
+    ? ((latestCompleteYear - previousCompleteYear) / previousCompleteYear) * 100
+    : null;
+
+  return {
+    total_works: sourceTypes.count,
+    years,
+    source_types: projectSourceTypeGroups(sourceTypes.groups),
+    subject_areas: projectSubjectGroups(subjectsResult.groups),
+    journal_count: journalSources.count,
+    journal_count_complete: journalSources.complete,
+    growth_rate: growthRate,
+    updated_at: new Date().toISOString(),
+  };
+}
+
 async function searchFacets(entity, search, params, service) {
   const groupings = {
     authors: [
@@ -460,6 +559,14 @@ export async function handleResearchApiRequest(url, service) {
       .filter((item) => item.id && item.display_name);
     const items = await filterLookupCandidates(entity, contextEntity, contextQuery, params, candidates, service);
     return { body: success(items) };
+  }
+
+  if (path === '/api/v1/projects/overview') {
+    const search = (params.get('query') ?? '').trim();
+    if (!search || search.length > 300) {
+      return { status: 400, body: { success: false, message: 'A valid project search query is required.' } };
+    }
+    return { body: success(await projectOverview(search, service)) };
   }
 
   const searchMatch = path.match(/^\/api\/v1\/search(?:\/(.+))?$/);
