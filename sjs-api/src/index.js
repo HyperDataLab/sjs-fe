@@ -236,7 +236,7 @@ async function handleRequest(request, env) {
         env,
         researchResponse.body,
         researchResponse.status ?? 200,
-        { 'Cache-Control': 'public, max-age=120' },
+        { 'Cache-Control': researchResponse.cacheControl ?? 'public, max-age=120' },
       );
     }
   }

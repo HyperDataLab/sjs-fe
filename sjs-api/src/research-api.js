@@ -18,8 +18,10 @@ const INSTITUTION_SELECT = [
   'ror', 'geo', 'associated_institutions',
 ].join(',');
 const PUBLISHER_SELECT = 'id,display_name,works_count,cited_by_count,country_codes,hierarchy_level';
-// Reserve three OpenAlex requests for the other aggregates under the Workers Free 50-subrequest limit.
-const PROJECT_OVERVIEW_SOURCE_PAGE_LIMIT = 45;
+const PROJECT_OVERVIEW_CACHE_TTL_MS = 30 * 60 * 1000;
+const PROJECT_OVERVIEW_CACHE_MAX_ENTRIES = 100;
+const projectOverviewCache = new Map();
+const projectOverviewInFlight = new Map();
 
 function pageOptions(params, defaultLimit = 10) {
   const page = params.get('page') === null ? 1 : Number(params.get('page'));
@@ -410,36 +412,30 @@ function projectSubjectGroups(groups) {
 }
 
 async function countProjectJournalSources(service, search) {
-  let cursor = '*';
-  let count = 0;
-  let pages = 0;
-  while (cursor && pages < PROJECT_OVERVIEW_SOURCE_PAGE_LIMIT) {
-    const result = await service.groupWorks({
-      search,
-      filter: 'primary_location.source.type:journal',
-      groupBy: 'primary_location.source.id',
-      limit: 200,
-      cursor,
-    });
-    count += result.groups.length;
-    cursor = result.nextCursor;
-    pages += 1;
-  }
-  return { count, complete: cursor === null };
+  const result = await service.groupWorks({
+    search,
+    filter: 'primary_location.source.type:journal',
+    groupBy: 'primary_location.source.id',
+    limit: 200,
+  });
+  return { count: result.groups.length, complete: result.nextCursor === null };
 }
 
 async function projectOverview(search, service) {
   const currentYear = new Date().getUTCFullYear();
   const firstTrendYear = currentYear - 4;
-  const [sourceTypes, yearsResult, subjectsResult, journalSources] = await Promise.all([
-    service.groupWorks({ search, groupBy: 'primary_location.source.type:include_unknown', limit: 200 }),
+  const [sourceTypesAndSubjects, yearsResult, journalSources] = await Promise.all([
+    service.groupWorks({
+      search,
+      groupBy: 'primary_location.source.type:include_unknown,primary_topic.field.id:include_unknown',
+      limit: 200,
+    }),
     service.groupWorks({
       search,
       filter: `publication_year:${firstTrendYear}-${currentYear}`,
       groupBy: 'publication_year',
       limit: 10,
     }),
-    service.groupWorks({ search, groupBy: 'primary_topic.field.id:include_unknown', limit: 200 }),
     countProjectJournalSources(service, search),
   ]);
 
@@ -457,15 +453,41 @@ async function projectOverview(search, service) {
     : null;
 
   return {
-    total_works: sourceTypes.count,
+    total_works: sourceTypesAndSubjects.count,
     years,
-    source_types: projectSourceTypeGroups(sourceTypes.groups),
-    subject_areas: projectSubjectGroups(subjectsResult.groups),
+    source_types: projectSourceTypeGroups(sourceTypesAndSubjects.groups),
+    subject_areas: projectSubjectGroups(sourceTypesAndSubjects.groups.flatMap((group) => group.groups ?? [])),
     journal_count: journalSources.count,
     journal_count_complete: journalSources.complete,
     growth_rate: growthRate,
     updated_at: new Date().toISOString(),
   };
+}
+
+function cachedProjectOverview(search, service) {
+  const now = Date.now();
+  const cached = projectOverviewCache.get(search);
+  if (cached && cached.expiresAt > now) {
+    projectOverviewCache.delete(search);
+    projectOverviewCache.set(search, cached);
+    return Promise.resolve(cached.value);
+  }
+  if (cached) projectOverviewCache.delete(search);
+
+  const pending = projectOverviewInFlight.get(search);
+  if (pending) return pending;
+
+  const request = projectOverview(search, service)
+    .then((value) => {
+      projectOverviewCache.set(search, { value, expiresAt: Date.now() + PROJECT_OVERVIEW_CACHE_TTL_MS });
+      while (projectOverviewCache.size > PROJECT_OVERVIEW_CACHE_MAX_ENTRIES) {
+        projectOverviewCache.delete(projectOverviewCache.keys().next().value);
+      }
+      return value;
+    })
+    .finally(() => projectOverviewInFlight.delete(search));
+  projectOverviewInFlight.set(search, request);
+  return request;
 }
 
 async function searchFacets(entity, search, params, service) {
@@ -566,7 +588,10 @@ export async function handleResearchApiRequest(url, service) {
     if (!search || search.length > 300) {
       return { status: 400, body: { success: false, message: 'A valid project search query is required.' } };
     }
-    return { body: success(await projectOverview(search, service)) };
+    return {
+      body: success(await cachedProjectOverview(search, service)),
+      cacheControl: 'public, max-age=900, stale-while-revalidate=1800',
+    };
   }
 
   const searchMatch = path.match(/^\/api\/v1\/search(?:\/(.+))?$/);

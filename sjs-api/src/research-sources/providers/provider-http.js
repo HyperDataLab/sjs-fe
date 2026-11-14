@@ -21,11 +21,23 @@ export async function fetchJson(url, source, fetchImpl = globalThis.fetch, timeo
 
   if (!response.ok) {
     const rateLimited = response.status === 429;
+    let dailyBudgetExhausted = false;
+    if (rateLimited && source === 'openalex') {
+      try {
+        const upstreamError = await response.clone().json();
+        dailyBudgetExhausted = upstreamError?.error === 'Rate limit exceeded'
+          && Number.isFinite(Number(upstreamError?.dailyRemainingUsd));
+      } catch {
+        // Fall back to the generic rate limit message when the provider body is not JSON.
+      }
+    }
     throw new ScholarlySourceError({
       source,
       statusCode: rateLimited ? 503 : 502,
       code: rateLimited ? 'UPSTREAM_RATE_LIMITED' : 'UPSTREAM_SOURCE_ERROR',
-      message: rateLimited ? 'The scholarly data source is rate limiting requests. Retry later.' : 'The scholarly data source could not complete the request.',
+      message: dailyBudgetExhausted
+        ? 'The OpenAlex daily API budget is exhausted. It resets at midnight UTC.'
+        : rateLimited ? 'The scholarly data source is rate limiting requests. Retry later.' : 'The scholarly data source could not complete the request.',
       upstreamStatus: response.status,
       retryAfter: response.headers?.get('retry-after') ?? null,
     });
