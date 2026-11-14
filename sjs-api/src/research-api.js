@@ -13,6 +13,11 @@ const SOURCE_SELECT = [
   'id', 'display_name', 'issn_l', 'issn', 'type', 'host_organization_name', 'country_code',
   'is_oa', 'is_in_doaj', 'summary_stats', 'topics', 'works_count', 'cited_by_count',
 ].join(',');
+const INSTITUTION_SELECT = [
+  'id', 'display_name', 'country_code', 'type', 'works_count', 'cited_by_count', 'homepage_url',
+  'ror', 'geo', 'associated_institutions',
+].join(',');
+const PUBLISHER_SELECT = 'id,display_name,works_count,cited_by_count,country_codes,hierarchy_level';
 
 function pageOptions(params, defaultLimit = 10) {
   const page = params.get('page') === null ? 1 : Number(params.get('page'));
@@ -30,6 +35,12 @@ function lastId(value) {
 function entityId(value, prefix) {
   const id = lastId(value);
   return new RegExp(`^${prefix}\\d+$`).test(id) ? id : '';
+}
+
+function taxonomyId(value, prefix) {
+  const id = lastId(value);
+  if (new RegExp(`^${prefix}\\d+$`).test(id)) return id;
+  return /^\d+$/.test(id) ? `${prefix}${id}` : '';
 }
 
 function success(data, extra = {}) {
@@ -191,20 +202,137 @@ function normalizeSource(source) {
   };
 }
 
-function worksFilter(params) {
+function normalizeInstitution(institution) {
+  const id = entityId(institution?.id, 'I');
+  return {
+    id,
+    institution_id: id,
+    openalex_id: institution?.id ?? null,
+    name: institution?.display_name ?? '',
+    display_name: institution?.display_name ?? '',
+    country_code: institution?.country_code ?? '',
+    type: institution?.type ?? '',
+    works_count: Number(institution?.works_count) || 0,
+    cited_by_count: Number(institution?.cited_by_count) || 0,
+    homepage_url: institution?.homepage_url ?? null,
+    ror: institution?.ror ?? null,
+    city: institution?.geo?.city ?? '',
+    region: institution?.geo?.region ?? '',
+  };
+}
+
+function normalizePublisher(publisher) {
+  const id = entityId(publisher?.id, 'P');
+  return {
+    id,
+    display_name: publisher?.display_name ?? '',
+    works_count: Number(publisher?.works_count) || 0,
+  };
+}
+
+function pipeValues(value, pattern) {
+  const values = (value ?? '').split('|').map((item) => item.trim()).filter(Boolean);
+  return values.length && values.every((item) => pattern.test(item)) ? [...new Set(values)].join('|') : '';
+}
+
+function authorsFilter(params, omittedField) {
   const filters = [];
-  const year = params.get('publication_year') ?? params.get('year');
-  if (year && /^\d{4}$/.test(year)) filters.push(`publication_year:${year}`);
+  const institutionIds = omittedField === 'institution_id' ? '' : pipeValues(params.get('institution_id'), /^I\d+$/);
+  const countryCodes = omittedField === 'country_code' ? '' : pipeValues((params.get('country_code') ?? '').toUpperCase(), /^[A-Z]{2}$/);
+  const hasOrcid = omittedField === 'has_orcid' ? null : params.get('has_orcid');
+  if (institutionIds) filters.push(`last_known_institutions.id:${institutionIds}`);
+  if (countryCodes) filters.push(`last_known_institutions.country_code:${countryCodes}`);
+  if (hasOrcid === 'true' || hasOrcid === 'false') filters.push(`has_orcid:${hasOrcid}`);
+  return filters.join(',');
+}
+
+function worksFilter(params, omittedField) {
+  const filters = [];
+  const year = pipeValues(params.get('publication_year') ?? params.get('year'), /^\d{4}$/);
+  if (year && omittedField !== 'publication_year') filters.push(`publication_year:${year}`);
   const journalId = params.get('journal_id') ?? params.get('journal');
   if (/^S\d+$/.test(journalId ?? '')) filters.push(`primary_location.source.id:${journalId}`);
   const topicId = params.get('topic_id') ?? params.get('topic');
   if (/^T\d+$/.test(topicId ?? '')) filters.push(`topics.id:${topicId}`);
-  const countryCode = (params.get('country_id') ?? params.get('country') ?? '').toUpperCase();
-  if (/^[A-Z]{2}$/.test(countryCode)) filters.push(`authorships.countries:${countryCode}`);
+  const institutionIds = pipeValues(params.get('institution_id'), /^I\d+$/);
+  if (institutionIds && omittedField !== 'institution_id') filters.push(`authorships.institutions.id:${institutionIds}`);
+  const countryCodes = pipeValues((params.get('country_code') ?? params.get('country_id') ?? params.get('country') ?? '').toUpperCase(), /^[A-Z]{2}$/);
+  if (countryCodes && omittedField !== 'country_code') filters.push(`authorships.countries:${countryCodes}`);
+  const types = pipeValues(params.get('type'), /^[a-z][a-z0-9-]{0,59}$/i);
+  if (types && omittedField !== 'type') filters.push(`type:${types}`);
   const access = params.get('is_open_access') ?? params.get('access');
-  if (['true', 'oa'].includes(access)) filters.push('open_access.is_oa:true');
-  if (['false', 'closed', 'non-oa'].includes(access)) filters.push('open_access.is_oa:false');
+  if (omittedField !== 'is_open_access' && ['true', 'oa'].includes(access)) filters.push('open_access.is_oa:true');
+  if (omittedField !== 'is_open_access' && ['false', 'closed', 'non-oa'].includes(access)) filters.push('open_access.is_oa:false');
   return filters.join(',');
+}
+
+function institutionsFilter(params, omittedField) {
+  const filters = [];
+  const countryCodes = omittedField === 'country_code' ? '' : pipeValues((params.get('country_code') ?? '').toUpperCase(), /^[A-Z]{2}$/);
+  const types = omittedField === 'type' ? '' : pipeValues(params.get('type'), /^[a-z][a-z0-9-]{0,59}$/i);
+  if (countryCodes) filters.push(`country_code:${countryCodes}`);
+  if (types) filters.push(`type:${types}`);
+  return filters.join(',');
+}
+
+function sourcesFilter(params, omittedField) {
+  const filters = [];
+  const validTypes = new Set(['journal', 'ebook platform', 'conference', 'repository', 'book series', 'other', 'metadata']);
+  const types = (params.get('type') ?? '').split('|').map((value) => value.trim().toLowerCase()).filter((value) => validTypes.has(value));
+  const topicIds = pipeValues(params.get('topic_id'), /^T\d+$/);
+  const publisherIds = pipeValues(params.get('publisher_id'), /^P\d+$/);
+  const isOpenAccess = params.get('is_open_access');
+  if (types.length && omittedField !== 'type') filters.push(`type:${[...new Set(types)].join('|')}`);
+  if (topicIds && omittedField !== 'topic_id') filters.push(`topics.id:${topicIds}`);
+  if (publisherIds && omittedField !== 'publisher_id') filters.push(`host_organization.id:${publisherIds}`);
+  if (omittedField !== 'is_open_access' && (isOpenAccess === 'true' || isOpenAccess === 'false')) filters.push(`is_oa:${isOpenAccess}`);
+  return filters.join(',');
+}
+
+function filterForFacet(entity, params, omittedField) {
+  if (entity === 'authors') return authorsFilter(params, omittedField);
+  if (entity === 'works') return worksFilter(params, omittedField);
+  if (entity === 'institutions') return institutionsFilter(params, omittedField);
+  if (entity === 'sources') return sourcesFilter(params, omittedField);
+  return '';
+}
+
+async function filterLookupCandidates(entity, contextEntity, contextQuery, params, candidates, service) {
+  const contexts = {
+    institutions: {
+      authors: { groupBy: 'last_known_institutions.id', filterField: 'last_known_institutions.id', facetKey: 'institution_id', omit: 'institution_id' },
+      works: { groupBy: 'authorships.institutions.id', filterField: 'authorships.institutions.id', facetKey: 'institution_id', omit: 'institution_id' },
+    },
+    topics: {
+      sources: { groupBy: 'topics.id', filterField: 'topics.id', facetKey: 'topic_id', omit: 'topic_id' },
+    },
+    publishers: {
+      sources: { groupBy: 'host_organization', filterField: 'host_organization.id', facetKey: 'publisher_id', omit: 'publisher_id' },
+    },
+  };
+  const context = contexts[entity]?.[contextEntity];
+  const defaultOptions = candidates.map((item) => ({ value: item.id, label: item.display_name, count: item.works_count }));
+  if (!context || candidates.length === 0) return defaultOptions;
+
+  const contextualFilter = filterForFacet(contextEntity, params, context.omit);
+  if (!contextualFilter && !contextQuery) return defaultOptions;
+
+  const candidateIds = candidates.map((item) => item.id).filter(Boolean);
+  if (candidateIds.length === 0) return [];
+  const candidateFilter = `${context.filterField}:${[...new Set(candidateIds)].join('|')}`;
+  const payload = await service.listEntity(contextEntity, {
+    page: 1,
+    limit: 200,
+    search: contextQuery || undefined,
+    filter: [contextualFilter, candidateFilter].filter(Boolean).join(','),
+    groupBy: context.groupBy,
+  });
+  const counts = new Map(normalizeFacetGroups(collectFacetGroups(payload?.group_by, 0), context.facetKey).map((item) => [item.value, item.count]));
+  return candidates
+    .filter((item) => counts.has(item.id))
+    .map((item) => ({ value: item.id, label: item.display_name, count: counts.get(item.id) ?? 0 }))
+    .sort((left, right) => right.count - left.count)
+    .slice(0, 10);
 }
 
 function sortWorks(params) {
@@ -213,6 +341,74 @@ function sortWorks(params) {
     : sortBy === 'title' ? 'title' : 'cited_by_count';
   const direction = (params.get('sortOrder') ?? 'desc').toLowerCase() === 'asc' ? 'asc' : 'desc';
   return `${field}:${direction}`;
+}
+
+function normalizeFacetGroups(groups, key) {
+  const values = new Map();
+  for (const group of Array.isArray(groups) ? groups : []) {
+    const rawValue = String(group?.key ?? '');
+    const value = rawValue.startsWith('http') ? lastId(rawValue) : rawValue;
+    if (!value) continue;
+    const previous = values.get(value);
+    values.set(value, {
+      value,
+      label: String(group?.key_display_name ?? previous?.label ?? value),
+      count: (previous?.count ?? 0) + (Number(group?.count) || 0),
+    });
+  }
+  const facets = [...values.values()];
+  if (key === 'publication_year') facets.sort((left, right) => Number(right.value) - Number(left.value));
+  else facets.sort((left, right) => right.count - left.count);
+  const limit = key === 'country_code' ? 200 : key === 'institution_id' ? 20 : key === 'topic_id' || key === 'publisher_id' ? 30 : 10;
+  return facets.slice(0, limit);
+}
+
+function collectFacetGroups(groups, depth) {
+  const items = Array.isArray(groups) ? groups : [];
+  if (depth === 0) return items;
+  return items.flatMap((group) => collectFacetGroups(group?.groups, depth - 1));
+}
+
+async function searchFacets(entity, search, params, service) {
+  const groupings = {
+    authors: [
+      { groupBy: 'last_known_institutions.id', facets: { institution_id: 0 }, omit: 'institution_id' },
+      { groupBy: 'last_known_institutions.country_code', facets: { country_code: 0 }, omit: 'country_code' },
+      { groupBy: 'has_orcid', facets: { has_orcid: 0 }, omit: 'has_orcid' },
+    ],
+    works: [
+      { groupBy: 'publication_year', facets: { publication_year: 0 }, omit: 'publication_year' },
+      { groupBy: 'type', facets: { type: 0 }, omit: 'type' },
+      { groupBy: 'open_access.is_oa', facets: { is_open_access: 0 }, omit: 'is_open_access' },
+      { groupBy: 'authorships.institutions.id', facets: { institution_id: 0 }, omit: 'institution_id' },
+      { groupBy: 'authorships.countries', facets: { country_code: 0 }, omit: 'country_code' },
+    ],
+    institutions: [
+      { groupBy: 'country_code', facets: { country_code: 0 }, omit: 'country_code' },
+      { groupBy: 'type', facets: { type: 0 }, omit: 'type' },
+    ],
+    sources: [
+      { groupBy: 'type', facets: { type: 0 }, omit: 'type' },
+      { groupBy: 'topics.id', facets: { topic_id: 0 }, omit: 'topic_id' },
+      { groupBy: 'is_oa', facets: { is_open_access: 0 }, omit: 'is_open_access' },
+      { groupBy: 'host_organization', facets: { publisher_id: 0 }, omit: 'publisher_id' },
+    ],
+  }[entity];
+  const facetGroups = Object.fromEntries([...new Set(groupings.flatMap(({ facets }) => Object.keys(facets)))].map((key) => [key, []]));
+  const results = await Promise.allSettled(groupings.map(({ groupBy, omit }) => service.listEntity(entity, {
+    page: 1,
+    limit: 200,
+    search: search || undefined,
+    filter: filterForFacet(entity, params, omit) || undefined,
+    groupBy,
+  })));
+  results.forEach((result, index) => {
+    if (result.status !== 'fulfilled') return;
+    for (const [key, depth] of Object.entries(groupings[index].facets)) {
+      facetGroups[key].push(...collectFacetGroups(result.value?.group_by, depth));
+    }
+  });
+  return Object.fromEntries(Object.entries(facetGroups).map(([key, groups]) => [key, normalizeFacetGroups(groups, key)]));
 }
 
 function toPageData(payload, page, limit, mapper) {
@@ -236,8 +432,107 @@ export async function handleResearchApiRequest(url, service) {
     }) };
   }
 
-  if (/^\/api\/v1\/search\//.test(path)) {
-    const search = decodeURIComponent(path.slice('/api/v1/search/'.length)).trim();
+  if (path === '/api/v1/catalog/filter-values') {
+    const entity = (params.get('entity') ?? '').trim().toLowerCase();
+    const query = (params.get('query') ?? '').trim();
+    if (!query || query.length > 200) return { status: 400, body: { success: false, message: 'A valid filter search query is required.' } };
+
+    const catalogs = {
+      institutions: { select: INSTITUTION_SELECT, normalize: normalizeInstitution },
+      topics: { select: TOPIC_SELECT, normalize: normalizeTopic },
+      publishers: { select: PUBLISHER_SELECT, normalize: normalizePublisher },
+    };
+    const catalog = catalogs[entity];
+    if (!catalog) return { status: 400, body: { success: false, message: 'Unsupported filter value entity.' } };
+    const contextEntity = (params.get('context_entity') ?? '').trim().toLowerCase();
+    const contextQuery = (params.get('context_query') ?? '').trim();
+    if (contextQuery.length > 300) return { status: 400, body: { success: false, message: 'Context query is too long.' } };
+
+    const payload = await service.listEntity(entity, {
+      page: 1,
+      limit: 50,
+      search: query,
+      filter: entity === 'institutions' && contextEntity === 'authors' ? institutionsFilter(params) || undefined : undefined,
+      sort: 'works_count:desc',
+      select: catalog.select,
+    });
+    const candidates = (Array.isArray(payload?.results) ? payload.results : []).map(catalog.normalize)
+      .filter((item) => item.id && item.display_name);
+    const items = await filterLookupCandidates(entity, contextEntity, contextQuery, params, candidates, service);
+    return { body: success(items) };
+  }
+
+  const searchMatch = path.match(/^\/api\/v1\/search(?:\/(.+))?$/);
+  if (searchMatch) {
+    const search = decodeURIComponent(searchMatch[1] ?? params.get('query') ?? '').trim();
+    const entity = (params.get('entity') ?? '').toLowerCase();
+    if (search.length > 300) return { status: 400, body: { success: false, message: 'Search query is too long.' } };
+
+    if (entity) {
+      if (!['authors', 'works', 'institutions', 'sources'].includes(entity)) {
+        return { status: 400, body: { success: false, message: 'Unsupported search entity.' } };
+      }
+      const paging = pageOptions(params, 10);
+      if (!paging) return { status: 400, body: { success: false, message: 'Invalid paging parameters.' } };
+      const includeFacets = params.get('include_facets') !== '0';
+
+      if (entity === 'authors') {
+        const sortBy = params.get('sortBy') === 'cited_by_count' ? 'cited_by_count' : 'works_count';
+        const sortOrder = (params.get('sortOrder') ?? 'desc').toLowerCase() === 'asc' ? 'asc' : 'desc';
+        const [payload, facets] = await Promise.all([
+          service.listEntity('authors', {
+          page: paging.page, limit: paging.limit, search: search || undefined,
+          filter: authorsFilter(params), sort: `${sortBy}:${sortOrder}`, select: AUTHOR_SELECT,
+          }),
+          includeFacets ? searchFacets(entity, search, params, service) : Promise.resolve(undefined),
+        ]);
+        const data = toPageData(payload, paging.page, paging.limit, normalizeAuthor);
+        return { body: success(data.items, { pagination: data.pagination, total: data.total, ...(facets ? { facets } : {}) }) };
+      }
+
+      if (entity === 'works') {
+        const [payload, facets] = await Promise.all([
+          service.listEntity('works', {
+          page: paging.page, limit: paging.limit, search: search || undefined,
+          filter: worksFilter(params), sort: sortWorks(params), select: WORK_SELECT,
+          }),
+          includeFacets ? searchFacets(entity, search, params, service) : Promise.resolve(undefined),
+        ]);
+        const data = toPageData(payload, paging.page, paging.limit, normalizeWork);
+        return { body: success(data.items, { pagination: data.pagination, total: data.total, ...(facets ? { facets } : {}) }) };
+      }
+
+      if (entity === 'sources') {
+        const sortBy = params.get('sortBy');
+        const sortField = sortBy === 'cited_by_count' ? 'cited_by_count'
+          : sortBy === 'metric_value' ? 'summary_stats.2yr_mean_citedness'
+            : sortBy === 'display_name' ? 'display_name' : 'works_count';
+        const sortOrder = (params.get('sortOrder') ?? 'desc').toLowerCase() === 'asc' ? 'asc' : 'desc';
+        const [payload, facets] = await Promise.all([
+          service.listEntity('sources', {
+            page: paging.page, limit: paging.limit, search: search || undefined,
+            filter: sourcesFilter(params), sort: `${sortField}:${sortOrder}`, select: SOURCE_SELECT,
+          }),
+          includeFacets ? searchFacets(entity, search, params, service) : Promise.resolve(undefined),
+        ]);
+        const data = toPageData(payload, paging.page, paging.limit, normalizeSource);
+        return { body: success(data.items, { pagination: data.pagination, total: data.total, ...(facets ? { facets } : {}) }) };
+      }
+
+      const sortBy = params.get('sortBy') === 'cited_by_count' ? 'cited_by_count' : 'works_count';
+      const sortOrder = (params.get('sortOrder') ?? 'desc').toLowerCase() === 'asc' ? 'asc' : 'desc';
+      const [payload, facets] = await Promise.all([
+        service.listEntity('institutions', {
+        page: paging.page, limit: paging.limit, search: search || undefined,
+        filter: institutionsFilter(params), sort: `${sortBy}:${sortOrder}`, select: INSTITUTION_SELECT,
+        }),
+        includeFacets ? searchFacets(entity, search, params, service) : Promise.resolve(undefined),
+      ]);
+      const data = toPageData(payload, paging.page, paging.limit, normalizeInstitution);
+      return { body: success(data.items, { pagination: data.pagination, total: data.total, ...(facets ? { facets } : {}) }) };
+    }
+
+    if (!search) return { status: 400, body: { success: false, message: 'Search query is required.' } };
     const [works, authors, sources, keywords] = await Promise.all([
       service.listEntity('works', { page: 1, limit: 5, search, sort: 'cited_by_count:desc', select: WORK_SELECT }),
       service.listEntity('authors', { page: 1, limit: 5, search, sort: 'cited_by_count:desc', select: AUTHOR_SELECT }),
@@ -414,17 +709,17 @@ export async function handleResearchApiRequest(url, service) {
     const payload = await service.listEntity(entity, {
       page: 1,
       limit: 100,
-      filter: !isFields && /^F\d+$/.test(fieldId ?? '') ? `field.id:${fieldId}` : undefined,
+      filter: !isFields && /^F\d+$/.test(fieldId ?? '') ? `field.id:${fieldId.slice(1)}` : undefined,
       sort: 'display_name:asc',
-      select: 'id,display_name,field',
+      select: isFields ? 'id,display_name' : 'id,display_name,field',
     });
     const items = (payload.results ?? []).map((item) => ({
-      id: entityId(item.id, prefix),
-      subject_area_id: entityId(item.id, prefix),
-      subject_category_id: entityId(item.id, prefix),
+      id: taxonomyId(item.id, prefix),
+      subject_area_id: taxonomyId(item.id, prefix),
+      subject_category_id: taxonomyId(item.id, prefix),
       display_name: item.display_name ?? '',
       name: item.display_name ?? '',
-      field_id: isFields ? undefined : entityId(item.field?.id, 'F'),
+      field_id: isFields ? undefined : taxonomyId(item.field?.id, 'F'),
     })).filter((item) => item.id);
     return { body: success(items) };
   }

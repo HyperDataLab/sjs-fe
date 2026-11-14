@@ -47,6 +47,7 @@ Public catalog routes return normalized OpenAlex Sources data. OpenAlex source s
 
 - `GET /api/v1/catalog/journals?search=...&page=1&limit=10&sort=metric` searches journals. Optional filters: `field_ids`, `subfield_ids`, `country_code`, `is_open_access`, `is_in_doaj`.
 - `GET /api/v1/catalog/fields`, `GET /api/v1/catalog/subfields?field_id=F...`, and `GET /api/v1/catalog/countries` return OpenAlex taxonomies and countries.
+- `GET /api/v1/search?query=...&entity=authors|works|institutions|sources&page=1&limit=10` searches a selected OpenAlex entity through one shared route (also accepts the legacy `/api/v1/search/:query` form). `country_code`, `institution_id`, `has_orcid`, `publication_year`, `type`, and `is_open_access` filters apply where supported by the selected entity. The maximum supported page size is 100.
 - Research reads for articles, authors, topics, keywords, journal details, subject areas/categories, publication trends, country/region trends, and landing-page search are served from OpenAlex through the Worker.
 - `GET /api/v1/catalog/volumes` and `/api/v1/catalog/issues` return empty lists because the selected on-demand provider does not expose the old editorial archive.
 - `GET /api/v1/research/works?source=openalex&query=...&limit=25&cursor=...` requires `Authorization: Bearer <Firebase ID token>` and returns normalized works.

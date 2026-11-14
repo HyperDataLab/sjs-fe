@@ -2,6 +2,7 @@ import { ScholarlySourceError } from '../scholarly-source.errors.js';
 import { asInteger, fetchJson, normalizeDoi } from './provider-http.js';
 
 const MAX_PER_PAGE = 100;
+const MAX_GROUPS_PER_PAGE = 200;
 const BASIC_PAGING_LIMIT = 10000;
 const SEARCHABLE_ENTITIES = new Set([
   'authors',
@@ -81,10 +82,17 @@ function normalizeJournalSource(source = {}) {
 function normalizeTaxonomyItems(payload, idPrefix) {
   const results = Array.isArray(payload?.results) ? payload.results : [];
   return results.map((item) => {
-    const id = lastOpenAlexId(item?.id);
-    if (!new RegExp(`^${idPrefix}\\d+$`).test(id) || typeof item?.display_name !== 'string') return null;
+    const rawId = lastOpenAlexId(item?.id);
+    const id = new RegExp(`^${idPrefix}\\d+$`).test(rawId) ? rawId : /^\d+$/.test(rawId) ? `${idPrefix}${rawId}` : '';
+    if (!id || typeof item?.display_name !== 'string') return null;
     return { id, display_name: item.display_name };
   }).filter(Boolean);
+}
+
+function openAlexTaxonomyId(value, prefix) {
+  const id = lastOpenAlexId(value);
+  if (/^\d+$/.test(id)) return id;
+  return new RegExp(`^${prefix}\\d+$`).test(id) ? id.slice(prefix.length) : '';
 }
 
 function normalizeWork(work) {
@@ -120,7 +128,7 @@ export function createOpenAlexProvider({ apiKey = '', baseUrl, email = '', timeo
     select,
   } = {}) {
     const url = entityUrl(baseUrl, entity);
-    url.searchParams.set('per_page', String(Math.min(limit, MAX_PER_PAGE)));
+    url.searchParams.set('per_page', String(Math.min(limit, groupBy ? MAX_GROUPS_PER_PAGE : MAX_PER_PAGE)));
     if (!groupBy) url.searchParams.set('page', String(page));
     if (filter) url.searchParams.set('filter', filter);
     if (search) url.searchParams.set('search', search);
@@ -210,8 +218,10 @@ export function createOpenAlexProvider({ apiKey = '', baseUrl, email = '', timeo
 
     async searchJournals({ search, page = 1, limit = 10, sort = 'metric', fieldIds = [], subfieldIds = [], countryCode, isOpenAccess, isInDoaj } = {}) {
       const filters = ['type:journal'];
-      if (fieldIds.length) filters.push(`topics.field.id:${fieldIds.join('|')}`);
-      if (subfieldIds.length) filters.push(`topics.subfield.id:${subfieldIds.join('|')}`);
+      const openAlexFieldIds = fieldIds.map((id) => openAlexTaxonomyId(id, 'F')).filter(Boolean);
+      const openAlexSubfieldIds = subfieldIds.map((id) => openAlexTaxonomyId(id, 'S')).filter(Boolean);
+      if (openAlexFieldIds.length) filters.push(`topics.field.id:${openAlexFieldIds.join('|')}`);
+      if (openAlexSubfieldIds.length) filters.push(`topics.subfield.id:${openAlexSubfieldIds.join('|')}`);
       if (countryCode) filters.push(`country_code:${countryCode}`);
       if (typeof isOpenAccess === 'boolean') filters.push(`is_oa:${isOpenAccess}`);
       if (typeof isInDoaj === 'boolean') filters.push(`is_in_doaj:${isInDoaj}`);
@@ -240,7 +250,7 @@ export function createOpenAlexProvider({ apiKey = '', baseUrl, email = '', timeo
 
     async listSubfields({ fieldId }) {
       const payload = await fetchEntityList('subfields', {
-        filter: `field.id:${fieldId}`,
+        filter: `field.id:${openAlexTaxonomyId(fieldId, 'F')}`,
         page: 1,
         limit: 100,
         sort: 'display_name',
