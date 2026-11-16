@@ -5,6 +5,7 @@ import { handleAdminApiRequest } from './admin-api.js';
 import { ScholarlySourceError } from './research-sources/scholarly-source.errors.js';
 import { createResearchSourceService } from './research-sources/research-sources.service.js';
 import { handleResearchApiRequest } from './research-api.js';
+import { getProjectOverview } from './project-overview-api.js';
 
 const JSON_HEADERS = { 'Content-Type': 'application/json; charset=utf-8' };
 
@@ -186,6 +187,19 @@ async function handleRequest(request, env) {
 	}
 
   const service = createResearchSourceService({ env });
+  if (url.pathname === '/api/v1/projects/overview' && request.method === 'GET') {
+    const query = (url.searchParams.get('query') ?? '').trim();
+    if (!query || query.length > 300) {
+      return jsonResponse(request, env, {
+        success: false,
+        error: 'invalid_project_overview_query',
+        message: 'A project search query between 1 and 300 characters is required.',
+      }, 400);
+    }
+    const data = await getProjectOverview(query, service);
+    return jsonResponse(request, env, { success: true, data }, 200, { 'Cache-Control': 'public, max-age=120' });
+  }
+
   const catalogCacheHeaders = { 'Cache-Control': 'public, max-age=300' };
   if (url.pathname === '/api/v1/catalog/fields' && request.method === 'GET') {
     return jsonResponse(request, env, { source: 'openalex', items: await service.listFields() }, 200, catalogCacheHeaders);

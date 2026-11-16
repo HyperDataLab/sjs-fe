@@ -123,6 +123,7 @@ export function createOpenAlexProvider({ apiKey = '', baseUrl, email = '', timeo
     search,
     sort,
     groupBy,
+    cursor,
     page = 1,
     limit = MAX_PER_PAGE,
     select,
@@ -130,6 +131,7 @@ export function createOpenAlexProvider({ apiKey = '', baseUrl, email = '', timeo
     const url = entityUrl(baseUrl, entity);
     url.searchParams.set('per_page', String(Math.min(limit, groupBy ? MAX_GROUPS_PER_PAGE : MAX_PER_PAGE)));
     if (!groupBy) url.searchParams.set('page', String(page));
+    if (cursor) url.searchParams.set('cursor', cursor);
     if (filter) url.searchParams.set('filter', filter);
     if (search) url.searchParams.set('search', search);
     if (sort) url.searchParams.set('sort', sort);
@@ -170,16 +172,20 @@ export function createOpenAlexProvider({ apiKey = '', baseUrl, email = '', timeo
       return fetchJson(url, 'openalex', fetchImpl, timeoutMilliseconds(timeout));
     },
 
-    async groupWorks({ filter, groupBy, limit = 100 } = {}) {
+    async groupWorks({ filter, search, groupBy, limit = 100, sort, cursor } = {}) {
       const payload = await fetchEntityList('works', {
         filter,
+        search,
+        sort,
         groupBy,
+        cursor,
         page: 1,
-        limit: Math.min(limit, MAX_PER_PAGE),
+        limit: Math.min(limit, MAX_GROUPS_PER_PAGE),
       });
       return {
         groups: Array.isArray(payload?.group_by) ? payload.group_by : [],
         count: asInteger(payload?.meta?.count) ?? 0,
+        nextCursor: typeof payload?.meta?.next_cursor === 'string' ? payload.meta.next_cursor : null,
       };
     },
 
