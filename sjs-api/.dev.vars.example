@@ -10,3 +10,6 @@ OPENALEX_EMAIL=
 OPENALEX_API_KEY=
 OPENALEX_TIMEOUT=
 CROSSREF_MAILTO=
+# Full backend API base URLs, including the API prefix (for example /api/v1).
+SJS_BE_API_BASE_URL=
+SJS_TRENDING_BE_API_BASE_URL=

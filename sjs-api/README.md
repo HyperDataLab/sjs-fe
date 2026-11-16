@@ -54,6 +54,17 @@ Public catalog routes return normalized OpenAlex Sources data. OpenAlex source s
 - `POST /api/v1/research/analyze` requires the same token, accepts `{"query":"...","sources":["openalex","crossref"],"limit":100}`, and returns compact counts by year, citation total, and top venues. It does not write to Firestore.
 - `POST /api/v1/auth/sso/custom-token` bridges a verified SSO access token to Firebase Auth. `GET /health` reports Worker health.
 
+### Existing backend gateway
+
+The Worker also exposes pass-through namespaces for the existing APIs. Set both upstream variables to the backend API base URL, including `/api/v1` (for example, `https://backend.example/api/v1`):
+
+- `/api/v1/upstream/sjs-be/<path>` forwards to `SJS_BE_API_BASE_URL/<path>`.
+- `/api/v1/upstream/sjs-trending-be/<path>` forwards to `SJS_TRENDING_BE_API_BASE_URL/<path>`.
+
+The gateway forwards the HTTP method, path, query string, body, authorization header, and cookies, and returns the upstream status and response. It covers the existing route trees without duplicating their endpoint implementations. Configure these URLs in local `sjs-api/.dev.vars` and as Worker environment variables for deployed environments. An unset upstream returns `503 upstream_not_configured`; a network failure returns `502 upstream_unavailable`.
+
+This is a transport gateway only. It does not convert Firebase ID tokens into the legacy BE JWT or translate Firestore project IDs into PostgreSQL project IDs. Routes that require those identities/scopes will continue to return the backend's response until that mapping is designed.
+
 Project CRUD and analysis-summary persistence remain direct Firebase Web SDK operations. The FE stores project inputs and compact analysis summaries in Firestore, not returned scholarly records. Providers are registered in `src/research-sources/research-sources.service.js`, so additional sources can be added behind the same Worker boundary.
 
 ## Secrets and deployment

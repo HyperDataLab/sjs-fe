@@ -6,6 +6,7 @@ import { ScholarlySourceError } from './research-sources/scholarly-source.errors
 import { createResearchSourceService } from './research-sources/research-sources.service.js';
 import { handleResearchApiRequest } from './research-api.js';
 import { getProjectOverview } from './project-overview-api.js';
+import { proxyBackendRequest } from './backend-proxy.js';
 
 const JSON_HEADERS = { 'Content-Type': 'application/json; charset=utf-8' };
 
@@ -18,8 +19,9 @@ function corsHeaders(request, env) {
   const headers = new Headers({ Vary: 'Origin' });
   if (origin && allowedOrigins(env).has(origin)) {
     headers.set('Access-Control-Allow-Origin', origin);
-		headers.set('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-    headers.set('Access-Control-Allow-Headers', 'Authorization, Content-Type');
+		headers.set('Access-Control-Allow-Methods', 'GET, HEAD, POST, PUT, PATCH, DELETE, OPTIONS');
+		headers.set('Access-Control-Allow-Headers', 'Accept, Authorization, Content-Type, X-Requested-With');
+		headers.set('Access-Control-Allow-Credentials', 'true');
     if (request.method === 'OPTIONS') headers.set('Access-Control-Max-Age', '86400');
   }
   return headers;
@@ -153,6 +155,9 @@ async function handleRequest(request, env) {
     });
   }
   if (url.pathname === '/health' && request.method === 'GET') return jsonResponse(request, env, { status: 'ok' });
+
+  const upstreamResponse = await proxyBackendRequest(request, env, corsHeaders);
+  if (upstreamResponse) return upstreamResponse;
 
   if (url.pathname === '/api/v1/auth/sso/custom-token' && request.method === 'POST') {
     let requestBody;
