@@ -189,6 +189,7 @@ async function handleRequest(request, env) {
   const service = createResearchSourceService({ env });
   if (url.pathname === '/api/v1/projects/overview' && request.method === 'GET') {
     const query = (url.searchParams.get('query') ?? '').trim();
+    const years = Number(url.searchParams.get('years') ?? 5);
     if (!query || query.length > 300) {
       return jsonResponse(request, env, {
         success: false,
@@ -196,7 +197,14 @@ async function handleRequest(request, env) {
         message: 'A project search query between 1 and 300 characters is required.',
       }, 400);
     }
-    const data = await getProjectOverview(query, service);
+    if (![1, 3, 5].includes(years)) {
+      return jsonResponse(request, env, {
+        success: false,
+        error: 'invalid_project_overview_year_range',
+        message: 'The project overview year range must be 1, 3, or 5 years.',
+      }, 400);
+    }
+    const data = await getProjectOverview(query, service, years);
     return jsonResponse(request, env, { success: true, data }, 200, { 'Cache-Control': 'public, max-age=120' });
   }
 

@@ -1,4 +1,4 @@
-const TREND_WINDOW_YEARS = 5;
+const AVAILABLE_YEAR_RANGES = new Set([1, 3, 5]);
 const GROUP_LIMIT = 200;
 
 const JOURNAL_WORK_TYPES = new Set([
@@ -31,9 +31,10 @@ function publicationTypeLabel(type) {
   return JOURNAL_WORK_TYPES.has(normalized) ? 'Journal' : 'Other';
 }
 
-export async function getProjectOverview(query, service) {
+export async function getProjectOverview(query, service, requestedYears = 5) {
   const currentYear = new Date().getUTCFullYear();
-  const firstYear = currentYear - TREND_WINDOW_YEARS + 1;
+  const yearsCount = AVAILABLE_YEAR_RANGES.has(Number(requestedYears)) ? Number(requestedYears) : 5;
+  const firstYear = currentYear - yearsCount + 1;
   const yearFilter = `publication_year:${firstYear}-${currentYear}`;
 
   const [yearResult, typeResult, subjectResult, journalResult] = await Promise.all([
@@ -42,13 +43,13 @@ export async function getProjectOverview(query, service) {
       filter: yearFilter,
       groupBy: 'publication_year',
       sort: 'key:asc',
-      limit: TREND_WINDOW_YEARS,
+      limit: yearsCount,
     }),
-    service.groupWorks({ search: query, groupBy: 'type', limit: 100 }),
-    service.groupWorks({ search: query, groupBy: 'primary_topic.field.id', limit: 100 }),
+    service.groupWorks({ search: query, filter: yearFilter, groupBy: 'type', limit: 100 }),
+    service.groupWorks({ search: query, filter: yearFilter, groupBy: 'primary_topic.field.id', limit: 100 }),
     service.groupWorks({
       search: query,
-      filter: 'primary_location.source.type:journal',
+      filter: `${yearFilter},primary_location.source.type:journal`,
       groupBy: 'primary_location.source.id',
       sort: 'count:desc',
       limit: GROUP_LIMIT,
@@ -57,15 +58,18 @@ export async function getProjectOverview(query, service) {
   ]);
 
   const yearCounts = new Map(normalizeGroups(yearResult.groups).map(({ label, count }) => [Number(label), count]));
-  const years = Array.from({ length: TREND_WINDOW_YEARS }, (_, index) => {
+  const years = Array.from({ length: yearsCount }, (_, index) => {
     const year = firstYear + index;
     return { year, count: yearCounts.get(year) ?? 0 };
   });
   const previousCompleteYear = currentYear - 2;
   const latestCompleteYear = currentYear - 1;
+  const hasGrowthComparison = previousCompleteYear >= firstYear && latestCompleteYear >= firstYear;
   const previousCount = yearCounts.get(previousCompleteYear) ?? 0;
   const latestCount = yearCounts.get(latestCompleteYear) ?? 0;
-  const growthRate = previousCount > 0 ? ((latestCount - previousCount) / previousCount) * 100 : null;
+  const growthRate = hasGrowthComparison && previousCount > 0
+    ? ((latestCount - previousCount) / previousCount) * 100
+    : null;
 
   const typeCounts = new Map([['Journal', 0], ['Conference', 0], ['Other', 0]]);
   for (const group of typeResult.groups ?? []) {
