@@ -66,6 +66,14 @@ service cloud.firestore {
             && data.analysisSummary.status == data.analysisStatus));
     }
 
+    function validProjectResearchCache(data) {
+      return data.keys().hasAll(['version', 'payload', 'updatedAt'])
+        && data.keys().hasOnly(['version', 'payload', 'updatedAt'])
+        && data.version == 1
+        && (data.payload is map || data.payload is list)
+        && data.updatedAt == request.time;
+    }
+
     match /users/{userId}/projects/{projectId} {
       allow get, list: if signedInAs(userId);
       allow create: if signedInAs(userId)
@@ -78,6 +86,17 @@ service cloud.firestore {
         && request.resource.data.createdAt == resource.data.createdAt
         && request.resource.data.updatedAt == request.time;
       allow delete: if signedInAs(userId);
+
+      match /researchCache/{cacheId} {
+        allow get: if signedInAs(userId)
+          && exists(/databases/$(database)/documents/users/$(userId)/projects/$(projectId));
+        allow list: if false;
+        allow create, update: if signedInAs(userId)
+          && exists(/databases/$(database)/documents/users/$(userId)/projects/$(projectId))
+          && validProjectResearchCache(request.resource.data);
+        allow delete: if signedInAs(userId)
+          && exists(/databases/$(database)/documents/users/$(userId)/projects/$(projectId));
+      }
     }
   }
 }
